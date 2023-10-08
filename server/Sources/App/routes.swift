@@ -2,8 +2,8 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
-    app.get { req async in
-        "It works!"
+    app.get { req in
+        Status(status: "OK")
     }
 
     app.get("hello") { req async -> String in
