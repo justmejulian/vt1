@@ -1,0 +1,40 @@
+import Fluent
+import Vapor
+
+final class SensorData: Model, Content {
+    static let schema = "sensor_data"
+
+    @ID(key: .id)
+    var id: UUID?
+
+    @Field(key: "timestamp")
+    var timestamp: Date
+
+    @Field(key: "device_id")
+    var device_id: UUID
+
+    @Field(key: "sensor_id")
+    var sensor_id: UUID
+
+    @Field(key: "x")
+    var x: String
+
+    @Field(key: "y")
+    var y: String
+
+    @Field(key: "z")
+    var z: String
+
+    init() { }
+
+    init(id: UUID? = nil, timestamp: Date, device_id: UUID, sensor_id: UUID, x: String, y: String, z: String) {
+        self.id = id
+        self.timestamp = timestamp
+        self.device_id = device_id
+        self.sensor_id = sensor_id
+        self.x = x
+        self.y = y
+        self.z = z
+    }
+
+}

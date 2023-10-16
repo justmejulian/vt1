@@ -2,13 +2,13 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
-    app.get { req in
+    app.get { req async -> String in
+        "Todo add list of routes"
+    }
+
+    app.get("status") { req in
         Status(status: "OK")
     }
 
-    app.get("hello") { req async -> String in
-        "Hello, world!"
-    }
-
-    try app.register(collection: TodoController())
+    try app.register(collection: DeviceController())
 }
