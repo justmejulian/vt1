@@ -67,11 +67,11 @@ struct DeviceController: RouteCollection {
         struct AddSensorData: Content {
             var timestamp: Double
             var sensor_id: String
-            var x: String
-            var y: String
-            var z: String
+            var x: Double
+            var y: Double
+            var z: Double
         }
-
+        
         do {
             // todo use uuid
             let device = try await Device.find(req.parameters.get("id"), on: req.db)
@@ -83,7 +83,7 @@ struct DeviceController: RouteCollection {
             // todo use sensor name
             let sensor = try await Sensor.find(UUID(addSensorData.sensor_id), on: req.db)
 
-            print(sensor)
+            print(sensor!)
 
             let sensorData = SensorData(
                 id: nil,

@@ -7,9 +7,9 @@ struct CreateSensorData: AsyncMigration {
             .field("timestamp", .datetime, .required)
             .field("device_id", .uuid, .required, .references("device", "id"))
             .field("sensor_id", .uuid, .required, .references("sensor", "id"))
-            .field("x", .string, .required)
-            .field("y", .string, .required)
-            .field("z", .string, .required)
+            .field("x", .double, .required)
+            .field("y", .double, .required)
+            .field("z", .double, .required)
             .unique(on: "timestamp", "device_id", "sensor_id")
             .create()
     }

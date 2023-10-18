@@ -17,17 +17,17 @@ final class SensorData: Model, Content {
     var sensor_id: UUID
 
     @Field(key: "x")
-    var x: String
+    var x: Double
 
     @Field(key: "y")
-    var y: String
+    var y: Double
 
     @Field(key: "z")
-    var z: String
+    var z: Double
 
     init() { }
 
-    init(id: UUID? = nil, timestamp: Date, device_id: UUID, sensor_id: UUID, x: String, y: String, z: String) {
+    init(id: UUID? = nil, timestamp: Date, device_id: UUID, sensor_id: UUID, x: Double, y: Double, z: Double) {
         self.id = id
         self.timestamp = timestamp
         self.device_id = device_id
