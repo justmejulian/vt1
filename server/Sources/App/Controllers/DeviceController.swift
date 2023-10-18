@@ -33,15 +33,13 @@ struct DeviceController: RouteCollection {
 
     func show(req: Request) async throws -> Device {
         guard let device = try await Device.find(req.parameters.get("id"), on: req.db) else {
-            print("Error in show: device not found")
-            throw Abort(.notFound)
+            throw Abort(.internalServerError)
         }
         return device
     }
 
     func delete(req: Request) async throws -> HTTPStatus {
         guard let device = try await Device.find(req.parameters.get("id"), on: req.db) else {
-            print("Error in delete: device not found")
             throw Abort(.notFound)
         }
         try await device.delete(on: req.db)
@@ -51,15 +49,24 @@ struct DeviceController: RouteCollection {
     func getSensorData(req: Request) async throws -> [SensorData] {
         do {
             // todo use uuid
-            let device = try await Device.find(req.parameters.get("id"), on: req.db)
-            let sensorData = try await SensorData.query(on: req.db).filter(\.$device_id == (device?.id)!).all()
+            guard let deviceId = req.parameters.get("id") else {
+                print("Error, deviceId not provided")
+                throw Abort(.badRequest)
+            }
+
+            guard let device: Device = try? await Device.find(UUID(deviceId), on: req.db) else {
+                print("Error, device not found")
+                throw Abort(.notFound)
+            }
+            
+            let sensorData = try await SensorData.query(on: req.db).filter(\.$device_id == device.id!).all()
 
             // todo return names not IDs
             // ie uuid for the device and sensor name for the sensor
             return sensorData
         } catch {
             print("Error in getSensorData: \(error)")
-            throw Abort(.notFound)
+            throw Abort(.internalServerError)
         }
     }
 
@@ -74,22 +81,25 @@ struct DeviceController: RouteCollection {
         
         do {
             // todo use uuid
-            let device = try await Device.find(req.parameters.get("id"), on: req.db)
+            guard let deviceId = req.parameters.get("id") else {
+                print("Error, deviceId not provided")
+                throw Abort(.badRequest)
+            }
 
+            let device = try await Device.find(UUID(deviceId), on: req.db)!
             let addSensorData = try req.content.decode(AddSensorData.self)
 
-            print(addSensorData)
-
             // todo use sensor name
-            let sensor = try await Sensor.find(UUID(addSensorData.sensor_id), on: req.db)
-
-            print(sensor!)
+            guard let sensor = try await Sensor.find(UUID(addSensorData.sensor_id), on: req.db) else {
+                print("Error, sensor not found", addSensorData.sensor_id)
+                throw Abort(.notFound)
+            }
 
             let sensorData = SensorData(
                 id: nil,
                 timestamp: Date(timeIntervalSince1970: addSensorData.timestamp),
-                device_id: (device?.id)!,
-                sensor_id: (sensor?.id)!,
+                device_id: device.id!,
+                sensor_id: sensor.id!,
                 x: addSensorData.x,
                 y: addSensorData.y,
                 z: addSensorData.z
