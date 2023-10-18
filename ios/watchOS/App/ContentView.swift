@@ -1,7 +1,4 @@
 //
-//  ContentView.swift
-//  vt1_watchos Watch App
-//
 //  Created by Julian Visser on 18.10.2023.
 //
 

@@ -1,7 +1,4 @@
 //
-//  AccelerometerData.swift
-//  vt1
-//
 //  Created by Julian Visser on 17.10.2023.
 //
 

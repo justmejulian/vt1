@@ -1,7 +1,4 @@
 //
-//  vt1_ios_Mobile_App.swift
-//  vt1_ios Mobile App
-//
 //  Created by Julian Visser on 16.10.2023.
 //
 
@@ -9,7 +6,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct vt1_ios_Mobile_App: App {
+struct Main: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,

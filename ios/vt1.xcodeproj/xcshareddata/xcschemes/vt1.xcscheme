@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C7327B7E2ADD5D8200F16E63"
-               BuildableName = "vt1.app"
-               BlueprintName = "vt1"
+               BuildableName = "vt1 Mobile App.app"
+               BlueprintName = "vt1 Mobile App"
                ReferencedContainer = "container:vt1.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,8 +35,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C7327B902ADD5D8300F16E63"
-               BuildableName = "vt1Tests.xctest"
-               BlueprintName = "vt1Tests"
+               BuildableName = "vt1 Mobile App Tests.xctest"
+               BlueprintName = "vt1 Mobile App Tests"
                ReferencedContainer = "container:vt1.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -46,8 +46,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C7327B9A2ADD5D8300F16E63"
-               BuildableName = "vt1UITests.xctest"
-               BlueprintName = "vt1UITests"
+               BuildableName = "vt1 Mobile AppUITests.xctest"
+               BlueprintName = "vt1 Mobile AppUITests"
                ReferencedContainer = "container:vt1.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -68,8 +68,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C7327B7E2ADD5D8200F16E63"
-            BuildableName = "vt1.app"
-            BlueprintName = "vt1"
+            BuildableName = "vt1 Mobile App.app"
+            BlueprintName = "vt1 Mobile App"
             ReferencedContainer = "container:vt1.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -85,8 +85,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C7327B7E2ADD5D8200F16E63"
-            BuildableName = "vt1.app"
-            BlueprintName = "vt1"
+            BuildableName = "vt1 Mobile App.app"
+            BlueprintName = "vt1 Mobile App"
             ReferencedContainer = "container:vt1.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

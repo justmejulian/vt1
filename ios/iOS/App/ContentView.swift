@@ -1,7 +1,4 @@
 //
-//  ContentView.swift
-//  vt1
-//
 //  Created by Julian Visser on 16.10.2023.
 //
 
