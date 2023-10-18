@@ -1,13 +1,13 @@
 //
-//  vt1UITests.swift
-//  vt1UITests
+//  vt1_watchos_Watch_AppUITests.swift
+//  vt1_watchos Watch AppUITests
 //
-//  Created by Julian Visser on 16.10.2023.
+//  Created by Julian Visser on 18.10.2023.
 //
 
 import XCTest
 
-final class vt1UITests: XCTestCase {
+final class vt1_watchos_Watch_AppUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

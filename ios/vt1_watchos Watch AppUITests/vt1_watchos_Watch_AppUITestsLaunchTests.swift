@@ -1,13 +1,13 @@
 //
-//  vt1UITestsLaunchTests.swift
-//  vt1UITests
+//  vt1_watchos_Watch_AppUITestsLaunchTests.swift
+//  vt1_watchos Watch AppUITests
 //
-//  Created by Julian Visser on 16.10.2023.
+//  Created by Julian Visser on 18.10.2023.
 //
 
 import XCTest
 
-final class vt1UITestsLaunchTests: XCTestCase {
+final class vt1_watchos_Watch_AppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
