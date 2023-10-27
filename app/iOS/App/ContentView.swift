@@ -6,10 +6,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
     
-    @Query private var items: [Item]
-
     @State private var text: String = ""
     
     @StateObject private var networkViewModel = NetworkViewModel()
@@ -62,5 +59,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
