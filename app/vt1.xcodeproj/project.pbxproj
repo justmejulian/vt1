@@ -26,7 +26,9 @@
 		C7327B962ADD5D8300F16E63 /* vt1_ios_Mobile_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B952ADD5D8300F16E63 /* vt1_ios_Mobile_AppTests.swift */; };
 		C7327BA02ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */; };
 		C7327BA22ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */; };
+		C778EF912AE954D90086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* ListView.swift */; };
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
+		C7C8A2C92AE948F500D7CFBF /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8A2C82AE948F500D7CFBF /* DataView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,7 +108,9 @@
 		C7327B9B2ADD5D8300F16E63 /* vt1 Mobile AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vt1 Mobile AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_ios_Mobile_App1UITests.swift; sourceTree = "<group>"; };
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C778EF902AE954D90086F894 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
+		C7C8A2C82AE948F500D7CFBF /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,11 +164,13 @@
 			children = (
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
 				C704625D2ADFCF6F009F5DD4 /* ContentView.swift */,
+				C7C8A2C82AE948F500D7CFBF /* DataView.swift */,
 				C704621D2ADEC7FD009F5DD4 /* MotionData.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
 				C70462612ADFCF70009F5DD4 /* Preview Content */,
 				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
 				C778EF922AE95A120086F894 /* RecordingData.swift */,
+				C778EF902AE954D90086F894 /* ListView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -504,7 +510,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7C8A2C92AE948F500D7CFBF /* DataView.swift in Sources */,
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
+				C778EF912AE954D90086F894 /* ListView.swift in Sources */,
 				C704628E2AE01544009F5DD4 /* MotionData.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
