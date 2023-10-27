@@ -3,6 +3,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct Main: App {
@@ -10,5 +11,6 @@ struct Main: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [RecordingData.self])
     }
 }

@@ -17,6 +17,7 @@
 		C70462792ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */; };
 		C704627C2ADFCF70009F5DD4 /* vt1 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C704628E2AE01544009F5DD4 /* MotionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704621D2ADEC7FD009F5DD4 /* MotionData.swift */; };
+		C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
 		C7327B832ADD5D8200F16E63 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B822ADD5D8200F16E63 /* App.swift */; };
 		C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B842ADD5D8200F16E63 /* ContentView.swift */; };
 		C7327B872ADD5D8200F16E63 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B862ADD5D8200F16E63 /* Item.swift */; };
@@ -25,6 +26,7 @@
 		C7327B962ADD5D8300F16E63 /* vt1_ios_Mobile_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B952ADD5D8300F16E63 /* vt1_ios_Mobile_AppTests.swift */; };
 		C7327BA02ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */; };
 		C7327BA22ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */; };
+		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +94,7 @@
 		C70462722ADFCF70009F5DD4 /* vtt1 Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtt1 Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C704628F2AE5899E009F5DD4 /* SensorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorData.swift; sourceTree = "<group>"; };
 		C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Mobile App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B822ADD5D8200F16E63 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C7327B842ADD5D8200F16E63 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -103,6 +106,7 @@
 		C7327B9B2ADD5D8300F16E63 /* vt1 Mobile AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vt1 Mobile AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_ios_Mobile_App1UITests.swift; sourceTree = "<group>"; };
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +163,8 @@
 				C704621D2ADEC7FD009F5DD4 /* MotionData.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
 				C70462612ADFCF70009F5DD4 /* Preview Content */,
+				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
+				C778EF922AE95A120086F894 /* RecordingData.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -500,7 +506,9 @@
 			files = (
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
 				C704628E2AE01544009F5DD4 /* MotionData.swift in Sources */,
+				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
+				C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
