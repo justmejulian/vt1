@@ -3,58 +3,32 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
     
-    @State private var text: String = ""
-    
-    @StateObject private var networkViewModel = NetworkViewModel()
-    
-    @State private var isRequestCompleted = true
-    
     var body: some View {
-        VStack(content: {
-            Text("VT1 2023")
-                .font(.largeTitle)
-                .padding(.all)
-            VStack(content: {
-                Spacer()
-                Text("Exercise")
-                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                TextField("Squat", text: $text)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .multilineTextAlignment(.center)
-                    .padding(.all)
-                
-                Spacer()
-            })
-            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
-                .padding(.all)
-            Button(action: addItem) {
-                Text("Send current")
-                    .font(.title2)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            Spacer()
+            Spacer()
+            Spacer()
+            NavigationLink {
+                StartRecordingView()
+            } label: {
+                Label("New Recording", systemImage: "plus")
             }
-                .buttonStyle(.borderedProminent)
-                .disabled(!isRequestCompleted)
-                .padding(.all)
-            Button(action: addItem) {
-                Text("Sync")
-                    .font(.title2)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+            Spacer()
+            NavigationLink {
+                ListView()
+            } label: {
+                Label("List of Recordings", systemImage: "list.bullet")
             }
-                .buttonStyle(.bordered)
-                .padding(.all)
-        })
+            Spacer()
+            Spacer()
+            Spacer()
+        }
+        .listStyle(.plain)
     }
 
-    private func addItem() {
-        isRequestCompleted = false
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-    }
 }
 
 #Preview {
