@@ -26,6 +26,23 @@ class MotionViewModel: ObservableObject {
     @Published var acceleration = BaseData()
 
     @Published var gyroscope = BaseData()
+    
+    @Published var timeCounter = 0
+    var timer: Timer? = nil
+    
+    private func toggleTimer() {
+        if timer == nil {
+            // Start the timer
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                // Update the counter every second
+                self.timeCounter += 1
+            }
+        } else {
+            // Stop the timer
+            timer?.invalidate()
+            timer = nil
+        }
+    }
 
     init() {
     }
@@ -83,7 +100,8 @@ class MotionViewModel: ObservableObject {
         gyroscope = BaseData()
     }
     
-    func handleButton() {
+    func toggle() {
+        toggleTimer()
         if isRecording {
             stop()
         } else {

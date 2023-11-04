@@ -13,9 +13,6 @@ struct MotionView: View {
     
     @ObservedObject var motionViewModel = MotionViewModel()
     
-    @State private var timeRunning = 0
-    @State private var timer: Timer?
-    
     var body: some View {
         VStack(content: {
             DataView(title: "Accelerometer", x: motionViewModel.acceleration.x, y: motionViewModel.acceleration.y, z: motionViewModel.acceleration.z)
@@ -27,13 +24,13 @@ struct MotionView: View {
                     .frame(maxWidth: .infinity)
                     .font(.caption2)
                     .bold()
-                Text("\(timeRunning)")
+                Text("\(motionViewModel.timeCounter)")
                     .frame(maxWidth: .infinity, alignment: .center)
                 
                     .font(.caption2)
             }
             
-            Button(action:  motionViewModel.handleButton) {
+            Button(action:  motionViewModel.toggle) {
                 Text(motionViewModel.isRecording ? "Stop" : "Start")
                     .font(.title2)
             }
