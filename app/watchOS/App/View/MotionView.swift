@@ -7,10 +7,6 @@ import SwiftData
 
 struct MotionView: View {
     
-    @Environment(\.modelContext) var context
-    
-    @Query() var recordingDataList: [RecordingData]
-    
     @ObservedObject var motionViewModel = MotionViewModel()
     
     var body: some View {
