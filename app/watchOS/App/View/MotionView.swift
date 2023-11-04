@@ -11,9 +11,9 @@ struct MotionView: View {
     
     var body: some View {
         VStack(content: {
-            DataView(title: "Accelerometer", x: motionViewModel.acceleration.x, y: motionViewModel.acceleration.y, z: motionViewModel.acceleration.z)
+            DataView(title: "Accelerometer", data: motionViewModel.acceleration)
             Spacer()
-            DataView(title: "Gyroscope", x: motionViewModel.gyroscope.x, y: motionViewModel.gyroscope.y, z: motionViewModel.gyroscope.z)
+            DataView(title: "Gyroscope", data: motionViewModel.gyroscope)
             Spacer()
             HStack {
                 Text("Time:")
@@ -40,20 +40,18 @@ struct MotionView: View {
         
         var title: String
         
-        var x:Double
-        var y:Double
-        var z:Double
-        
+        var data: MotionViewModel.BaseData
+
         var body: some View {
             Text(title)
                 .font(.caption)
                 .bold()
             HStack(content: {
-                Text("X: \(x, specifier: "%.2f")")
+                Text("X: \(data.x, specifier: "%.2f")")
                     .font(.caption2)
-                Text("Y: \(y, specifier: "%.2f")")
+                Text("Y: \(data.y, specifier: "%.2f")")
                     .font(.caption2)
-                Text("Z: \(z, specifier: "%.2f")")
+                Text("Z: \(data.z, specifier: "%.2f")")
                     .font(.caption2)
             })
 

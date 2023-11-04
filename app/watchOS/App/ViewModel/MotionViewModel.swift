@@ -56,6 +56,7 @@ class MotionViewModel: ObservableObject {
 
         self.isRecording = true
 
+        // todo could use the timestamp from deviceMotion
         let date = Date()
 
         print("Adding data to context")
@@ -93,6 +94,7 @@ class MotionViewModel: ObservableObject {
     }
     
     private func stop() {
+        timeCounter = 0
         isRecording = false
         acceleration = BaseData()
         gyroscope = BaseData()
