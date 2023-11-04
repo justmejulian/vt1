@@ -21,11 +21,6 @@ class MotionViewModel: ObservableObject {
         var x = 0.0
         var y = 0.0
         var z = 0.0
-        mutating func set(x: Double, y:Double, z:Double){
-            self.x = x
-            self.y = y
-            self.z = z
-        }
     }
     
     @Published var acceleration = BaseData()
@@ -57,64 +52,33 @@ class MotionViewModel: ObservableObject {
     
     private func start(){
         let recording = RecordingData(exercise: "testSquat")
-        try? self.modelContext.save()
+        modelContext.insert(recording)
 
         self.isRecording = true
 
         let date = Date()
 
         print("Adding data to context")
-        print(motionManager.isAccelerometerAvailable)
-        print(motionManager.isGyroAvailable)
+        // todo why is gyro not availible
         print(motionManager.isDeviceMotionAvailable)
-
-        if motionManager.isAccelerometerAvailable {
-            //todo use 0.1 for display, but store more than that
-            motionManager.accelerometerUpdateInterval = 0.1
-            
-            motionManager.startAccelerometerUpdates(to: .main) { data, error in
-                if let data = data {
-                    print(data)
-                    self.acceleration.set(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z)
-                    let acceSensorData = SensorData(timestamp: date, sensor_id: MotionViewModel.accelerationSensor, x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z)
-                    print("Adding acc data to recording")
-                    recording.sensorData.append(acceSensorData)
-                    try? self.modelContext.save()
-                }
-                if let error = error {
-                    print(error)
-                }
-            }
-        } else {
-            print("Acc not availibe")
-        }
-
-        if motionManager.isGyroAvailable {
-            motionManager.gyroUpdateInterval = 0.1
-            motionManager.startGyroUpdates(to: .main) { data, error in
-                if let data = data {
-                    self.gyroscope.set(x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
-                    let gyroSensorData = SensorData(timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
-                    print("Adding gyro data to recording")
-                    recording.sensorData.append(gyroSensorData)
-                    try? self.modelContext.save()
-                }
-                if let error = error {
-                    print(error)
-                }
-            }
-        } else {
-            print("Gyro not availibe")
-        }
         
         if motionManager.isDeviceMotionAvailable {
             motionManager.deviceMotionUpdateInterval = 0.1
             motionManager.startDeviceMotionUpdates(to: .main) { data, error in
                 if let data = data {
-                    self.gyroscope.set(x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
+                    // todo is the different to normal acceleration?
+                    self.acceleration = BaseData(x: data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z)
+                    print(self.acceleration)
+                    let acceSensorData = SensorData(timestamp: date, sensor_id: MotionViewModel.accelerationSensor, x: data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z)
+
+                    self.gyroscope = BaseData(x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
                     let gyroSensorData = SensorData(timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
+
                     print("Adding gyro data to recording")
                     recording.sensorData.append(gyroSensorData)
+                    
+                    print("Adding acceleration data to recording")
+                    recording.sensorData.append(acceSensorData)
                     try? self.modelContext.save()
                 }
                 if let error = error {
@@ -132,6 +96,7 @@ class MotionViewModel: ObservableObject {
         isRecording = false
         acceleration = BaseData()
         gyroscope = BaseData()
+        motionManager.stopDeviceMotionUpdates()
     }
     
     func toggle() {

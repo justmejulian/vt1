@@ -6,7 +6,7 @@ import SwiftUI
 import SwiftData
 
 struct MotionView: View {
-    
+
     @ObservedObject var motionViewModel = MotionViewModel()
     
     var body: some View {
@@ -40,9 +40,9 @@ struct MotionView: View {
         
         var title: String
         
-        @State var x:Double
-        @State var y:Double
-        @State var z:Double
+        var x:Double
+        var y:Double
+        var z:Double
         
         var body: some View {
             Text(title)
