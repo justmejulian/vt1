@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             NavigationLink {
-                DataView()
+                MotionView()
             } label: {
                 Label("New Recording", systemImage: "plus")
             }

@@ -16,7 +16,7 @@
 		C70462772ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */; };
 		C70462792ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */; };
 		C704627C2ADFCF70009F5DD4 /* vt1 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C704628E2AE01544009F5DD4 /* MotionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704621D2ADEC7FD009F5DD4 /* MotionData.swift */; };
+		C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */; };
 		C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
 		C7327B832ADD5D8200F16E63 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B822ADD5D8200F16E63 /* App.swift */; };
 		C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B842ADD5D8200F16E63 /* ContentView.swift */; };
@@ -29,7 +29,7 @@
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* ListView.swift */; };
 		C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF942AEC44BD0086F894 /* StartRecordingView.swift */; };
-		C7C8A2C92AE948F500D7CFBF /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8A2C82AE948F500D7CFBF /* DataView.swift */; };
+		C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8A2C82AE948F500D7CFBF /* MotionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +85,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C704621D2ADEC7FD009F5DD4 /* MotionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionData.swift; sourceTree = "<group>"; };
+		C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkViewModel.swift; sourceTree = "<group>"; };
 		C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C704625B2ADFCF6F009F5DD4 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -112,7 +112,7 @@
 		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
 		C778EF962AEC45CB0086F894 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
-		C7C8A2C82AE948F500D7CFBF /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
+		C7C8A2C82AE948F500D7CFBF /* MotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,15 +164,12 @@
 		C704625A2ADFCF6F009F5DD4 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				C73A2C3D2AF296FE009C046B /* View */,
+				C73A2C3C2AF296F5009C046B /* ViewModel */,
+				C73A2C3B2AF296EC009C046B /* Model */,
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
-				C704625D2ADFCF6F009F5DD4 /* ContentView.swift */,
-				C7C8A2C82AE948F500D7CFBF /* DataView.swift */,
-				C704621D2ADEC7FD009F5DD4 /* MotionData.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
 				C70462612ADFCF70009F5DD4 /* Preview Content */,
-				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
-				C778EF922AE95A120086F894 /* RecordingData.swift */,
-				C778EF902AE954D90086F894 /* ListView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -289,6 +286,33 @@
 				C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */,
 			);
 			path = UITests;
+			sourceTree = "<group>";
+		};
+		C73A2C3B2AF296EC009C046B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
+				C778EF922AE95A120086F894 /* RecordingData.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C73A2C3C2AF296F5009C046B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		C73A2C3D2AF296FE009C046B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C704625D2ADFCF6F009F5DD4 /* ContentView.swift */,
+				C7C8A2C82AE948F500D7CFBF /* MotionView.swift */,
+				C778EF902AE954D90086F894 /* ListView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -513,10 +537,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7C8A2C92AE948F500D7CFBF /* DataView.swift in Sources */,
+				C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */,
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
 				C778EF912AE954D90086F894 /* ListView.swift in Sources */,
-				C704628E2AE01544009F5DD4 /* MotionData.swift in Sources */,
+				C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
 				C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */,

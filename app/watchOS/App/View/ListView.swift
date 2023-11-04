@@ -12,6 +12,7 @@ import Foundation
 struct ListView: View {
     @Query() var recordingDataList: [RecordingData]
     
+    
     var body: some View {
         List(recordingDataList) { recordingData in
             HStack{
@@ -19,9 +20,13 @@ struct ListView: View {
                     Text(String(recordingData.exercise))
                         .font(.caption)
                         .bold()
-                    Text(String(recordingData.sensorData[0].timestamp.ISO8601Format())).font(.footnote)
+                    if recordingData.sensorData.isEmpty {
+                        Text("Oops, No sensordata").font(.footnote)
+                    } else {
+                        Text(String(recordingData.sensorData[0].timestamp.ISO8601Format())).font(.footnote)
+                    }
                 }
-                
+                Spacer()
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 10, weight: .light))
             }
