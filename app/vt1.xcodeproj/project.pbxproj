@@ -25,6 +25,8 @@
 		C7327B962ADD5D8300F16E63 /* vt1_ios_Mobile_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B952ADD5D8300F16E63 /* vt1_ios_Mobile_AppTests.swift */; };
 		C7327BA02ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */; };
 		C7327BA22ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */; };
+		C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
+		C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
 		C778EF912AE954D90086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* ListView.swift */; };
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* ListView.swift */; };
@@ -108,6 +110,7 @@
 		C7327B9B2ADD5D8300F16E63 /* vt1 Mobile AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vt1 Mobile AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_ios_Mobile_App1UITests.swift; sourceTree = "<group>"; };
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		C778EF902AE954D90086F894 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
@@ -222,6 +225,7 @@
 		C704628D2ADFD3F3009F5DD4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -539,6 +543,7 @@
 			files = (
 				C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */,
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
+				C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C778EF912AE954D90086F894 /* ListView.swift in Sources */,
 				C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
@@ -568,6 +573,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */,
 				C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,

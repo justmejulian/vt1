@@ -10,6 +10,8 @@ class MotionViewModel: ObservableObject {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
     
+    private let connectivityManager = ConnectivityManager()
+    
     private static let accelerationSensor = "f1e8e57a-b350-4450-9d5a-4fc13410afcc"
     private static let gyroscopeSensor = "c8ddbb1d-7395-4892-bc5e-30923b7c0de4"
     
@@ -91,6 +93,10 @@ class MotionViewModel: ObservableObject {
             print("Device Motion is not Available")
         }
 
+    }
+
+    func sendMessageToiPhone() {
+        connectivityManager.sendMessage()
     }
     
     private func stop() {

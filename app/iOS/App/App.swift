@@ -7,6 +7,7 @@ import SwiftData
 
 @main
 struct Main: App {
+    let connectivityManager = ConnectivityManager()
 
     var body: some Scene {
         WindowGroup {

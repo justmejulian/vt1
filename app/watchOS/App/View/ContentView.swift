@@ -5,8 +5,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State var started = false
+        
+    @ObservedObject var motionViewModel = MotionViewModel()
     
     var body: some View {
         NavigationStack {
@@ -21,11 +21,10 @@ struct ContentView: View {
                 Label("List of Recordings", systemImage: "list.bullet")
             }
             Spacer()
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+            Button(action: motionViewModel.sendMessageToiPhone, label: {
                 // todo spin inco when syncing
                 Label("Sync", systemImage: "arrow.triangle.2.circlepath")
             })
-                .background(started ? Color.red : Color.blue)
                 .clipShape(Capsule())
                 .padding(.all)
         }
