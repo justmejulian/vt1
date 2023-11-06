@@ -27,6 +27,8 @@
 		C7327BA22ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */; };
 		C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
 		C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
+		C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
+		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF912AE954D90086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* ListView.swift */; };
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* ListView.swift */; };
@@ -169,7 +171,6 @@
 			children = (
 				C73A2C3D2AF296FE009C046B /* View */,
 				C73A2C3C2AF296F5009C046B /* ViewModel */,
-				C73A2C3B2AF296EC009C046B /* Model */,
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
 				C70462612ADFCF70009F5DD4 /* Preview Content */,
@@ -225,6 +226,7 @@
 		C704628D2ADFD3F3009F5DD4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C73A2C3B2AF296EC009C046B /* Model */,
 				C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */,
 			);
 			path = Shared;
@@ -573,10 +575,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */,
 				C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,
+				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
 				C70462222ADEDB67009F5DD4 /* NetworkViewModel.swift in Sources */,
 			);
