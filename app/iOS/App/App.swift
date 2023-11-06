@@ -13,6 +13,5 @@ struct Main: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [RecordingData.self])
     }
 }

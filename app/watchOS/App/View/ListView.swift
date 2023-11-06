@@ -10,10 +10,13 @@ import SwiftData
 import Foundation
 
 struct ListView: View {
-    @Query() var recordingDataList: [RecordingData]
-    
-    
+    @ObservationIgnored
+    private let dataSource = DataSource.shared
+
     var body: some View {
+
+        let recordingDataList = dataSource.fetchRecordings()
+
         List(recordingDataList) { recordingData in
             HStack{
                 VStack{

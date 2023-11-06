@@ -25,8 +25,7 @@ struct ContentView: View {
                 // todo spin inco when syncing
                 Label("Sync", systemImage: "arrow.triangle.2.circlepath")
             })
-                .clipShape(Capsule())
-                .padding(.all)
+             .buttonStyle(.borderedProminent)
         }
         .listStyle(.plain)
         .navigationTitle("Color")

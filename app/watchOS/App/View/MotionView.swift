@@ -8,7 +8,7 @@ import SwiftData
 struct MotionView: View {
 
     @ObservedObject var motionViewModel = MotionViewModel()
-    
+   
     var body: some View {
         VStack(content: {
             DataView(title: "Accelerometer", data: motionViewModel.acceleration)

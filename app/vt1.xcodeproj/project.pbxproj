@@ -18,6 +18,9 @@
 		C704627C2ADFCF70009F5DD4 /* vt1 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */; };
 		C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
+		C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
+		C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
+		C72BDCDE2AF9275400A3A563 /* SensorDataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDD2AF9275400A3A563 /* SensorDataListView.swift */; };
 		C7327B832ADD5D8200F16E63 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B822ADD5D8200F16E63 /* App.swift */; };
 		C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B842ADD5D8200F16E63 /* ContentView.swift */; };
 		C7327B892ADD5D8300F16E63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7327B882ADD5D8300F16E63 /* Assets.xcassets */; };
@@ -31,7 +34,7 @@
 		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF912AE954D90086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* ListView.swift */; };
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
-		C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* ListView.swift */; };
+		C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* RecordingListView.swift */; };
 		C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF942AEC44BD0086F894 /* StartRecordingView.swift */; };
 		C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8A2C82AE948F500D7CFBF /* MotionView.swift */; };
 /* End PBXBuildFile section */
@@ -102,6 +105,8 @@
 		C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C704628F2AE5899E009F5DD4 /* SensorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorData.swift; sourceTree = "<group>"; };
+		C72BDCDA2AF908DE00A3A563 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		C72BDCDD2AF9275400A3A563 /* SensorDataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDataListView.swift; sourceTree = "<group>"; };
 		C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Mobile App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B822ADD5D8200F16E63 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C7327B842ADD5D8200F16E63 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -116,7 +121,7 @@
 		C778EF902AE954D90086F894 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
-		C778EF962AEC45CB0086F894 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		C778EF962AEC45CB0086F894 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
 		C7C8A2C82AE948F500D7CFBF /* MotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -169,6 +174,7 @@
 		C704625A2ADFCF6F009F5DD4 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				C72BDCD52AF8F73700A3A563 /* Model */,
 				C73A2C3D2AF296FE009C046B /* View */,
 				C73A2C3C2AF296F5009C046B /* ViewModel */,
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
@@ -226,10 +232,52 @@
 		C704628D2ADFD3F3009F5DD4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C72BDCD92AF908C800A3A563 /* Util */,
 				C73A2C3B2AF296EC009C046B /* Model */,
-				C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		C72BDCD52AF8F73700A3A563 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C72BDCD62AF8F74200A3A563 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C72BDCD72AF8F74800A3A563 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C778EF942AEC44BD0086F894 /* StartRecordingView.swift */,
+				C778EF962AEC45CB0086F894 /* RecordingListView.swift */,
+				C72BDCDD2AF9275400A3A563 /* SensorDataListView.swift */,
+				C7327B842ADD5D8200F16E63 /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C72BDCD82AF8F74E00A3A563 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		C72BDCD92AF908C800A3A563 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */,
+				C72BDCDA2AF908DE00A3A563 /* DataSource.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		C7327B762ADD5D8200F16E63 = {
@@ -258,11 +306,10 @@
 		C7327B812ADD5D8200F16E63 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				C778EF942AEC44BD0086F894 /* StartRecordingView.swift */,
-				C778EF962AEC45CB0086F894 /* ListView.swift */,
+				C72BDCD82AF8F74E00A3A563 /* ViewModel */,
+				C72BDCD72AF8F74800A3A563 /* View */,
+				C72BDCD62AF8F74200A3A563 /* Model */,
 				C7327B822ADD5D8200F16E63 /* App.swift */,
-				C7327B842ADD5D8200F16E63 /* ContentView.swift */,
-				C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */,
 				C7327B882ADD5D8300F16E63 /* Assets.xcassets */,
 				C7327B8A2ADD5D8300F16E63 /* Preview Content */,
 			);
@@ -546,6 +593,7 @@
 				C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */,
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
 				C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
+				C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF912AE954D90086F894 /* ListView.swift in Sources */,
 				C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
@@ -577,8 +625,10 @@
 			files = (
 				C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
-				C778EF982AEC4E6F0086F894 /* ListView.swift in Sources */,
+				C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */,
+				C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */,
+				C72BDCDE2AF9275400A3A563 /* SensorDataListView.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,
 				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,

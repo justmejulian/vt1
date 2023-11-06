@@ -18,7 +18,7 @@ struct ContentView: View {
             }
             Spacer()
             NavigationLink {
-                ListView()
+                RecordingListView()
             } label: {
                 Label("List of Recordings", systemImage: "list.bullet")
             }

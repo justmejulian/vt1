@@ -10,16 +10,13 @@ import Combine
 import WatchConnectivity
 
 class ConnectivityManager: NSObject, WCSessionDelegate {
-    // private var modelContainer: ModelContainer
-    // private var modelContext: ModelContext
-
-    static let shared = ConnectivityManager()
-    
     private var session: WCSession = .default
     
-    override init() {
-        // self.modelContainer = try! SwiftData.ModelContainer(for: RecordingData.self)
-        // self.modelContext = SwiftData.ModelContext(self.modelContainer)
+    @ObservationIgnored
+    private let dataSource: DataSource
+
+    init(dataSource: DataSource = DataSource.shared) {
+        self.dataSource = dataSource
 
         super.init()
 
@@ -46,13 +43,16 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
 
     func sendRecordings(recordings: [RecordingData])  {
         print("sending message")
-        let data = try! JSONEncoder().encode(recordings)
-        print(data)
-        self.session.sendMessageData(data, replyHandler: { replyData in
-            print("reply", replyData)
-        }, errorHandler: { (error) in
-            print("error sending message", error.localizedDescription)
-        })
+        recordings.forEach{ recording in
+            let data = try! JSONEncoder().encode(recording)
+
+            self.session.sendMessageData(data, replyHandler: { replyData in
+                print("reply", replyData)
+                // todo set these as synced
+            }, errorHandler: { (error) in
+                print("error sending message", error.localizedDescription)
+            })
+        }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
@@ -64,7 +64,14 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveMessageData data: Data, replyHandler: @escaping (Data) -> Void) {
         print("calling did receivie message")
-        print(data)
+        let recording = try! JSONDecoder().decode(RecordingData.self, from: data)
+
+        print(recording.exercise)
+        // self.dataSource.clear()
+        self.dataSource.appendRecoring(recording: recording)
+        
+        print("sending reply")
+        replyHandler(data)
     }
 
 #if os(iOS)

@@ -7,9 +7,6 @@ import CoreMotion
 import SwiftData
 
 class MotionViewModel: ObservableObject {
-    private let modelContainer: ModelContainer
-    private let modelContext: ModelContext
-    
     private let connectivityManager = ConnectivityManager()
     
     private static let accelerationSensor = "f1e8e57a-b350-4450-9d5a-4fc13410afcc"
@@ -17,6 +14,9 @@ class MotionViewModel: ObservableObject {
     
     @Published private(set) var isRecording = false
     
+    @ObservationIgnored
+    private let dataSource: DataSource
+
     private let motionManager = CMMotionManager()
     
     struct BaseData {
@@ -46,15 +46,14 @@ class MotionViewModel: ObservableObject {
         }
     }
 
-    init() {
-        // todo do I need to catch?
-        self.modelContainer = try! SwiftData.ModelContainer(for: RecordingData.self)
-        self.modelContext = SwiftData.ModelContext(self.modelContainer)
+    init(dataSource: DataSource = DataSource.shared) {
+        self.dataSource = dataSource
     }
-    
+
     private func start(){
         let recording = RecordingData(exercise: "testSquat")
-        modelContext.insert(recording)
+        
+        dataSource.appendRecoring(recording: recording)
 
         self.isRecording = true
 
@@ -82,7 +81,6 @@ class MotionViewModel: ObservableObject {
                     
                     print("Adding acceleration data to recording")
                     recording.sensorData.append(acceSensorData)
-                    try? self.modelContext.save()
                 }
                 if let error = error {
                     print(error)
@@ -92,11 +90,10 @@ class MotionViewModel: ObservableObject {
         } else {
             print("Device Motion is not Available")
         }
-
     }
-
+    
     func sendMessageToiPhone() {
-        let recordings = try! self.modelContext.fetch(FetchDescriptor<RecordingData>())
+        let recordings = dataSource.fetchRecordings()
         connectivityManager.sendRecordings(recordings: recordings)
     }
     
