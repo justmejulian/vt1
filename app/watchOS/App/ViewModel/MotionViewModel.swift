@@ -96,7 +96,8 @@ class MotionViewModel: ObservableObject {
     }
 
     func sendMessageToiPhone() {
-        connectivityManager.sendMessage()
+        let recordings = try! self.modelContext.fetch(FetchDescriptor<RecordingData>())
+        connectivityManager.sendRecordings(recordings: recordings)
     }
     
     private func stop() {
