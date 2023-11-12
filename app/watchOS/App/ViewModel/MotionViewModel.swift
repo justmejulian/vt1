@@ -8,23 +8,28 @@ import SwiftData
 
 class MotionViewModel: ObservableObject {
     private let connectivityManager = ConnectivityManager()
-    
-    private static let accelerationSensor = "f1e8e57a-b350-4450-9d5a-4fc13410afcc"
-    private static let gyroscopeSensor = "c8ddbb1d-7395-4892-bc5e-30923b7c0de4"
-    
+
+
+    // todo move to constants file
+    // private static let accelerationSensor = "f1e8e57a-b350-4450-9d5a-4fc13410afcc"
+    // private static let gyroscopeSensor = "c8ddbb1d-7395-4892-bc5e-30923b7c0de4"
+    private static let accelerationSensor = "Acceleration"
+    private static let gyroscopeSensor = "Gyroscope"
+
     @Published private(set) var isRecording = false
-    
+
     @ObservationIgnored
     private let dataSource: DataSource
 
+    // Use batchedSensor
     private let motionManager = CMMotionManager()
-    
+
     struct BaseData {
         var x = 0.0
         var y = 0.0
         var z = 0.0
     }
-    
+
     @Published var acceleration = BaseData()
 
     @Published var gyroscope = BaseData()
@@ -51,36 +56,34 @@ class MotionViewModel: ObservableObject {
     }
 
     private func start(){
-        let recording = RecordingData(exercise: "testSquat")
-        
-        dataSource.appendRecoring(recording: recording)
+        let startRecording = Date()
+        let recording = RecordingData(exercise: "testSquat", startTimestamp: startRecording)
+        dataSource.appendRecoring(recording)
+        self.sendRecording(recording)
 
         self.isRecording = true
 
-        // todo could use the timestamp from deviceMotion
-        let date = Date()
-
         print("Adding data to context")
-        // todo why is gyro not availible
-        print(motionManager.isDeviceMotionAvailable)
-        
         if motionManager.isDeviceMotionAvailable {
+            // todo set to max
             motionManager.deviceMotionUpdateInterval = 0.1
+
             motionManager.startDeviceMotionUpdates(to: .main) { data, error in
                 if let data = data {
-                    // todo is the different to normal acceleration?
+                    let date = Date()
                     self.acceleration = BaseData(x: data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z)
-                    print(self.acceleration)
-                    let acceSensorData = SensorData(timestamp: date, sensor_id: MotionViewModel.accelerationSensor, x: data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z)
+                    let acceSensorData = SensorData(recordingStart: startRecording, timestamp: date, sensor_id: MotionViewModel.accelerationSensor, x: data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z)
 
                     self.gyroscope = BaseData(x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
-                    let gyroSensorData = SensorData(timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
+                    let gyroSensorData = SensorData(recordingStart: startRecording, timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
 
-                    print("Adding gyro data to recording")
-                    recording.sensorData.append(gyroSensorData)
-                    
-                    print("Adding acceleration data to recording")
-                    recording.sensorData.append(acceSensorData)
+                    //print("Adding gyro data to recording")
+                    self.dataSource.appendSensorData(gyroSensorData)
+                    self.sendSensorData(gyroSensorData)
+
+                    //print("Adding acceleration data to recording")
+                    self.dataSource.appendSensorData(acceSensorData)
+                    self.sendSensorData(acceSensorData)
                 }
                 if let error = error {
                     print(error)
@@ -91,12 +94,19 @@ class MotionViewModel: ObservableObject {
             print("Device Motion is not Available")
         }
     }
-    
-    func sendMessageToiPhone() {
-        let recordings = dataSource.fetchRecordings()
-        connectivityManager.sendRecordings(recordings: recordings)
+
+    func sendSensorData(_ data: SensorData){
+        self.connectivityManager.sendSensorData(sensorData: data)
     }
-    
+
+    func sendRecording(_ data: RecordingData){
+        self.connectivityManager.sendRecording(recording: data)
+    }
+
+    func sync() {
+        print("syncing")
+    }
+
     private func stop() {
         timeCounter = 0
         isRecording = false

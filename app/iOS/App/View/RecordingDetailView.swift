@@ -16,6 +16,8 @@ struct SensorDataListView: View {
                 VStack{
                     Text(String(sensorData.sensor_id))
                         .font(.caption)
+                    Text(String(sensorData.timestamp.timeIntervalSince1970))
+                        .font(.caption2)
                         .bold()
                     HStack(content: {
                         Text("X: \(sensorData.x, specifier: "%.2f")")

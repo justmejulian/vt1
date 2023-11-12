@@ -7,6 +7,7 @@ import Foundation
 class NetworkViewModel: ObservableObject {
     // todo remove any
     func postDataToAPI(data: [String: Any], completion: @escaping (Error?) -> Void) {
+        // todo device name
         guard let url = URL(string: "http://127.0.0.1:8080/devices/30D1E9CF-4773-4EA6-8DCE-D9B16ADB47C6/data") else {
             completion(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
             return
