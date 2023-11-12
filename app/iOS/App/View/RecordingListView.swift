@@ -12,36 +12,35 @@ struct RecordingListView: View {
     private let dataSource = DataSource.shared
 
     var body: some View {
-        let recordingDataList = dataSource.fetchRecordings()
+        let recordingDataList = dataSource.fetchRecordingArray()
 
-        NavigationStack {
-            List(recordingDataList) { recordingData in
-                NavigationLink {
-                    SensorDataListView(sensorDataList: recordingData.sensorData)
-                } label: {
-                    HStack{
-                        VStack{
-                            Text(String(recordingData.exercise))
-                                .font(.caption)
-                                .bold()
-                            if recordingData.sensorData.isEmpty {
-                                Text("Oops, No sensordata").font(.footnote)
-                            } else {
-                                Text(String(recordingData.sensorData[0].timestamp.ISO8601Format())).font(.footnote)
+        if recordingDataList.isEmpty {
+            VStack{
+                Spacer()
+                Text("Looks like there's no data yet...")
+                Spacer()
+            }
+        } else {
+            ScrollView {
+                NavigationStack {
+                    List(recordingDataList) { recordingData in
+                        NavigationLink {
+                            RecordingDetailView(recording: recordingData)
+                        } label: {
+                            VStack{
+                                Text(String(recordingData.exercise))
+                                    .font(.caption)
+                                    .bold()
+                                Text(recordingData.startTimestamp.ISO8601Format())
+                                    .font(.caption2)
+                                    .bold()
+                            }
                         }
-                        }
-                        Spacer()
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 10, weight: .light))
-                }
+                    }
+                        .listStyle(.automatic)
+                        .padding(.horizontal, 20)
                 }
             }
-            .listStyle(.automatic)
-            .overlay(Group {
-                if recordingDataList.isEmpty {
-                    Text("Oops, looks like there's no data...")
-                }
-            })
         }
     }
 }

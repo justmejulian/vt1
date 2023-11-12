@@ -36,7 +36,3 @@ struct RecordingListView: View {
             })
     }
 }
-
-#Preview {
-    ListView()
-}

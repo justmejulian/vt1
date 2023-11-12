@@ -16,12 +16,12 @@ struct ContentView: View {
                 Label("New Recording", systemImage: "plus")
             }
             NavigationLink {
-                ListView()
+                RecordingListView()
             } label: {
                 Label("List of Recordings", systemImage: "list.bullet")
             }
             Spacer()
-            Button(action: motionViewModel.sendMessageToiPhone, label: {
+            Button(action: motionViewModel.sync, label: {
                 // todo spin inco when syncing
                 Label("Sync", systemImage: "arrow.triangle.2.circlepath")
             })

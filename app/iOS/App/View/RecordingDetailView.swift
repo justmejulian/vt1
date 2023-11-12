@@ -7,37 +7,29 @@ import SwiftData
 
 import Foundation
 
-struct SensorDataListView: View {
-    let sensorDataList: [SensorData]
+struct RecordingDetailView: View {
+    @ObservationIgnored
+    private let dataSource = DataSource.shared
+
+    var recording: RecordingData
 
     var body: some View {
-        List(sensorDataList) { sensorData in
-            HStack{
-                VStack{
-                    Text(String(sensorData.sensor_id))
-                        .font(.caption)
-                    Text(String(sensorData.timestamp.timeIntervalSince1970))
-                        .font(.caption2)
-                        .bold()
-                    HStack(content: {
-                        Text("X: \(sensorData.x, specifier: "%.2f")")
-                            .font(.caption2)
-                        Text("Y: \(sensorData.y, specifier: "%.2f")")
-                            .font(.caption2)
-                        Text("Z: \(sensorData.z, specifier: "%.2f")")
-                            .font(.caption2)
-                    })
-                }
-                Spacer()
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 10, weight: .light))
-            }
+
+        let sensorDataList = dataSource.fetchSensorDataArray(timestamp: recording.startTimestamp)
+        // todo filter for different sensors
+        VStack{
+            Text("Recording: ")
+                .font(.title)
+                .bold()
+            Text(recording.startTimestamp.ISO8601Format())
+                .font(.title)
+
+            Spacer()
+
+            Text("# of datapoints: " + String(sensorDataList.count))
+                .font(.title2)
+
+            Spacer()
         }
-        .listStyle(.automatic)
-        .overlay(Group {
-            if sensorDataList.isEmpty {
-                Text("Oops, looks like there's no data...")
-            }
-        })
     }
 }

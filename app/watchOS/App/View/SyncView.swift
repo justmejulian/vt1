@@ -6,3 +6,17 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct SyncView: View {
+    
+    // todo delete all in synced
+    
+    var body: some View {
+        VStack{
+            Text("Sync")
+                .font(.title)
+        }
+    }
+
+}

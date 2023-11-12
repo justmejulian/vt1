@@ -8,25 +8,36 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
+            Text("Recordings:")
+                .font(.title)
+                .bold()
+                .padding(.top, 32)
+
             Spacer()
+
+            RecordingListView()
+
             Spacer()
-            Spacer()
-            NavigationLink {
-                StartRecordingView()
-            } label: {
-                Label("New Recording", systemImage: "plus")
-            }
-            Spacer()
-            NavigationLink {
-                RecordingListView()
-            } label: {
-                Label("List of Recordings", systemImage: "list.bullet")
-            }
-            Spacer()
-            Spacer()
-            Spacer()
+
+            HStack {
+                NavigationLink {
+                    StartRecordingView()
+                } label: {
+                    Label("New Recording", systemImage: "plus")
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
+                }
+                    .buttonStyle(BorderedProminentButtonStyle())
+
+                NavigationLink {
+                } label: {
+                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
+                }
+                    .buttonStyle(BorderedButtonStyle())
+            }.padding(.bottom, 32).padding(.horizontal, 20)
         }
-        .listStyle(.plain)
     }
 
 }
