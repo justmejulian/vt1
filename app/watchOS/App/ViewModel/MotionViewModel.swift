@@ -58,7 +58,7 @@ class MotionViewModel: ObservableObject {
     private func start(){
         let startRecording = Date()
         let recording = RecordingData(exercise: "testSquat", startTimestamp: startRecording)
-        dataSource.appendRecoring(recording)
+        dataSource.appendRecording(recording)
         self.sendRecording(recording)
 
         self.isRecording = true

@@ -80,7 +80,7 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
                 return
             }
             print("recived recording", recording)
-            self.dataSource.appendRecoring(recording)
+            self.dataSource.appendRecording(recording)
             replyHandler(["sucess": true])
         }
 

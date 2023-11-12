@@ -6,13 +6,11 @@ import Foundation
 import SwiftUI
 
 struct StartRecordingView: View {
-    
+
     @State private var text: String = ""
-    
     @StateObject private var networkViewModel = NetworkViewModel()
-    
     @State private var isRequestCompleted = true
-    
+
     var body: some View {
         VStack(content: {
             Text("VT1 2023")
@@ -26,7 +24,7 @@ struct StartRecordingView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .padding(.all)
-                
+
                 Spacer()
             })
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)

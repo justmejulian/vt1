@@ -7,11 +7,15 @@ import SwiftData
 
 @main
 struct Main: App {
+
+    let modelContainer = DataSource.shared.getModelContainer()
+
     let connectivityManager = ConnectivityManager()
+
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-        }
+        }.modelContainer(modelContainer)
     }
 }

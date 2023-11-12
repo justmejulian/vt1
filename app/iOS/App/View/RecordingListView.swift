@@ -8,38 +8,37 @@ import SwiftData
 import Foundation
 
 struct RecordingListView: View {
-    @ObservationIgnored
-    private let dataSource = DataSource.shared
+    @Environment(\.modelContext) var modelContext
+    @Query var recordings: [RecordingData]
+
+    init() {
+        print(recordings)
+    }
 
     var body: some View {
-        let recordingDataList = dataSource.fetchRecordingArray()
-
-        if recordingDataList.isEmpty {
+        if recordings.isEmpty {
             VStack{
                 Spacer()
                 Text("Looks like there's no data yet...")
                 Spacer()
             }
         } else {
-            ScrollView {
-                NavigationStack {
-                    List(recordingDataList) { recordingData in
-                        NavigationLink {
-                            RecordingDetailView(recording: recordingData)
-                        } label: {
-                            VStack{
-                                Text(String(recordingData.exercise))
-                                    .font(.caption)
-                                    .bold()
-                                Text(recordingData.startTimestamp.ISO8601Format())
-                                    .font(.caption2)
-                                    .bold()
-                            }
+            NavigationStack {
+                List(recordings) { recordingData in
+                    NavigationLink {
+                        RecordingDetailView(recording: recordingData)
+                    } label: {
+                        VStack{
+                            Text(String(recordingData.exercise))
+                                .font(.caption)
+                                .bold()
+                            Text(recordingData.startTimestamp.ISO8601Format())
+                                .font(.caption2)
+                                .bold()
                         }
                     }
-                        .listStyle(.automatic)
-                        .padding(.horizontal, 20)
                 }
+                    .listStyle(.automatic)
             }
         }
     }

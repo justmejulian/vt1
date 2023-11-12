@@ -27,13 +27,21 @@ final class DataSource {
 
     @MainActor
     private init() {
-        self.modelContainer = try! ModelContainer(for: RecordingData.self, SensorData.self, SyncedData.self)
-        self.modelContext = modelContainer.mainContext
+        do {
+            self.modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self, SyncedData.self)
+            self.modelContext = modelContainer.mainContext
+        } catch {
+            fatalError(error.localizedDescription)
+        }
 
         syncedData = SyncedData()
         self.modelContext.insert(syncedData)
-        self.clear()
     }
+
+    func getModelContainer() -> ModelContainer {
+        return self.modelContainer
+    }
+
     private func appendData<T>(_ data: T) where T : PersistentModel{
         modelContext.insert(data)
         do {
@@ -54,11 +62,13 @@ final class DataSource {
     func addSynced<T>(_ data: T) where T: PersistentModel {
         if let sensorData = data as? SensorData {
             self.syncedData.sensorData.append(sensorData)
+            // todo try and save?
             return
         }
 
         if let recordingData = data as? RecordingData {
             self.syncedData.recoridngs.append(recordingData)
+            // todo try and save?
             return
         }
         print("Unkown data type in addSynced")
@@ -68,7 +78,7 @@ final class DataSource {
         appendData(sensorData)
     }
 
-    func appendRecoring(_ recording: RecordingData) {
+    func appendRecording(_ recording: RecordingData) {
         appendData(recording)
     }
 
