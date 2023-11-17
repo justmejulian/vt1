@@ -11,10 +11,7 @@ struct RecordingListView: View {
     @Environment(\.modelContext) var modelContext
     @Query var recordings: [RecordingData]
 
-    init() {
-        print(recordings)
-    }
-
+    //todo allow to delete recordings
     var body: some View {
         if recordings.isEmpty {
             VStack{

@@ -18,7 +18,7 @@ struct ContentView: View {
             NavigationLink {
                 RecordingListView()
             } label: {
-                Label("List of Recordings", systemImage: "list.bullet")
+                Label("List of Unsynced Recordings", systemImage: "list.bullet")
             }
             Spacer()
             NavigationLink {

@@ -38,8 +38,7 @@ struct SyncView: View {
             Button("Sync") {
                 syncing = true
                 motionViewModel.sync()
-                while(sensorData.count > 0 || recordings.count > 0) {
-                }
+                // todo reacte to no more data
                 syncing = false
             }
                 .buttonStyle(.borderedProminent)

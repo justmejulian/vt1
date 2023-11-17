@@ -54,6 +54,7 @@ class MotionViewModel: ObservableObject {
 
     private func start(){
         let startRecording = Date()
+        // todo exercise name, default or what comes from iphone
         let recording = RecordingData(exercise: "testSquat", startTimestamp: startRecording)
         dataSource.appendRecording(recording)
         self.sendRecording(recording)
