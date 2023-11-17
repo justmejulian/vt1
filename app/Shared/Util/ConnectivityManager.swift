@@ -14,6 +14,10 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
     @ObservationIgnored
     private let dataSource: DataSource
 
+    @MainActor
+    static let shared = ConnectivityManager()
+
+    @MainActor
     init(dataSource: DataSource = DataSource.shared) {
         self.dataSource = dataSource
 
@@ -44,12 +48,12 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
         let encodedData = try! JSONEncoder().encode(data)
 
         let context = [key: encodedData]
-        print(context)
         // do this aysnc?
         self.session.sendMessage(context, replyHandler: { replyData in
             if replyData["sucess"] != nil {
                 // todo handle this better
-                self.dataSource.addSynced(data)
+                // print("remove synced data")
+                self.dataSource.removeData(data)
                 return
             }
             print("Something went wrong sending data")
@@ -71,7 +75,6 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
     }
 
     func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
-        print("calling did receivie message", data)
         // todo test what happens when send wrong thing with recoding key
         if let endcodedRecording = data["recording"] {
             guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
@@ -79,9 +82,9 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
                 replyHandler(["error": "error decoding recording"])
                 return
             }
-            print("recived recording", recording)
             self.dataSource.appendRecording(recording)
             replyHandler(["sucess": true])
+            return
         }
 
         if let endcodedSensorData = data["sensorData"] {
@@ -90,9 +93,9 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
                 replyHandler(["error": "error decoding sensorData"])
                 return
             }
-            print("recived sensorData", sensorData)
             self.dataSource.appendSensorData(sensorData)
             replyHandler(["sucess": true])
+            return
         }
 
         replyHandler(["error": "unknown data type"])

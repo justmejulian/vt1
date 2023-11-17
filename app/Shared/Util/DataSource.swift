@@ -14,13 +14,11 @@ import SwiftData
 enum DataTypes {
     case recording(RecordingData)
     case sensorData(SensorData)
-    case syncedData(SyncedData)
 }
 
 final class DataSource {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
-    private let syncedData: SyncedData
 
     @MainActor
     static let shared = DataSource()
@@ -34,8 +32,7 @@ final class DataSource {
             fatalError(error.localizedDescription)
         }
 
-        syncedData = SyncedData()
-        self.modelContext.insert(syncedData)
+        self.clear()
     }
 
     func getModelContainer() -> ModelContainer {
@@ -59,19 +56,23 @@ final class DataSource {
         }
     }
 
-    func addSynced<T>(_ data: T) where T: PersistentModel {
-        if let sensorData = data as? SensorData {
-            self.syncedData.sensorData.append(sensorData)
-            // todo try and save?
-            return
-        }
+// func addSynced<T>(_ data: T) where T: PersistentModel {
+//        if let sensorData = data as? SensorData {
+//            self.syncedData.sensorData.append(sensorData)
+//            // todo try and save?
+//            return
+//        }
+//
+//        if let recordingData = data as? RecordingData {
+//            self.syncedData.recoridngs.append(recordingData)
+//            // todo try and save?
+//            return
+//        }
+//        print("Unkown data type in addSynced")
+//    }
 
-        if let recordingData = data as? RecordingData {
-            self.syncedData.recoridngs.append(recordingData)
-            // todo try and save?
-            return
-        }
-        print("Unkown data type in addSynced")
+    func removeData<T>(_ data: T) where T: PersistentModel {
+        modelContext.delete(data)
     }
 
     func appendSensorData(_ sensorData: SensorData) {
@@ -86,7 +87,7 @@ final class DataSource {
         fetchData()
     }
 
-    func fetchSensorDataArray(timestamp: Date?) -> [SensorData] {
+    func fetchSensorDataArray(timestamp: Date? = nil) -> [SensorData] {
         let data: [SensorData] = fetchData()
         guard timestamp != nil else {
             return data
@@ -95,11 +96,8 @@ final class DataSource {
         return data.filter { $0.recordingStart == timestamp }
     }
 
-    func removeRecording(_ recording: RecordingData) {
-        modelContext.delete(recording)
-    }
-
     func clear() {
+        print("clearing all data")
         do {
             try modelContext.delete(model: RecordingData.self)
         } catch {

@@ -18,17 +18,20 @@ struct RecordingDetailView: View {
         let sensorDataList = dataSource.fetchSensorDataArray(timestamp: recording.startTimestamp)
         // todo filter for different sensors
         VStack{
+            Spacer()
+            
             Text("Recording: ")
                 .font(.title)
                 .bold()
             Text(recording.startTimestamp.ISO8601Format())
-                .font(.title)
-
+                .font(.title2)
+            
             Spacer()
 
             Text("# of datapoints: " + String(sensorDataList.count))
                 .font(.title2)
 
+            Spacer()
             Spacer()
         }
     }

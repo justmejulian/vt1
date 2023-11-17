@@ -7,15 +7,43 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 struct SyncView: View {
-    
-    // todo delete all in synced
-    
+    @Environment(\.modelContext) var modelContext
+    @Query var recordings: [RecordingData]
+    @Query var sensorData: [SensorData]
+
+
+    @ObservationIgnored
+    private let dataSource = DataSource.shared
+
+    @ObservationIgnored
+    private let connectivityManager = ConnectivityManager.shared
+
+    @ObservedObject var motionViewModel = MotionViewModel()
+
+    @State var syncing = false
+
     var body: some View {
         VStack{
             Text("Sync")
                 .font(.title)
+            Spacer()
+            Text("# unsynced Recordings: \(recordings.count)")
+                .font(.caption2)
+            Text("# unsynced SensorData: \(sensorData.count)")
+                .font(.caption2)
+            Spacer()
+            Button("Sync") {
+                syncing = true
+                motionViewModel.sync()
+                while(sensorData.count > 0 || recordings.count > 0) {
+                }
+                syncing = false
+            }
+                .buttonStyle(.borderedProminent)
+                .disabled(sensorData.count <= 0 || recordings.count <= 0 || syncing)
         }
     }
 

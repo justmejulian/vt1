@@ -7,8 +7,12 @@ import CoreMotion
 import SwiftData
 
 class MotionViewModel: ObservableObject {
-    private let connectivityManager = ConnectivityManager()
 
+    @ObservationIgnored
+    private let connectivityManager = ConnectivityManager.shared
+
+    @ObservationIgnored
+    private let dataSource = DataSource.shared
 
     // todo move to constants file
     // private static let accelerationSensor = "f1e8e57a-b350-4450-9d5a-4fc13410afcc"
@@ -17,9 +21,6 @@ class MotionViewModel: ObservableObject {
     private static let gyroscopeSensor = "Gyroscope"
 
     @Published private(set) var isRecording = false
-
-    @ObservationIgnored
-    private let dataSource: DataSource
 
     // Use batchedSensor
     private let motionManager = CMMotionManager()
@@ -31,12 +32,12 @@ class MotionViewModel: ObservableObject {
     }
 
     @Published var acceleration = BaseData()
-
     @Published var gyroscope = BaseData()
-    
+
     @Published var timeCounter = 0
+
     var timer: Timer? = nil
-    
+
     private func toggleTimer() {
         if timer == nil {
             // Start the timer
@@ -51,10 +52,6 @@ class MotionViewModel: ObservableObject {
         }
     }
 
-    init(dataSource: DataSource = DataSource.shared) {
-        self.dataSource = dataSource
-    }
-
     private func start(){
         let startRecording = Date()
         let recording = RecordingData(exercise: "testSquat", startTimestamp: startRecording)
@@ -63,7 +60,6 @@ class MotionViewModel: ObservableObject {
 
         self.isRecording = true
 
-        print("Adding data to context")
         if motionManager.isDeviceMotionAvailable {
             // todo set to max
             motionManager.deviceMotionUpdateInterval = 0.1
@@ -105,6 +101,17 @@ class MotionViewModel: ObservableObject {
 
     func sync() {
         print("syncing")
+        let sensorData = dataSource.fetchSensorDataArray()
+        let recordings = dataSource.fetchRecordingArray()
+
+        print("Syncing \(sensorData.count) SensorData and \(recordings.count) Recordings")
+        sensorData.forEach { sensorData in
+            connectivityManager.sendSensorData(sensorData: sensorData)
+        }
+        recordings.forEach { recordingData in
+            connectivityManager.sendRecording(recording: recordingData)
+        }
+        print("Finished syncing")
     }
 
     private func stop() {
@@ -114,13 +121,40 @@ class MotionViewModel: ObservableObject {
         gyroscope = BaseData()
         motionManager.stopDeviceMotionUpdates()
     }
-    
+
     func toggle() {
         toggleTimer()
+
         if isRecording {
             stop()
-        } else {
-            start()
+            sync()
+            return
         }
+
+        start()
+    }
+
+
+    func getCountOfUnsyncedData() -> Int? {
+        if isRecording {
+            print("Cannot get count of unsynced data while recording")
+            return nil
+        }
+        return getCountOfUnsyncedSensorData()! + getCountOfUnsyncedRecordingData()!
+    }
+
+    func getCountOfUnsyncedSensorData() -> Int? {
+        if isRecording {
+            print("Cannot get count of unsynced sensor data while recording")
+            return nil
+        }
+        return dataSource.fetchSensorDataArray().count
+    }
+    func getCountOfUnsyncedRecordingData() -> Int? {
+        if isRecording {
+            print("Cannot get count of unsynced recording data while recording")
+            return nil
+        }
+        return dataSource.fetchRecordingArray().count
     }
 }

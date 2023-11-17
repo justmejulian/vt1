@@ -5,9 +5,9 @@
 import SwiftUI
 
 struct ContentView: View {
-        
+
     @ObservedObject var motionViewModel = MotionViewModel()
-    
+
     var body: some View {
         NavigationStack {
             NavigationLink {
@@ -21,11 +21,11 @@ struct ContentView: View {
                 Label("List of Recordings", systemImage: "list.bullet")
             }
             Spacer()
-            Button(action: motionViewModel.sync, label: {
-                // todo spin inco when syncing
+            NavigationLink {
+                SyncView()
+            } label: {
                 Label("Sync", systemImage: "arrow.triangle.2.circlepath")
-            })
-             .buttonStyle(.borderedProminent)
+            }.buttonStyle(.borderedProminent)
         }
         .listStyle(.plain)
         .navigationTitle("Color")

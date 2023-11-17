@@ -26,7 +26,7 @@ class SensorData: Codable{
     var x: Double
     var y: Double
     var z: Double
-    
+
     init(recordingStart: Date, timestamp: Date, sensor_id: String, x: Double, y: Double, z: Double) {
         self.recordingStart = recordingStart
         self.timestamp = timestamp

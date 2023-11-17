@@ -8,7 +8,7 @@ import SwiftData
 struct MotionView: View {
 
     @ObservedObject var motionViewModel = MotionViewModel()
-   
+
     var body: some View {
         VStack(content: {
             DataView(title: "Accelerometer", data: motionViewModel.acceleration)
@@ -22,10 +22,8 @@ struct MotionView: View {
                     .bold()
                 Text("\(motionViewModel.timeCounter)")
                     .frame(maxWidth: .infinity, alignment: .center)
-                
                     .font(.caption2)
             }
-            
             Button(action:  motionViewModel.toggle) {
                 Text(motionViewModel.isRecording ? "Stop" : "Start")
                     .font(.title2)
@@ -35,11 +33,8 @@ struct MotionView: View {
                 .padding(.all)
         })
     }
-    
     struct DataView: View {
-        
         var title: String
-        
         var data: MotionViewModel.BaseData
 
         var body: some View {
