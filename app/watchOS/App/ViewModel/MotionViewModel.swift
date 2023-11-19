@@ -56,7 +56,7 @@ class MotionViewModel: NSObject, ObservableObject {
         }
     }
 
-    private func start() async{
+    private func start() {
         let startDate = Date()
         // todo exercise name, default or what comes from iphone
         let recording = RecordingData(exercise: "testSquat", startTimestamp: startDate)
@@ -87,16 +87,19 @@ class MotionViewModel: NSObject, ObservableObject {
         builder?.beginCollection(withStart: startDate) { (success, error) in
             Task {
                 do {
-                    for try await batchedData in CMBatchedSensorManager().accelerometerUpdates() {
+                    for try await batchedData in self.motionManager.accelerometerUpdates() {
+                        var values: [Value] = []
                         batchedData.forEach { data in
-                            // todo improve to send as batches
-                            self.acceleration = BaseData(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z)
-                            let date = startDate.addingTimeInterval(data.timestamp)
-                            let acceSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.accelerationSensor, x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z)
-                            //print("Adding acceleration data to recording")
-                            self.dataSource.appendSensorData(acceSensorData)
-                            self.sendSensorData(acceSensorData)
+                            values.append(Value(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z, timestamp: data.timestamp))
                         }
+                        // print("acceleration", batchedData.count)
+                        let firstValue = values.first!
+                        // todo do they all have the same timestamp?
+                        let date = startDate.addingTimeInterval(firstValue.timestamp)
+                        self.acceleration = BaseData(x: firstValue.x, y: firstValue.y, z: firstValue.z)
+                        let acceSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.accelerationSensor, values: values)
+                        self.dataSource.appendSensorData(acceSensorData)
+                        self.sendSensorData(acceSensorData)
                     }
                 } catch {
                     print(error)
@@ -105,16 +108,21 @@ class MotionViewModel: NSObject, ObservableObject {
             }
             Task {
                 do {
-                    for try await batchedData in CMBatchedSensorManager().deviceMotionUpdates() {
+                    for try await batchedData in self.motionManager.deviceMotionUpdates() {
+                        var values: [Value] = []
                         batchedData.forEach { data in
-                            // todo improve to send as batches
-                            self.gyroscope = BaseData(x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
-                            let date = startDate.addingTimeInterval(data.timestamp)
-                            let gyroSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, x: data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z)
-                            //print("Adding gyro data to recording")
-                            self.dataSource.appendSensorData(gyroSensorData)
-                            self.sendSensorData(gyroSensorData)
+                            values.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
                         }
+                        // print("gyroscope", batchedData.count)
+                        // todo catch no value
+                        let firstValue = values.first!
+                        // todo do they all have the same timestamp?
+                        let date = startDate.addingTimeInterval(firstValue.timestamp)
+                        self.gyroscope = BaseData(x: firstValue.x, y: firstValue.y, z: firstValue.z)
+                        let gyroSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, values: values)
+                        //print("Adding gyro data to recording")
+                        self.dataSource.appendSensorData(gyroSensorData)
+                        self.sendSensorData(gyroSensorData)
                     }
                 } catch {
                     print("\(error)")
@@ -174,10 +182,11 @@ class MotionViewModel: NSObject, ObservableObject {
         isRecording = false
         acceleration = BaseData()
         gyroscope = BaseData()
+        motionManager.stopAccelerometerUpdates()
         motionManager.stopDeviceMotionUpdates()
     }
 
-    func toggle() async {
+    func toggle() {
         toggleTimer()
 
         if isRecording {
@@ -186,7 +195,7 @@ class MotionViewModel: NSObject, ObservableObject {
             return
         }
 
-        await start()
+        start()
     }
 
 

@@ -24,11 +24,7 @@ struct MotionView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.caption2)
             }
-            Button(action: {
-                Task {
-                    await motionViewModel.toggle()
-                }
-            }) {
+            Button(action: motionViewModel.toggle) {
                 Text(motionViewModel.isRecording ? "Stop" : "Start")
                     .font(.title2)
             }

@@ -2,7 +2,7 @@
 //  SensorData.swift
 //  vt1 Watch App
 //
-//  Created by Julian Visser on 22.10.2023.
+//  Created by Julian Visser on 229.10.2023.
 //
 
 import Foundation
@@ -15,25 +15,20 @@ class SensorData: Codable{
         case recordingStart
         case timestamp
         case sensor_id
-        case x
-        case y
-        case z
+        case values
     }
 
     var recordingStart: Date
     var timestamp: Date
     var sensor_id: String // todo rename to camelcase
-    var x: Double
-    var y: Double
-    var z: Double
 
-    init(recordingStart: Date, timestamp: Date, sensor_id: String, x: Double, y: Double, z: Double) {
+    var values: [Value] // batch of values
+
+    init(recordingStart: Date, timestamp: Date, sensor_id: String, values: [Value]) {
         self.recordingStart = recordingStart
         self.timestamp = timestamp
         self.sensor_id = sensor_id
-        self.x = x
-        self.y = y
-        self.z = z
+        self.values = values
     }
 
     required init(from decoder: Decoder) throws {
@@ -41,9 +36,7 @@ class SensorData: Codable{
         self.recordingStart = try container.decode(Date.self, forKey: .recordingStart)
         self.timestamp = try container.decode(Date.self, forKey: .timestamp)
         self.sensor_id = try container.decode(String.self, forKey: .sensor_id)
-        self.x = try container.decode(Double.self, forKey: .x)
-        self.y = try container.decode(Double.self, forKey: .y)
-        self.z = try container.decode(Double.self, forKey: .z)
+        self.values = try container.decode([Value].self, forKey: .values)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -51,8 +44,13 @@ class SensorData: Codable{
         try container.encode(recordingStart, forKey: .recordingStart)
         try container.encode(timestamp, forKey: .timestamp)
         try container.encode(sensor_id, forKey: .sensor_id)
-        try container.encode(x, forKey: .x)
-        try container.encode(y, forKey: .y)
-        try container.encode(z, forKey: .z)
+        try container.encode(values, forKey: .values)
     }
+}
+
+struct Value: Codable {
+    var x: Double
+    var y: Double
+    var z: Double
+    var timestamp: TimeInterval
 }
