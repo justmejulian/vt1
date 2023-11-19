@@ -134,6 +134,7 @@
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
 		C778EF962AEC45CB0086F894 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
 		C7C8A2C82AE948F500D7CFBF /* MotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionView.swift; sourceTree = "<group>"; };
+		C7CA489E2B07D09D00023112 /* vt1 Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "vt1 Watch App.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +298,7 @@
 		C7327B762ADD5D8200F16E63 = {
 			isa = PBXGroup;
 			children = (
+				C7CA489E2B07D09D00023112 /* vt1 Watch App.entitlements */,
 				C704628D2ADFD3F3009F5DD4 /* Shared */,
 				C704628C2ADFD370009F5DD4 /* watchOS */,
 				C704628B2ADFD35E009F5DD4 /* iOS */,
@@ -711,13 +713,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "vt1 Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"watchOS/App/Preview Content\"";
 				DEVELOPMENT_TEAM = T73ZGJ9UTG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "vt1-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = vt1_watchos;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Reads health data for accurate motion analysis";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Writes workout into Apple Health";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Getting data from acceleroemeter";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.julianvisser.vt1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -741,13 +748,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "vt1 Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"watchOS/App/Preview Content\"";
 				DEVELOPMENT_TEAM = T73ZGJ9UTG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "vt1-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = vt1_watchos;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Reads health data for accurate motion analysis";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Writes workout into Apple Health";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Getting data from acceleroemeter";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.julianvisser.vt1;
 				LD_RUNPATH_SEARCH_PATHS = (

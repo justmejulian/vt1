@@ -76,6 +76,7 @@ final class DataSource {
     }
 
     func appendSensorData(_ sensorData: SensorData) {
+        print(sensorData.id, sensorData.recordingStart, sensorData.timestamp, sensorData.sensor_id, sensorData.x, sensorData.y, sensorData.z)
         appendData(sensorData)
     }
 

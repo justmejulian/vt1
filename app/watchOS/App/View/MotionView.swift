@@ -24,14 +24,20 @@ struct MotionView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.caption2)
             }
-            Button(action:  motionViewModel.toggle) {
+            Button(action: {
+                Task {
+                    await motionViewModel.toggle()
+                }
+            }) {
                 Text(motionViewModel.isRecording ? "Stop" : "Start")
                     .font(.title2)
             }
             .background(motionViewModel.isRecording ? Color.red : Color.blue)
                 .clipShape(Capsule())
                 .padding(.all)
-        })
+        }).onAppear {
+            motionViewModel.requestAuthorization()
+        }
     }
     struct DataView: View {
         var title: String
