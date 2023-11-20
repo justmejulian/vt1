@@ -2,6 +2,10 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
+
+    // todo maybe remove and send in chunks
+    app.routes.defaultMaxBodySize = "100mb"
+
     app.get { req async -> String in
         "Todo add list of routes"
     }
@@ -10,5 +14,9 @@ func routes(_ app: Application) throws {
         Status(status: "OK")
     }
 
-    try app.register(collection: DeviceController())
+    //try app.register(collection: DeviceController())
+    app.post("device") { req in
+        print(req)
+        return "OK"
+    }
 }
