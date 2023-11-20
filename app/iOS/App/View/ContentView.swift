@@ -30,6 +30,7 @@ struct ContentView: View {
                     .buttonStyle(BorderedProminentButtonStyle())
 
                 NavigationLink {
+                    SyncView()
                 } label: {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)

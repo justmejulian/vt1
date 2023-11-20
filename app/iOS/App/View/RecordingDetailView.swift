@@ -10,16 +10,25 @@ import Foundation
 struct RecordingDetailView: View {
     @ObservationIgnored
     private let dataSource = DataSource.shared
-
+    
     var recording: RecordingData
-
+    
     // add delete button
     // add why to change exercise type
 
-    var body: some View {
+    @Query
+    var sensorData: [SensorData]
+    
+    init(recording: RecordingData) {
+        self.recording = recording
 
-        let sensorDataList = dataSource.fetchSensorDataArray(timestamp: recording.startTimestamp)
-        let valluesCount = sensorDataList.reduce(0) { $0 + $1.values.count }
+        self._sensorData = Query(filter: #Predicate<SensorData> {
+            $0.recordingStart == recording.startTimestamp
+        })
+    }
+
+    var body: some View {
+        let valluesCount = sensorData.reduce(0) { $0 + $1.values.count }
         // todo filter for different sensors
         VStack{
             Spacer()

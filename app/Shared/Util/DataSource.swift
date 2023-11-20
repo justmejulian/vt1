@@ -26,7 +26,7 @@ final class DataSource {
     @MainActor
     private init() {
         do {
-            self.modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self, SyncedData.self)
+            self.modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self)
             self.modelContext = modelContainer.mainContext
         } catch {
             fatalError(error.localizedDescription)
@@ -101,6 +101,8 @@ final class DataSource {
         print("clearing all data")
         do {
             try modelContext.delete(model: RecordingData.self)
+            try modelContext.delete(model: SensorData.self)
+            
         } catch {
             print("Failed to clear all data.")
         }

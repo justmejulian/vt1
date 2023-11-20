@@ -44,7 +44,7 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
         }
     }
 
-    func send<T: PersistentModel>(key: String, data: T) where T:Codable {
+    func sendPresistentModel<T: PersistentModel>(key: String, data: T) where T:Codable {
         let encodedData = try! JSONEncoder().encode(data)
 
         let context = [key: encodedData]
@@ -67,11 +67,28 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
     }
 
     func sendSensorData(sensorData: SensorData) {
-        self.send(key: "sensorData", data: sensorData)
+        self.sendPresistentModel(key: "sensorData", data: sensorData)
     }
 
     func sendRecording(recording: RecordingData) {
-        self.send(key: "recording", data: recording)
+        self.sendPresistentModel(key: "recording", data: recording)
+    }
+
+    func sendStartSession(exerciseName: String) {
+        let context = ["startSession": exerciseName]
+        self.session.sendMessage(context, replyHandler: { replyData in
+            if replyData["sucess"] != nil {
+                print("sucessfully started session")
+                return
+            }
+            print("Something went wrong sending data")
+            if let error = replyData["error"] {
+                print(error)
+                return
+            }
+        }, errorHandler: { (error) in
+            print("error sending start session", exerciseName, error.localizedDescription)
+        })
     }
 
     func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
@@ -94,6 +111,12 @@ class ConnectivityManager: NSObject, WCSessionDelegate {
                 return
             }
             self.dataSource.appendSensorData(sensorData)
+            replyHandler(["sucess": true])
+            return
+        }
+
+        if let sessionData = data["startSession"] {
+            print("sessionData", sessionData)
             replyHandler(["sucess": true])
             return
         }

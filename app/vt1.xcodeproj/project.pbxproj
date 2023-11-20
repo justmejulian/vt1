@@ -21,8 +21,6 @@
 		C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
 		C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
 		C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */; };
-		C72BDCE02AFA99F600A3A563 /* SyncedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDF2AFA99F600A3A563 /* SyncedData.swift */; };
-		C72BDCE12AFA99F600A3A563 /* SyncedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDF2AFA99F600A3A563 /* SyncedData.swift */; };
 		C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE22AFD409D00A3A563 /* SyncView.swift */; };
 		C72BDCE52AFD416F00A3A563 /* RecordingDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE42AFD416F00A3A563 /* RecordingDetailModel.swift */; };
 		C72BDCE72AFD418E00A3A563 /* RecordingDetailModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */; };
@@ -38,6 +36,7 @@
 		C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
 		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */; };
+		C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7713C1A2B0B71DB001C7768 /* SyncView.swift */; };
 		C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* RecordingListView.swift */; };
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* RecordingListView.swift */; };
@@ -113,7 +112,6 @@
 		C704628F2AE5899E009F5DD4 /* SensorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorData.swift; sourceTree = "<group>"; };
 		C72BDCDA2AF908DE00A3A563 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
-		C72BDCDF2AFA99F600A3A563 /* SyncedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncedData.swift; sourceTree = "<group>"; };
 		C72BDCE22AFD409D00A3A563 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		C72BDCE42AFD416F00A3A563 /* RecordingDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailModel.swift; sourceTree = "<group>"; };
 		C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailModelView.swift; sourceTree = "<group>"; };
@@ -129,6 +127,7 @@
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListViewModel.swift; sourceTree = "<group>"; };
+		C7713C1A2B0B71DB001C7768 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		C778EF902AE954D90086F894 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
 		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
@@ -272,6 +271,7 @@
 				C778EF962AEC45CB0086F894 /* RecordingListView.swift */,
 				C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */,
 				C7327B842ADD5D8200F16E63 /* ContentView.swift */,
+				C7713C1A2B0B71DB001C7768 /* SyncView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -362,7 +362,6 @@
 			children = (
 				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
 				C778EF922AE95A120086F894 /* RecordingData.swift */,
-				C72BDCDF2AFA99F600A3A563 /* SyncedData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -608,7 +607,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C72BDCE12AFA99F600A3A563 /* SyncedData.swift in Sources */,
 				C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */,
 				C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */,
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
@@ -643,6 +641,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */,
 				C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C72BDCE52AFD416F00A3A563 /* RecordingDetailModel.swift in Sources */,
@@ -650,7 +649,6 @@
 				C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */,
 				C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */,
-				C72BDCE02AFA99F600A3A563 /* SyncedData.swift in Sources */,
 				C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,
 				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,

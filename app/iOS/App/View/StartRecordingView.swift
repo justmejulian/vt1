@@ -5,10 +5,14 @@
 import Foundation
 import SwiftUI
 
+import HealthKit
+
 struct StartRecordingView: View {
+    @ObservationIgnored
+    private let connectivityManager = ConnectivityManager.shared
 
     @State private var text: String = ""
-    @StateObject private var networkViewModel = NetworkViewModel()
+
     @State private var isRequestCompleted = true
 
     var body: some View {
@@ -19,7 +23,7 @@ struct StartRecordingView: View {
             VStack(content: {
                 Spacer()
                 Text("Exercise")
-                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    .font(.title)
                 TextField("Squat", text: $text)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
@@ -42,6 +46,7 @@ struct StartRecordingView: View {
 
     private func start() {
         isRequestCompleted = false
+        connectivityManager.sendStartSession(exerciseName: text)
     }
 }
 
