@@ -32,7 +32,8 @@ struct MotionView: View {
                 .clipShape(Capsule())
                 .padding(.all)
         }).onAppear {
-            motionViewModel.requestAuthorization()
+            // todo
+            // motionViewModel.requestAuthorization()
         }
     }
     struct DataView: View {

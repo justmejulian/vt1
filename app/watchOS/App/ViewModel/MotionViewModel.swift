@@ -12,6 +12,10 @@ class MotionViewModel: NSObject, ObservableObject {
     private let connectivityManager = ConnectivityManager.shared
 
     @ObservationIgnored
+    private let workoutManager = WorkoutManager.shared
+
+
+    @ObservationIgnored
     private let dataSource = DataSource.shared
 
     // todo move to constants file
@@ -22,13 +26,6 @@ class MotionViewModel: NSObject, ObservableObject {
 
     @Published private(set) var isRecording = false
 
-    // Use batchedSensor
-    private let motionManager = CMBatchedSensorManager()
-
-    let healthStore = HKHealthStore()
-    var session: HKWorkoutSession?
-    var builder: HKLiveWorkoutBuilder?
-
     struct BaseData {
         var x = 0.0
         var y = 0.0
@@ -37,6 +34,8 @@ class MotionViewModel: NSObject, ObservableObject {
 
     @Published var acceleration = BaseData()
     @Published var gyroscope = BaseData()
+
+    let motionManager = CMBatchedSensorManager()
 
     @Published var timeCounter = 0
 
@@ -57,99 +56,71 @@ class MotionViewModel: NSObject, ObservableObject {
     }
 
     private func start() {
-        let startDate = Date()
         // todo exercise name, default or what comes from iphone
-        let recording = RecordingData(exercise: "testSquat", startTimestamp: startDate)
-        dataSource.appendRecording(recording)
-        self.sendRecording(recording)
-        self.isRecording = true
-        guard CMBatchedSensorManager.isAccelerometerSupported && CMBatchedSensorManager.isDeviceMotionSupported else {
-            print("Error CMBatchedSensorManager nor supported, check permissions")
-            return
-        }
-        let configuration = HKWorkoutConfiguration()
-        configuration.activityType = .functionalStrengthTraining
-        configuration.locationType = .indoor
-        // Create the session and obtain the workout builder.
-        do {
-            session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
-            builder = session?.associatedWorkoutBuilder()
-        } catch {
-            // Handle any exceptions.
-            print(error)
-            return
-        }
-        session?.delegate = self
-        builder?.delegate = self
-        // Set the workout builder's data source.
-        builder?.dataSource = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: configuration)
-        session?.startActivity(with: startDate)
-        builder?.beginCollection(withStart: startDate) { (success, error) in
-            Task {
-                do {
-                    for try await batchedData in self.motionManager.accelerometerUpdates() {
-                        var values: [Value] = []
-                        batchedData.forEach { data in
-                            values.append(Value(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z, timestamp: data.timestamp))
-                        }
-                        // print("acceleration", batchedData.count)
-                        let firstValue = values.first!
-                        // todo do they all have the same timestamp?
-                        let date = startDate.addingTimeInterval(firstValue.timestamp)
-                        self.acceleration = BaseData(x: firstValue.x, y: firstValue.y, z: firstValue.z)
-                        let acceSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.accelerationSensor, values: values)
-                        self.dataSource.appendSensorData(acceSensorData)
-                        self.sendSensorData(acceSensorData)
-                    }
-                } catch {
-                    print(error)
-                    print("\(error)")
-                }
-            }
-            Task {
-                do {
-                    for try await batchedData in self.motionManager.deviceMotionUpdates() {
-                        var values: [Value] = []
-                        batchedData.forEach { data in
-                            values.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
-                        }
-                        // print("gyroscope", batchedData.count)
-                        // todo catch no value
-                        let firstValue = values.first!
-                        // todo do they all have the same timestamp?
-                        let date = startDate.addingTimeInterval(firstValue.timestamp)
-                        self.gyroscope = BaseData(x: firstValue.x, y: firstValue.y, z: firstValue.z)
-                        let gyroSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, values: values)
-                        //print("Adding gyro data to recording")
-                        self.dataSource.appendSensorData(gyroSensorData)
-                        self.sendSensorData(gyroSensorData)
-                    }
-                } catch {
-                    print("\(error)")
-                }
-            }
+        print("start recording")
+        Task {
+            try await workoutManager.startWorkout()
+            self.recordAndSendData()
+            isRecording = true
         }
     }
 
-    // Request authorization to access HealthKit.
-    func requestAuthorization() {
-        // The quantity type to write to the health store.
-        let typesToShare: Set = [
-            HKQuantityType.workoutType()
-        ]
+    // todo this function should throw
+    func recordAndSendData() {
+        print("recording and sending Data")
 
-        // The quantity types to read from the health store.
-        let typesToRead: Set = [
-            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
-            HKObjectType.activitySummaryType()
-        ]
+        let startDate = Date()
+        let recording = RecordingData(exercise: "testSquat", startTimestamp: startDate)
+        dataSource.appendRecording(recording)
 
-        // Request authorization for those quantity types.
-        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
-            // Handle error.
-            if error != nil {
-                print(error!)
-                return
+        // todo stating and sending?
+        self.sendRecording(recording)
+
+        // todo make sure workout is running
+        Task {
+            do {
+                print("recording acceleration")
+                for try await batchedData in self.motionManager.accelerometerUpdates() {
+                    var values: [Value] = []
+                    batchedData.forEach { data in
+                        values.append(Value(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z, timestamp: data.timestamp))
+                    }
+                    // print("acceleration", batchedData.count)
+                    let firstValue = values.first!
+                    // todo do they all have the same timestamp?
+                    let date = startDate.addingTimeInterval(firstValue.timestamp)
+                    self.acceleration = BaseData(x: firstValue.x, y: firstValue.y, z: firstValue.z)
+                    let acceSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.accelerationSensor, values: values)
+                    self.dataSource.appendSensorData(acceSensorData)
+                    self.sendSensorData(acceSensorData)
+                }
+            } catch {
+                print(error)
+                print("\(error)")
+            }
+        }
+
+        Task {
+            do {
+                print("recording gyroscope")
+                for try await batchedData in self.motionManager.deviceMotionUpdates() {
+                    var values: [Value] = []
+                    batchedData.forEach { data in
+                        values.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
+                    }
+                    // print("gyroscope", batchedData.count)
+                    // todo catch no value
+                    let firstValue = values.first!
+                    // todo do they all have the same timestamp?
+                    let date = startDate.addingTimeInterval(firstValue.timestamp)
+                    self.gyroscope = BaseData(x: firstValue.x, y: firstValue.y, z: firstValue.z)
+                    let gyroSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: MotionViewModel.gyroscopeSensor, values: values)
+                    //print("Adding gyro data to recording")
+                    self.dataSource.appendSensorData(gyroSensorData)
+                    self.sendSensorData(gyroSensorData)
+                }
+            } catch {
+                print("\(error)")
             }
         }
     }
@@ -198,7 +169,6 @@ class MotionViewModel: NSObject, ObservableObject {
         start()
     }
 
-
     func getCountOfUnsyncedData() -> Int? {
         if isRecording {
             print("Cannot get count of unsynced data while recording")
@@ -220,35 +190,5 @@ class MotionViewModel: NSObject, ObservableObject {
             return nil
         }
         return dataSource.fetchRecordingArray().count
-    }
-}
-
-extension MotionViewModel: HKWorkoutSessionDelegate {
-    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
-        DispatchQueue.main.async {}
-        // Wait for the session to transition states before ending the builder.
-        if toState == .ended {
-            builder?.endCollection(withEnd: date) { (success, error) in
-                self.builder?.finishWorkout { (workout, error) in
-                        DispatchQueue.main.async {}
-                }
-            }
-        }
-    }
-    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {}
-}
-
-extension MotionViewModel: HKLiveWorkoutBuilderDelegate {
-
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
-    }
-    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
-        for type in collectedTypes {
-            guard let quantityType = type as? HKQuantityType else {
-                return // Nothing to do.
-            }
-            let statistics = workoutBuilder.statistics(for: quantityType)
-            // Update the published values.
-        }
     }
 }

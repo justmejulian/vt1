@@ -8,6 +8,8 @@ struct ContentView: View {
 
     @ObservedObject var motionViewModel = MotionViewModel()
 
+    //todo add connection state
+
     var body: some View {
         NavigationStack {
             switch motionViewModel.isRecording {
@@ -28,7 +30,7 @@ struct ContentView: View {
                     } label: {
                         Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                     }.buttonStyle(.borderedProminent)
-                
+
             case true:
                 MotionView()
             }
