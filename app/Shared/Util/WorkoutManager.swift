@@ -14,6 +14,7 @@ class WorkoutManager: NSObject, ObservableObject {
     static let shared = WorkoutManager()
 
     let healthStore = HKHealthStore()
+    
     var session: HKWorkoutSession?
 
     #if os(watchOS)
@@ -23,6 +24,7 @@ class WorkoutManager: NSObject, ObservableObject {
     var started: Bool = false
 
     func resetWorkout() {
+        session = nil
         #if os(watchOS)
         builder = nil
         #endif

@@ -53,6 +53,11 @@ class RecordingManager: NSObject, ObservableObject {
         
         let startDate = recording.startTimestamp
         
+        guard CMBatchedSensorManager.isAccelerometerSupported && CMBatchedSensorManager.isDeviceMotionSupported else {
+            print("Error CMBatchedSensorManager not supported")
+            return
+        }
+        
         Task {
             do {
                 print("recording acceleration")

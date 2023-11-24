@@ -12,7 +12,7 @@ import WatchConnectivity
 class ConnectivityManager: NSObject, WCSessionDelegate {
     @MainActor
     static let shared = ConnectivityManager()
-    
+
     private var session: WCSession = .default
     @ObservationIgnored
     private let dataSource: DataSource

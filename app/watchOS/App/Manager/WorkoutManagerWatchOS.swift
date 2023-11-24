@@ -30,12 +30,9 @@ extension WorkoutManager {
         }
     }
 
-    func startWorkout() async throws {
+    func startWorkout() async throws -> HKWorkoutSession? {
         print("start workout")
-        guard CMBatchedSensorManager.isAccelerometerSupported && CMBatchedSensorManager.isDeviceMotionSupported else {
-            print("Error CMBatchedSensorManager not supported, check permissions")
-            return
-        }
+
 
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .functionalStrengthTraining
@@ -44,8 +41,6 @@ extension WorkoutManager {
         session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
         builder = session?.associatedWorkoutBuilder()
 
-        session?.delegate = self
-        builder?.delegate = self
         // Set the workout builder's data source.
         builder?.dataSource = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: configuration)
 
@@ -54,6 +49,8 @@ extension WorkoutManager {
         session?.startActivity(with: startDate)
         try await builder?.beginCollection(at: startDate)
         started = true
+        
+        return session
     }
 
     func handleReceivedData(_ data: Data) throws {
