@@ -11,6 +11,7 @@ class AppDelegate: NSObject, WKApplicationDelegate {
     // todo move workoutman to let
 
     func handle(_ workoutConfiguration: HKWorkoutConfiguration) {
+        print("AppDelegate: handle")
         Task {
             do {
                 WorkoutManager.shared.resetWorkout()

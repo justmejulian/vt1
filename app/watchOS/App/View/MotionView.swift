@@ -11,9 +11,6 @@ struct MotionView: View {
 
     var body: some View {
         VStack(content: {
-            DataView(title: "Accelerometer", data: motionViewModel.acceleration)
-            Spacer()
-            DataView(title: "Gyroscope", data: motionViewModel.gyroscope)
             Spacer()
             HStack {
                 Text("Time:")
@@ -25,34 +22,15 @@ struct MotionView: View {
                     .font(.caption2)
             }
             Button(action: motionViewModel.toggle) {
-                Text(motionViewModel.isRecording ? "Stop" : "Start")
+                Text(motionViewModel.started ? "Stop" : "Start")
                     .font(.title2)
             }
-            .background(motionViewModel.isRecording ? Color.red : Color.blue)
+            .background(motionViewModel.started ? Color.red : Color.blue)
                 .clipShape(Capsule())
                 .padding(.all)
         }).onAppear {
             // todo
             // motionViewModel.requestAuthorization()
-        }
-    }
-    struct DataView: View {
-        var title: String
-        var data: MotionViewModel.BaseData
-
-        var body: some View {
-            Text(title)
-                .font(.caption)
-                .bold()
-            HStack(content: {
-                Text("X: \(data.x, specifier: "%.2f")")
-                    .font(.caption2)
-                Text("Y: \(data.y, specifier: "%.2f")")
-                    .font(.caption2)
-                Text("Z: \(data.z, specifier: "%.2f")")
-                    .font(.caption2)
-            })
-
         }
     }
 

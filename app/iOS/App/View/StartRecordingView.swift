@@ -10,6 +10,8 @@ import HealthKit
 struct StartRecordingView: View {
     @ObservationIgnored
     private let connectivityManager = ConnectivityManager.shared
+    @ObservationIgnored
+    private let workoutManager = WorkoutManager.shared
 
     @State private var text: String = ""
 
@@ -45,8 +47,13 @@ struct StartRecordingView: View {
     }
 
     private func start() {
-        isRequestCompleted = false
-        connectivityManager.sendStartSession(exerciseName: text)
+        Task {
+            do {
+                try await workoutManager.startWatchWorkout()
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 

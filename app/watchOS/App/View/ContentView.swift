@@ -6,13 +6,13 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @ObservedObject var motionViewModel = MotionViewModel()
+    @ObservedObject var recordingManager = RecordingManager()
 
     //todo add connection state
 
     var body: some View {
         NavigationStack {
-            switch motionViewModel.isRecording {
+            switch recordingManager.isRecording {
             case false :
                     NavigationLink {
                         MotionView()
@@ -38,8 +38,4 @@ struct ContentView: View {
         .listStyle(.plain)
         .navigationTitle("Color")
     }
-}
-
-#Preview {
-    ContentView()
 }

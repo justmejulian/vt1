@@ -17,11 +17,11 @@ enum DataTypes {
 }
 
 final class DataSource {
-    private let modelContainer: ModelContainer
-    private let modelContext: ModelContext
-
     @MainActor
     static let shared = DataSource()
+
+    private let modelContainer: ModelContainer
+    private let modelContext: ModelContext
 
     @MainActor
     private init() {
@@ -55,21 +55,6 @@ final class DataSource {
             fatalError(error.localizedDescription)
         }
     }
-
-// func addSynced<T>(_ data: T) where T: PersistentModel {
-//        if let sensorData = data as? SensorData {
-//            self.syncedData.sensorData.append(sensorData)
-//            // todo try and save?
-//            return
-//        }
-//
-//        if let recordingData = data as? RecordingData {
-//            self.syncedData.recoridngs.append(recordingData)
-//            // todo try and save?
-//            return
-//        }
-//        print("Unkown data type in addSynced")
-//    }
 
     func removeData<T>(_ data: T) where T: PersistentModel {
         modelContext.delete(data)
