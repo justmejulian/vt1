@@ -4,14 +4,21 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 import HealthKit
 
 struct StartRecordingView: View {
-    @ObservationIgnored
-    private let connectivityManager = ConnectivityManager.shared
+    @ObservedObject
+    private var connectivityManager = ConnectivityManager.shared
     @ObservationIgnored
     private let workoutManager = WorkoutManager.shared
+    
+    @Query
+    var sensorData: [SensorData]
+    
+    @Query
+    var recordingData: [RecordingData]
 
     @State private var text: String = ""
 
@@ -19,22 +26,54 @@ struct StartRecordingView: View {
 
     var body: some View {
         VStack(content: {
-            Text("VT1 2023")
+            Spacer()
+            
+            Text("Start New Recording")
                 .font(.largeTitle)
                 .padding(.all)
-            VStack(content: {
+            
+            HStack {
                 Spacer()
-                Text("Exercise")
-                    .font(.title)
-                TextField("Squat", text: $text)
+                VStack {
+                    Text("Connected")
+                        .font(.caption)
+                        .bold()
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(connectivityManager.isConnected ? .green : .gray)
+                }
+                Spacer()
+                VStack {
+                    Text("Recording #: ")
+                        .font(.caption)
+                        .bold()
+                    Text(String(recordingData.count))
+                        .font(.caption)
+                }
+                Spacer()
+                VStack {
+                    Text("Data Point #: ")
+                        .font(.caption)
+                        .bold()
+                    Text(String(sensorData.count))
+                        .font(.caption)
+                }
+                Spacer()
+            }
+            
+            Spacer()
+            
+            VStack(content: {
+                Text("Enter Exercise Name:")
+                    .font(.title3)
+                TextField("Default", text: $text)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .padding(.all)
-
-                Spacer()
             })
-            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
                 .padding(.all)
+            
+            Spacer()
+            
             Button(action: start) {
                 Text("Start Recording")
                     .font(.title2)
@@ -43,6 +82,8 @@ struct StartRecordingView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(!isRequestCompleted)
                 .padding(.all)
+            
+            Spacer()
         })
     }
 
@@ -50,7 +91,7 @@ struct StartRecordingView: View {
         Task {
             do {
                 try await workoutManager.startWatchWorkout()
-                await connectivityManager.sendStartSession(exerciseName: text)
+                connectivityManager.sendStartSession(exerciseName: text)
             } catch {
                 print(error)
             }
