@@ -9,21 +9,7 @@ import Foundation
 import CoreMotion
 import SwiftUI
 
-struct RecordingError: LocalizedError {
-    let description: String
-
-    init(_ description: String) {
-        self.description = description
-    }
-
-    var errorDescription: String? {
-        description
-    }
-}
-
 class RecordingManager: NSObject, ObservableObject {
-    static let shared = RecordingManager()
-
     let motionManager = CMBatchedSensorManager()
     
     @Published private(set) var isRecording = false
@@ -60,7 +46,6 @@ class RecordingManager: NSObject, ObservableObject {
         
         Task {
             do {
-                print("recording acceleration")
                 for try await batchedData in self.motionManager.accelerometerUpdates() {
                     
                     var values: [Value] = []
@@ -82,7 +67,6 @@ class RecordingManager: NSObject, ObservableObject {
         
         Task {
             do {
-                print("recording gyroscope")
                 for try await batchedData in self.motionManager.deviceMotionUpdates() {
                     
                     var values: [Value] = []
@@ -102,5 +86,17 @@ class RecordingManager: NSObject, ObservableObject {
                 print("Error handeling deviceMotionUpdates", error)
             }
         }
+    }
+}
+
+struct RecordingError: LocalizedError {
+    let description: String
+
+    init(_ description: String) {
+        self.description = description
+    }
+
+    var errorDescription: String? {
+        description
     }
 }

@@ -30,7 +30,7 @@ extension WorkoutManager {
         }
     }
 
-    func startWorkout() async throws -> HKWorkoutSession? {
+    func startWorkout() async throws {
         print("start workout")
 
 
@@ -48,9 +48,8 @@ extension WorkoutManager {
 
         session?.startActivity(with: startDate)
         try await builder?.beginCollection(at: startDate)
-        started = true
         
-        return session
+        started = true
     }
 
     func handleReceivedData(_ data: Data) throws {

@@ -50,13 +50,10 @@ struct StartRecordingView: View {
         Task {
             do {
                 try await workoutManager.startWatchWorkout()
+                await connectivityManager.sendStartSession(exerciseName: text)
             } catch {
                 print(error)
             }
         }
     }
-}
-
-#Preview {
-    StartRecordingView()
 }

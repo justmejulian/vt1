@@ -6,13 +6,13 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @ObservedObject var recordingManager = RecordingManager()
+    @ObservedObject var sessionManager = SessionManager.shared
 
     //todo add connection state
 
     var body: some View {
         NavigationStack {
-            switch recordingManager.isRecording {
+            switch sessionManager.started {
             case false :
                     NavigationLink {
                         MotionView()

@@ -14,14 +14,7 @@ struct SyncView: View {
     @Query var recordings: [RecordingData]
     @Query var sensorData: [SensorData]
 
-
-    @ObservationIgnored
-    private let dataSource = DataSource.shared
-
-    @ObservationIgnored
-    private let connectivityManager = ConnectivityManager.shared
-
-    @ObservedObject var motionViewModel = MotionViewModel()
+    @ObservedObject var sessionManager = SessionManager.shared
 
     @State var syncing = false
 
@@ -37,7 +30,7 @@ struct SyncView: View {
             Spacer()
             Button("Sync") {
                 syncing = true
-                motionViewModel.sync()
+                sessionManager.sync()
                 // todo reacte to no more data
                 syncing = false
             }

@@ -7,28 +7,35 @@ import SwiftData
 
 struct MotionView: View {
 
-    @ObservedObject var motionViewModel = MotionViewModel()
+    @ObservedObject var sessionManager = SessionManager.shared
 
     var body: some View {
         VStack(content: {
+            VStack {
+            Text("Time:")
+                .font(.caption)
+                .bold()
+            }
             Spacer()
             HStack {
                 Text("Time:")
                     .frame(maxWidth: .infinity)
                     .font(.caption2)
                     .bold()
-                Text("\(motionViewModel.timeCounter)")
+                Text("\(sessionManager.timeCounter)")
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.caption2)
             }
-            Button(action: motionViewModel.toggle) {
-                Text(motionViewModel.started ? "Stop" : "Start")
+            Button(action: sessionManager.toggle) {
+                Text(sessionManager.started ? "Stop" : "Start")
                     .font(.title2)
             }
-            .background(motionViewModel.started ? Color.red : Color.blue)
+            .background(sessionManager.started ? Color.red : Color.blue)
                 .clipShape(Capsule())
                 .padding(.all)
-        }).onAppear {
+        })
+        .navigationBarBackButtonHidden(sessionManager.started)
+        .onAppear {
             // todo
             // motionViewModel.requestAuthorization()
         }
