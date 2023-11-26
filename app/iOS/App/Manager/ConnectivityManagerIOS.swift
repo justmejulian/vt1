@@ -40,10 +40,19 @@ extension ConnectivityManager {
         replyHandler(["error": "unknown data type"])
     }
     
+    func sessionWatchStateDidChange(_ session: WCSession){
+        print("Session WatchState Did Change")
+        DispatchQueue.main.async {
+            self.isConnected = session.isReachable && session.isPaired
+        }
+    }
+    
     func sessionDidBecomeInactive(_ session: WCSession) {
+        print("Session Did Become Inactive")
         isConnected = false
     }
     func sessionDidDeactivate(_ session: WCSession) {
+        print("Session Did Become Deactivate")
         isConnected = false
     }
 }

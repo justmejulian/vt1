@@ -3,23 +3,65 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    
+    @ObservedObject
+    private var connectivityManager = ConnectivityManager.shared
+    
+    @Query
+    var sensorData: [SensorData]
+    
+    @Query
+    var recordingData: [RecordingData]
 
     var body: some View {
         NavigationStack {
-            Text("Recordings:")
-                .font(.title)
+            Text("VT 1")
+                .font(.largeTitle)
                 .bold()
                 .padding(.top, 32)
-
+            
+            Spacer()
+            Spacer()
+            
+            HStack {
+                Spacer()
+                VStack {
+                    Text("Connected")
+                        .font(.caption)
+                        .bold()
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(connectivityManager.isConnected ? .green : .gray)
+                }
+                Spacer()
+                VStack {
+                    Text("Recording #: ")
+                        .font(.caption)
+                        .bold()
+                    Text(String(recordingData.count))
+                        .font(.caption)
+                }
+                Spacer()
+                VStack {
+                    Text("Data Point #: ")
+                        .font(.caption)
+                        .bold()
+                    Text(String(sensorData.count))
+                        .font(.caption)
+                }
+                Spacer()
+            }
+            
+            Spacer()
             Spacer()
 
             RecordingListView()
 
             Spacer()
 
-            HStack {
+            VStack {
                 NavigationLink {
                     StartRecordingView()
                 } label: {
@@ -41,8 +83,4 @@ struct ContentView: View {
         }
     }
 
-}
-
-#Preview {
-    ContentView()
 }

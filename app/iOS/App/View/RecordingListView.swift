@@ -16,7 +16,7 @@ struct RecordingListView: View {
         if recordings.isEmpty {
             VStack{
                 Spacer()
-                Text("Looks like there's no data yet...")
+                Text("Looks like there are no Recordings yet...")
                 Spacer()
             }
         } else {

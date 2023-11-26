@@ -8,14 +8,31 @@ import SwiftData
 struct MotionView: View {
 
     @ObservedObject var sessionManager = SessionManager.shared
+    
+    @Query
+    var sensorData: [SensorData]
 
     var body: some View {
         VStack(content: {
+            if sessionManager.started {
+                Spacer()
+                Spacer()
+                Spacer()
+            }
             VStack {
-            Text("Time:")
+                Text(sessionManager.exerciseName ?? " ")
                 .font(.caption)
                 .bold()
             }
+            Spacer()
+            VStack {
+                Text("Data Point #:")
+                .font(.caption)
+                .bold()
+                Text(String(sessionManager.sensorDataCount))
+                .font(.caption)
+            }
+            Spacer()
             Spacer()
             HStack {
                 Text("Time:")
@@ -26,6 +43,7 @@ struct MotionView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.caption2)
             }
+            Spacer()
             Button(action: sessionManager.toggle) {
                 Text(sessionManager.started ? "Stop" : "Start")
                     .font(.title2)
@@ -36,8 +54,7 @@ struct MotionView: View {
         })
         .navigationBarBackButtonHidden(sessionManager.started)
         .onAppear {
-            // todo
-            // motionViewModel.requestAuthorization()
+            sessionManager.requestAuthorization()
         }
     }
 

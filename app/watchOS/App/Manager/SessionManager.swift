@@ -27,6 +27,8 @@ class SessionManager: NSObject, ObservableObject {
     var timer: Timer? = nil
     
     @Published var started = false
+    @Published var exerciseName: String? = nil
+    @Published var sensorDataCount: Int = 0
     
     func startWorkout() async {
         print("Crating Workout to start Session")
@@ -42,6 +44,8 @@ class SessionManager: NSObject, ObservableObject {
         if (!workoutManager.started) {
             await startWorkout()
         }
+        
+        self.exerciseName = exerciseName
         
         print("Start Session")
         
@@ -60,6 +64,8 @@ class SessionManager: NSObject, ObservableObject {
             sendRecording(recording: recording)
             
             recordingManager.monitorUpdates(recording: recording, handleUpdate: { sensorData in
+                
+                self.sensorDataCount += sensorData.values.count
                 // Store Sensor Data
                 self.dataSource.appendSensorData(sensorData)
                 // Send Sensor Data
@@ -154,7 +160,6 @@ class SessionManager: NSObject, ObservableObject {
         }
         timer?.invalidate()
         timer = nil
-        timeCounter = 0
     }
 
     func getCountOfUnsyncedData() -> Int? {
@@ -181,6 +186,11 @@ class SessionManager: NSObject, ObservableObject {
         return dataSource.fetchRecordingArray().count
     }
 
+    func requestAuthorization(){
+        Task{
+            await workoutManager.requestAuthorization()
+        }
+    }
 }
 
 struct SessionError: LocalizedError {
