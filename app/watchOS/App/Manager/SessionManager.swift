@@ -9,7 +9,6 @@ import Foundation
 import HealthKit
 
 class SessionManager: NSObject, ObservableObject {
-
     static let shared = SessionManager()
     
     let recordingManager = RecordingManager()
@@ -45,12 +44,14 @@ class SessionManager: NSObject, ObservableObject {
             await startWorkout()
         }
         
+        // todo send to ios that started
+        
         self.exerciseName = exerciseName
         
         print("Start Session")
         
         started = true
-        
+        sensorDataCount = 0
         startTimer()
         
         do {
@@ -123,7 +124,10 @@ class SessionManager: NSObject, ObservableObject {
         print("Finished Syncing")
     }
 
-    private func stop() {
+    func stop() {
+        
+        // todo send to ios that stoped
+        
         stopTimer()
         started = false
         recordingManager.stop()
@@ -148,6 +152,7 @@ class SessionManager: NSObject, ObservableObject {
         if timer != nil {
             print("Timer already running")
         }
+        timeCounter = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             // Update the counter every second
             self.timeCounter += 1

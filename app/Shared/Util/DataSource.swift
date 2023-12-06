@@ -83,11 +83,10 @@ final class DataSource {
     }
 
     func clear() {
-        print("clearing all data")
+        print("Clearing all data.")
         do {
             try modelContext.delete(model: RecordingData.self)
             try modelContext.delete(model: SensorData.self)
-            
         } catch {
             print("Failed to clear all data.")
         }

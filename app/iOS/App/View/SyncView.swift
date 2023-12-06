@@ -16,6 +16,7 @@ struct SyncView: View {
 
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
+    
 
     var body: some View {
         
@@ -80,7 +81,8 @@ struct SyncView: View {
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
                 }
-                    .buttonStyle(BorderedButtonStyle())
+                .buttonStyle(BorderedButtonStyle())
+                
             }.padding(.bottom, 32).padding(.horizontal, 20)
         }
     }

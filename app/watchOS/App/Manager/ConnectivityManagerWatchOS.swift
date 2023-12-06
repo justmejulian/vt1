@@ -29,7 +29,39 @@ extension ConnectivityManager {
             
             replyHandler(["error": "Failed to convert exerciseName to string"])
         }
+        
+        if (data["stopSession"] != nil) {
+            print("recived stop session")
 
-        replyHandler(["error": "unknown data type"])
+            sessionManager.stop()
+            replyHandler(["sucess": true])
+        }
+
+        if (data["getSessionState"] != nil) {
+            print("received get session state")
+            sendSessionState()
+            replyHandler(["success": true])
+            return
+        }
+
+        replyHandler(["error in Watch ConnectivityManager": "unknown data type"])
+    }
+    
+    
+    func sendSensorData(sensorData: SensorData, replyHandler: (([String : Any]) -> Void)?) {
+        self.sendPresistentModel(key: "sensorData", data: sensorData, replyHandler: replyHandler)
+    }
+
+    func sendRecording(recording: RecordingData, replyHandler: (([String : Any]) -> Void)?) {
+        self.sendPresistentModel(key: "recording", data: recording, replyHandler: replyHandler)
+    }
+
+    private func sendSessionState() {
+        let context = ["isSessionRunning": SessionManager.shared.started]
+        self.session.sendMessage(context, replyHandler: { replyData in
+            print("sucessfully sent session state")
+        }, errorHandler: { (error) in
+            print("error sending", context, error.localizedDescription)
+        })
     }
 }

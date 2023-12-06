@@ -5,15 +5,14 @@
 import Foundation
 import SwiftUI
 import SwiftData
-
 import HealthKit
 
 struct StartRecordingView: View {
     @ObservedObject
+    private var sessionManager = SessionManager.shared
+    @ObservedObject
     private var connectivityManager = ConnectivityManager.shared
-    @ObservationIgnored
-    private let workoutManager = WorkoutManager.shared
-    
+
     @Query
     var sensorData: [SensorData]
     
@@ -22,9 +21,10 @@ struct StartRecordingView: View {
 
     @State private var text: String = ""
 
-    @State private var isRequestCompleted = true
-
     var body: some View {
+        
+        let valluesCount = sensorData.reduce(0) { $0 + $1.values.count }
+        
         VStack(content: {
             Spacer()
             
@@ -32,69 +32,68 @@ struct StartRecordingView: View {
                 .font(.largeTitle)
                 .padding(.all)
             
-            HStack {
-                Spacer()
-                VStack {
+            VStack{
+                HStack {
                     Text("Connected")
-                        .font(.caption)
+                        .font(.title3)
                         .bold()
+                    Spacer()
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(connectivityManager.isConnected ? .green : .gray)
-                }
-                Spacer()
-                VStack {
+                }.padding(.all)
+                HStack {
                     Text("Recording #: ")
-                        .font(.caption)
+                        .font(.title3)
                         .bold()
+                    Spacer()
                     Text(String(recordingData.count))
-                        .font(.caption)
-                }
-                Spacer()
-                VStack {
-                    Text("Data Point #: ")
-                        .font(.caption)
+                        .font(.title3)
+                }.padding(.all)
+                HStack {
+                    Text("Data #")
+                        .font(.title3)
                         .bold()
+                    Spacer()
+                    Text(String(valluesCount))
+                        .font(.title3)
+                }.padding(.all)
+                HStack {
+                    Text("Batch #")
+                        .font(.title3)
+                        .bold()
+                    Spacer()
                     Text(String(sensorData.count))
-                        .font(.caption)
-                }
-                Spacer()
-            }
+                        .font(.title3)
+                }.padding(.all)
+            }.padding(.all)
             
             Spacer()
             
             VStack(content: {
-                Text("Enter Exercise Name:")
-                    .font(.title3)
-                TextField("Default", text: $text)
+                TextField("Enter Exercise Name:", text: $text)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .padding(.all)
-            })
-                .padding(.all)
+            }).padding(.all)
             
             Spacer()
             
-            Button(action: start) {
-                Text("Start Recording")
-                    .font(.title2)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+            Button(action: {
+                Task {
+                    await sessionManager.toggle(text: text)
+                }
+            }) {
+                Label(sessionManager.isSessionRunning ?? false ? "Stop Recording" : "Start Recording", systemImage: "arrow.triangle.2.circlepath")
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
             }
-                .buttonStyle(.borderedProminent)
-                .disabled(!isRequestCompleted)
-                .padding(.all)
-            
-            Spacer()
+                .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil || !connectivityManager.isConnected)
+                .buttonStyle(BorderedProminentButtonStyle())
+                .padding(.bottom, 32).padding(.horizontal, 20)
         })
-    }
-
-    private func start() {
-        Task {
-            do {
-                try await workoutManager.startWatchWorkout()
-                connectivityManager.sendStartSession(exerciseName: text)
-            } catch {
-                print(error)
-            }
+        .onAppear {
+            print("StartRecordingView.onAppear")
+            sessionManager.refreshSessionState()
         }
     }
 }

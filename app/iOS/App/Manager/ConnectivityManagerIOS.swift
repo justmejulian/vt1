@@ -10,7 +10,66 @@ import WatchConnectivity
 
 extension ConnectivityManager {
     
+    func getSessionState() {
+        let context = ["getSessionState": true]
+        self.session.sendMessage(context, replyHandler: { replyData in
+            if replyData["sucess"] != nil {
+                print("sucessfully started session")
+                return
+            }
+            print("Something went wrong sending data")
+            if let error = replyData["error"] {
+                print(error)
+                return
+            }
+        }, errorHandler: { (error) in
+            print("error getting session state", error.localizedDescription)
+            DispatchQueue.main.async {
+                SessionManager.shared.isSessionRunning = false
+            }
+        })
+    }
+    
+    func sendStartSession(exerciseName: String) {
+        print("send StartSession")
+        let context = ["startSession": exerciseName]
+        self.session.sendMessage(context, replyHandler: { replyData in
+            if replyData["sucess"] != nil {
+                print("sucessfully started session")
+                return
+            }
+            print("Something went wrong starting session")
+            if let error = replyData["error"] {
+                print(error)
+                return
+            }
+        }, errorHandler: { (error) in
+            print("error sending start session", exerciseName, error.localizedDescription)
+        })
+    }
+    
+    func sendStopSession() {
+        print("send StopSession")
+        let context = ["stopSession": true]
+        self.session.sendMessage(context, replyHandler: { replyData in
+            if replyData["sucess"] != nil {
+                print("sucessfully started session")
+                return
+            }
+            print("Something went wrong stopping session")
+            if let error = replyData["error"] {
+                print(error)
+                return
+            }
+        }, errorHandler: { (error) in
+            print("error sending stop session", error.localizedDescription)
+        })
+    }
+    
     func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
+
+        // print("recived data:", data)
+
         // todo test what happens when send wrong thing with recoding key
         if let endcodedRecording = data["recording"] {
             guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
@@ -18,7 +77,7 @@ extension ConnectivityManager {
                 replyHandler(["error": "error decoding recording"])
                 return
             }
-            
+
             // todo repace this with funcion params
             self.dataSource.appendRecording(recording)
             replyHandler(["sucess": true])
@@ -32,12 +91,27 @@ extension ConnectivityManager {
                 replyHandler(["error": "error decoding sensorData"])
                 return
             }
+
             self.dataSource.appendSensorData(sensorData)
             replyHandler(["sucess": true])
             return
         }
 
-        replyHandler(["error": "unknown data type"])
+        if let isSessionRunning = data["isSessionRunning"] {
+            if let isSessionRunning = isSessionRunning as? Bool {
+                print("recived isSessionRunning:", isSessionRunning)
+                DispatchQueue.main.async {
+                    SessionManager.shared.isSessionRunning = isSessionRunning
+                }
+                replyHandler(["sucess": true])
+                return
+            }
+            print("Failed to convert isSessionRunning to bool", isSessionRunning)
+            replyHandler(["error": "Failed to convert isSessionRunning to bool"])
+            return
+        }
+
+        replyHandler(["error in iOS ConnectivityManager": "unknown data type"])
     }
     
     func sessionWatchStateDidChange(_ session: WCSession){
@@ -56,3 +130,16 @@ extension ConnectivityManager {
         isConnected = false
     }
 }
+
+struct ConnectivityError: LocalizedError {
+    let description: String
+
+    init(_ description: String) {
+        self.description = description
+    }
+
+    var errorDescription: String? {
+        description
+    }
+}
+
