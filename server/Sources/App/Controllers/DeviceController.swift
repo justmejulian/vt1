@@ -1,4 +1,5 @@
 import Fluent
+import PostgresNIO
 import Vapor
 
 struct DeviceController: RouteCollection {
@@ -113,6 +114,11 @@ struct DeviceController: RouteCollection {
             return .ok
 
         } catch {
+            if (((error as? PSQLError)?.isConstraintFailure) != nil) {
+                print("Already exists in addSensorData: \(String(reflecting: error))")
+                return .ok
+            }
+            
             print("Error in addSensorData: \(String(reflecting: error))")
             throw Abort(.notFound)
         }
@@ -163,11 +169,16 @@ struct DeviceController: RouteCollection {
             )
 
             try await recordingData.save(on: req.db)
-
-            return .ok
         } catch {
+            if (((error as? PSQLError)?.isConstraintFailure) != nil) {
+                print("Already exists in addRecordingData: \(String(reflecting: error))")
+                return .ok
+            }
+            
             print("Error in addRecordingData: \(String(reflecting: error))")
             throw Abort(.notFound)
         }
+        
+        return .ok
     }
 }

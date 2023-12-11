@@ -61,7 +61,7 @@ class RecordingManager: NSObject, ObservableObject {
                     handleUpdate(sensorData)
                 }
             } catch {
-                print("Error handeling accelerometerUpdates", error)
+                print("Error handling accelerometerUpdates", error)
             }
         }
         
@@ -69,21 +69,30 @@ class RecordingManager: NSObject, ObservableObject {
             do {
                 for try await batchedData in self.motionManager.deviceMotionUpdates() {
                     
-                    var values: [Value] = []
+                    var rotationRateValues: [Value] = []
+                    var userAccelerationValues: [Value] = []
+                    var gravityValues: [Value] = []
                     batchedData.forEach { data in
-                        values.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
+                        rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
+                        userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: data.timestamp))
+                        gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: data.timestamp))
                     }
                     
-                    let firstValue = values.first!
+                    let firstValue = rotationRateValues.first!
                     // todo do they all have the same timestamp?
                     let date = startDate.addingTimeInterval(firstValue.timestamp)
                     
-                    let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "rotationRate", values: values)
-                    
-                    handleUpdate(sensorData)
+                    let rotationRateSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "rotationRate", values: rotationRateValues)
+                    handleUpdate(rotationRateSensorData)
+
+                    let userAccelerationSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "userAcceleration", values: userAccelerationValues)
+                    handleUpdate(userAccelerationSensorData)
+
+                    let gravitySensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "gravity", values: gravityValues)
+                    handleUpdate(gravitySensorData)
                 }
             } catch {
-                print("Error handeling deviceMotionUpdates", error)
+                print("Error handling deviceMotionUpdates", error)
             }
         }
     }
