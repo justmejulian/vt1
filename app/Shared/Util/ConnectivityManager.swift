@@ -20,9 +20,6 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     @ObservationIgnored
     internal let dataSource: DataSource
 
-    @Published
-    var isConnected = false
-
     @MainActor
     init(dataSource: DataSource = DataSource.shared) {
         self.dataSource = dataSource
@@ -31,7 +28,6 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
 
         self.session.delegate = self
         self.session.activate()
-        isConnected = true
     }
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {

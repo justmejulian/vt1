@@ -56,7 +56,7 @@ class RecordingManager: NSObject, ObservableObject {
                     let firstValue = values.first!
                     let date = startDate.addingTimeInterval(firstValue.timestamp)
                     
-                    let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: Constants.accelerationSensor, values: values)
+                    let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "acceleration", values: values)
                     
                     handleUpdate(sensorData)
                 }
@@ -78,7 +78,7 @@ class RecordingManager: NSObject, ObservableObject {
                     // todo do they all have the same timestamp?
                     let date = startDate.addingTimeInterval(firstValue.timestamp)
                     
-                    let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: Constants.gyroscopeSensor, values: values)
+                    let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "rotationRate", values: values)
                     
                     handleUpdate(sensorData)
                 }

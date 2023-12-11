@@ -20,6 +20,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateDevice())
     app.migrations.add(CreateSensor())
     app.migrations.add(CreateSensorData())
+    app.migrations.add(CreateRecordingData())
     app.migrations.add(AddSensors())
 
     // run migrations

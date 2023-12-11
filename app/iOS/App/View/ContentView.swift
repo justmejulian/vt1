@@ -7,9 +7,6 @@ import SwiftData
 
 struct ContentView: View {
     
-    @ObservedObject
-    private var connectivityManager = ConnectivityManager.shared
-    
     @Query
     var sensorData: [SensorData]
     
@@ -27,14 +24,6 @@ struct ContentView: View {
             Spacer()
             
             HStack {
-                Spacer()
-                VStack {
-                    Text("Connected")
-                        .font(.caption)
-                        .bold()
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(connectivityManager.isConnected ? .green : .gray)
-                }
                 Spacer()
                 VStack {
                     Text("Recording #: ")
@@ -55,6 +44,13 @@ struct ContentView: View {
             }
             
             Spacer()
+            Spacer()
+            
+            Text("Unsynced Data")
+                .font(.title3)
+                .bold()
+                .padding(.top, 32)
+            
             Spacer()
 
             RecordingListView()

@@ -8,11 +8,11 @@ import SwiftUI
 import SwiftData
 
 struct SyncView: View {
-    @ObservedObject
-    private var connectivityManager = ConnectivityManager.shared
     
     @ObservationIgnored
     private let networkManager = NetworkViewModel()
+    @ObservationIgnored
+    private let dataSource = DataSource.shared
 
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
@@ -27,14 +27,6 @@ struct SyncView: View {
                 .font(.largeTitle)
                 .padding(.all)
             VStack{
-                HStack {
-                    Text("Connected")
-                        .font(.title3)
-                        .bold()
-                    Spacer()
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(connectivityManager.isConnected ? .green : .gray)
-                }.padding(.all)
                 HStack {
                     Text("Recording #: ")
                         .font(.title3)
@@ -66,24 +58,29 @@ struct SyncView: View {
             Spacer()
             VStack {
                 Button(action: {
-                    networkManager.postDataToAPI(sensorData)
+                    postData()
                 }) {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
                 }
                     .buttonStyle(BorderedProminentButtonStyle())
-                
-                Button(action: {
-                    print("Export data to local")
-                }) {
-                    Label("Export", systemImage: "square.and.arrow.up")
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(BorderedButtonStyle())
-                
             }.padding(.bottom, 32).padding(.horizontal, 20)
+        }
+    }
+
+    func postData(){
+        Task{
+            recordingData.forEach {recording in
+                print(recording)
+                networkManager.postRecordingToAPI(recording, handleSuccess: { data in dataSource.removeData(recording)})
+            }
+        }
+        Task{
+            sensorData.forEach {sensor in
+                print(sensor)
+                networkManager.postSensorDataToAPI(sensor, handleSuccess: { data in dataSource.removeData(sensor)})
+            }
         }
     }
 }

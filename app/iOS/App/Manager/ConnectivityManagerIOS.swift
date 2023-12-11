@@ -17,7 +17,7 @@ extension ConnectivityManager {
                 print("sucessfully started session")
                 return
             }
-            print("Something went wrong sending data")
+            print("Something went wrong getSessionState")
             if let error = replyData["error"] {
                 print(error)
                 return
@@ -116,18 +116,13 @@ extension ConnectivityManager {
     
     func sessionWatchStateDidChange(_ session: WCSession){
         print("Session WatchState Did Change")
-        DispatchQueue.main.async {
-            self.isConnected = session.isReachable && session.isPaired
-        }
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
         print("Session Did Become Inactive")
-        isConnected = false
     }
     func sessionDidDeactivate(_ session: WCSession) {
         print("Session Did Become Deactivate")
-        isConnected = false
     }
 }
 

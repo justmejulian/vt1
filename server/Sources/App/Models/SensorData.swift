@@ -7,14 +7,14 @@ final class SensorData: Model, Content {
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: "timestamp")
-    var timestamp: Date
-
-    @Field(key: "device_id")
-    var device_id: UUID
+    @Field(key: "recording_start")
+    var recording_start: Date
 
     @Field(key: "sensor_id")
     var sensor_id: UUID
+
+    @Field(key: "timestamp")
+    var timestamp: Date
 
     @Field(key: "x")
     var x: Double
@@ -27,14 +27,13 @@ final class SensorData: Model, Content {
 
     init() { }
 
-    init(id: UUID? = nil, timestamp: Date, device_id: UUID, sensor_id: UUID, x: Double, y: Double, z: Double) {
+    init(id: UUID? = UUID(), recording_start: Date, sensor_id: UUID, timestamp: Date, x: Double, y: Double, z: Double) {
         self.id = id
-        self.timestamp = timestamp
-        self.device_id = device_id
+        self.recording_start = recording_start
         self.sensor_id = sensor_id
+        self.timestamp = timestamp
         self.x = x
         self.y = y
         self.z = z
     }
-
 }

@@ -2,20 +2,20 @@ import Fluent
 
 struct AddSensors: AsyncMigration {
     func prepare(on database: Database) async throws {
-        let accelerometer = Sensor(
-            name: "Accelerometer"
+        let acceleration = Sensor(
+            name: "acceleration"
         )
-        try await accelerometer.save(on: database)
-        let gyroscope = Sensor(
-            name: "Gyroscope"
+        try await acceleration.save(on: database)
+        let rotationRate = Sensor(
+            name: "rotationRate"
         )
-        try await gyroscope.save(on: database)
+        try await rotationRate.save(on: database)
     }
 
     func revert(on database: Database) async throws {
-        let accelerometer = try await Sensor.query(on: database).filter(\.$name == "Accelerometer").first()
-        let gyroscope = try await Sensor.query(on: database).filter(\.$name == "Gyroscope").first()
-        try await accelerometer?.delete(on: database)
-        try await gyroscope?.delete(on: database)
+        let acceleration = try await Sensor.query(on: database).filter(\.$name == "acceleration").first()
+        let rotationRate = try await Sensor.query(on: database).filter(\.$name == "rotationRate").first()
+        try await acceleration?.delete(on: database)
+        try await rotationRate?.delete(on: database)
     }
 }

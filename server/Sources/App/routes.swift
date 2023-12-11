@@ -14,9 +14,5 @@ func routes(_ app: Application) throws {
         Status(status: "OK")
     }
 
-    //try app.register(collection: DeviceController())
-    app.post("device") { req in
-        print(req)
-        return "OK"
-    }
+    try app.register(collection: DeviceController())
 }

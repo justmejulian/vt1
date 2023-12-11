@@ -86,7 +86,7 @@ class SessionManager: NSObject, ObservableObject {
                 self.dataSource.removeData(sensorData)
                 return
             }
-            print("Something went wrong sending data")
+            print("Something went wrong sending sensor data")
             if let error = replyData["error"] {
                 print(error)
                 return
@@ -101,7 +101,7 @@ class SessionManager: NSObject, ObservableObject {
                 self.dataSource.removeData(recording)
                 return
             }
-            print("Something went wrong sending data")
+            print("Something went wrong sending recording data")
             if let error = replyData["error"] {
                 print(error)
                 return

@@ -10,8 +10,6 @@ import HealthKit
 struct StartRecordingView: View {
     @ObservedObject
     private var sessionManager = SessionManager.shared
-    @ObservedObject
-    private var connectivityManager = ConnectivityManager.shared
 
     @Query
     var sensorData: [SensorData]
@@ -23,8 +21,6 @@ struct StartRecordingView: View {
 
     var body: some View {
         
-        let valluesCount = sensorData.reduce(0) { $0 + $1.values.count }
-        
         VStack(content: {
             Spacer()
             
@@ -34,27 +30,11 @@ struct StartRecordingView: View {
             
             VStack{
                 HStack {
-                    Text("Connected")
-                        .font(.title3)
-                        .bold()
-                    Spacer()
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(connectivityManager.isConnected ? .green : .gray)
-                }.padding(.all)
-                HStack {
                     Text("Recording #: ")
                         .font(.title3)
                         .bold()
                     Spacer()
                     Text(String(recordingData.count))
-                        .font(.title3)
-                }.padding(.all)
-                HStack {
-                    Text("Data #")
-                        .font(.title3)
-                        .bold()
-                    Spacer()
-                    Text(String(valluesCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -87,7 +67,7 @@ struct StartRecordingView: View {
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
             }
-                .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil || !connectivityManager.isConnected)
+                .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil)
                 .buttonStyle(BorderedProminentButtonStyle())
                 .padding(.bottom, 32).padding(.horizontal, 20)
         })

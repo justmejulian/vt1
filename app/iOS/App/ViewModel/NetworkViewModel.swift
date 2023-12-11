@@ -3,13 +3,19 @@
 //
 
 import Foundation
+import UIKit
 
 class NetworkViewModel: ObservableObject {
     // todo remove any
-    func postDataToAPI(_ data: Codable) {
+    func postDataToAPI(url: String,  data: Codable, handleSuccess: ((_ data: Codable) -> Void)?) {
         // todo device name
-        //guard let url = URL(string: "http://192.168.1.251:8080/devices/30D1E9CF-4773-4EA6-8DCE-D9B16ADB47C6/data") else {
-        guard let url = URL(string: "http://192.168.1.251:8080/device") else {
+
+        guard let uuid = UIDevice.current.identifierForVendor?.uuidString else {
+            print("Could not get device ID")
+            return
+        }
+
+        guard let url = URL(string: "http://192.168.1.251:8080/devices/" + uuid + "/" + url) else {
             print("Invalid URL")
             return
         }
@@ -24,7 +30,27 @@ class NetworkViewModel: ObservableObject {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print(error)
+                return
+            }
+
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    print("success", httpResponse.statusCode)
+                    if let handleSuccess = handleSuccess {
+                        handleSuccess(data!)
+                    }
+                } else {
+                    print("error", httpResponse.statusCode)
+                }
             }
         }.resume()
+    }
+
+    func postRecordingToAPI(_ recording: RecordingData, handleSuccess: ((_ data: Codable) -> Void)?) {
+        postDataToAPI(url: "recording", data: recording, handleSuccess: handleSuccess)
+    }
+
+    func postSensorDataToAPI(_ sensorData: SensorData, handleSuccess: ((_ data: Codable) -> Void)?) {
+        postDataToAPI(url: "sensorData", data: sensorData, handleSuccess: handleSuccess)
     }
 }
