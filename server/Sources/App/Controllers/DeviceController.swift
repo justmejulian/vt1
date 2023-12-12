@@ -26,6 +26,8 @@ struct DeviceController: RouteCollection {
 
                 device.group("recording") { data in
                     data.post(use: addRecordingData)
+                }
+                device.group("recordings") { data in
                     data.get(use: getRecordings)
                 }
             }
@@ -47,7 +49,12 @@ struct DeviceController: RouteCollection {
                 throw Abort(.badRequest)
             }
 
-            return try await Device.query(on: req.db).filter(\.$uuid == deviceId).first()!
+            guard let device = try await Device.query(on: req.db).filter(\.$uuid == deviceId).first() else {
+                print("Error, device not found")
+                throw Abort(.notFound)
+            }
+            return device
+
         } catch {
             print("Error in getDevice: \(String(reflecting: error))")
             throw Abort(.notFound)
