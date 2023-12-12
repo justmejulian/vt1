@@ -10,13 +10,12 @@ import SwiftData
 struct SyncView: View {
     
     @ObservationIgnored
-    private let networkManager = NetworkViewModel()
-    @ObservationIgnored
     private let dataSource = DataSource.shared
 
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
-    
+
+    @State private var ip: String = "192.168.1.251:8080"
 
     var body: some View {
         
@@ -52,10 +51,16 @@ struct SyncView: View {
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)
-            
-            // todo add response message: failed / synced 10, 5 new
-            
+
             Spacer()
+
+            VStack(content: {
+                TextField("Enter IP:", text: $ip)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .multilineTextAlignment(.center)
+                    .padding(.all)
+            }).padding(.all)
+
             VStack {
                 Button(action: {
                     postData()
@@ -65,20 +70,21 @@ struct SyncView: View {
                         .frame(maxWidth: .infinity)
                 }
                     .buttonStyle(BorderedProminentButtonStyle())
+                    .disabled(ip == "")
+
             }.padding(.bottom, 32).padding(.horizontal, 20)
         }
     }
 
     func postData(){
+        let networkManager = NetworkViewModel(ip: ip)
         Task{
             recordingData.forEach {recording in
-                print(recording)
                 networkManager.postRecordingToAPI(recording, handleSuccess: { data in dataSource.removeData(recording)})
             }
         }
         Task{
             sensorData.forEach {sensor in
-                print(sensor)
                 networkManager.postSensorDataToAPI(sensor, handleSuccess: { data in dataSource.removeData(sensor)})
             }
         }

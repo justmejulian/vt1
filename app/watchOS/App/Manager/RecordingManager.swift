@@ -14,7 +14,7 @@ class RecordingManager: NSObject, ObservableObject {
     
     @Published private(set) var isRecording = false
     
-    func start() throws -> RecordingData {
+    func start(exercise: String) throws -> RecordingData {
         
         if (isRecording) {
             throw RecordingError("Recording already running")
@@ -26,7 +26,7 @@ class RecordingManager: NSObject, ObservableObject {
 
         let startDate = Date()
         
-        return RecordingData(exercise: "testSquat", startTimestamp: startDate);
+        return RecordingData(exercise: exercise, startTimestamp: startDate);
     }
     
     func stop() {

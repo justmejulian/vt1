@@ -56,7 +56,7 @@ class SessionManager: NSObject, ObservableObject {
         
         do {
             // Start Recording
-            let recording = try recordingManager.start()
+            let recording = try recordingManager.start(exercise: exerciseName)
             
             // Store Recording
             dataSource.appendRecording(recording)

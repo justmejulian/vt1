@@ -7,7 +7,7 @@ func routes(_ app: Application) throws {
     app.routes.defaultMaxBodySize = "100mb"
 
     app.get { req async -> String in
-        "Todo add list of routes"
+        "VT1 - Julian Visser"
     }
 
     app.get("status") { req in
