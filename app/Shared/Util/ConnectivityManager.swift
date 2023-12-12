@@ -39,13 +39,17 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     }
 
     func sendPresistentModel<T: PersistentModel>(key: String, data: T, replyHandler: (([String : Any]) -> Void)?) where T:Codable {
-        let encodedData = try! JSONEncoder().encode(data)
+        do {
+            let encodedData = try JSONEncoder().encode(data)
 
-        let context = [key: encodedData]
-        // do this async?
-        self.session.sendMessage(context, replyHandler: replyHandler, errorHandler: { (error) in
-            print("error sending", key, error.localizedDescription)
-        })
+            let context = [key: encodedData]
+            // do this async?
+            self.session.sendMessage(context, replyHandler: replyHandler, errorHandler: { (error) in
+                print("error sending", key, error.localizedDescription)
+            })
+        } catch {
+            print("Error sending Presistent Model: ", error)
+        }
     }
 
 }

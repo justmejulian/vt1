@@ -41,11 +41,6 @@ final class DataSource {
 
     private func appendData<T>(_ data: T) where T : PersistentModel{
         modelContext.insert(data)
-        do {
-            try modelContext.save()
-        } catch {
-            fatalError(error.localizedDescription)
-        }
     }
 
     private func fetchData<T>() -> [T] where T : PersistentModel {
@@ -61,7 +56,6 @@ final class DataSource {
     }
 
     func appendSensorData(_ sensorData: SensorData) {
-        // print(sensorData.id, sensorData.recordingStart, sensorData.timestamp, sensorData.sensor_id, sensorData.x, sensorData.y, sensorData.z)
         appendData(sensorData)
     }
 
