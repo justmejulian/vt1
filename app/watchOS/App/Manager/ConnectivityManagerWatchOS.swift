@@ -39,8 +39,7 @@ extension ConnectivityManager {
 
         if (data["getSessionState"] != nil) {
             print("received get session state")
-            sendSessionState()
-            replyHandler(["success": true])
+            replyHandler(["isSessionRunning": sessionManager.started])
             return
         }
 
@@ -56,8 +55,8 @@ extension ConnectivityManager {
         self.sendPresistentModel(key: "recording", data: recording, replyHandler: replyHandler)
     }
 
-    private func sendSessionState() {
-        let context = ["isSessionRunning": SessionManager.shared.started]
+    func sendSessionState(isSessionRunning: Bool) {
+        let context = ["isSessionRunning": isSessionRunning]
         self.session.sendMessage(context, replyHandler: { replyData in
             print("sucessfully sent session state")
         }, errorHandler: { (error) in

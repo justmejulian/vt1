@@ -38,9 +38,32 @@ final class DataSource {
     func getModelContainer() -> ModelContainer {
         return self.modelContainer
     }
+    
+    func existingModel<T>(for objectID: PersistentIdentifier)
+      throws -> T? where T: PersistentModel {
+          if let registered: T = modelContext.registeredModel(for: objectID) {
+          return registered
+      }
+          
+      let fetchDescriptor = FetchDescriptor<T>(
+          predicate: #Predicate {
+          $0.persistentModelID == objectID
+      })
+          
+          print(objectID)
+      
+          return try modelContext.fetch(fetchDescriptor).first
+    }
 
     private func appendData<T>(_ data: T) where T : PersistentModel{
-        modelContext.insert(data)
+//        if let _: T = modelContext.registeredModel(for: data.persistentModelID) {
+//            print("Found already registered model", data)
+//        } else {
+//            modelContext.insert(data)
+//        }
+        DispatchQueue.main.async {
+            self.modelContext.insert(data)
+        }
     }
 
     private func fetchData<T>() -> [T] where T : PersistentModel {
@@ -56,6 +79,7 @@ final class DataSource {
     }
 
     func appendSensorData(_ sensorData: SensorData) {
+        // todo check if already exists
         appendData(sensorData)
     }
 

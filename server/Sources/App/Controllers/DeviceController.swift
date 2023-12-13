@@ -162,7 +162,8 @@ struct DeviceController: RouteCollection {
                 throw Abort(.notFound)
             }
 
-            let sensorData = try await SensorData.query(on: req.db).filter(\.$recording_start == recording.start_time).all()
+            // todo lean out return data
+            let sensorData = try await SensorData.query(on: req.db).filter(\.$recording_start == recording.start_time).filter(\.$device_id == recording.device_id).all()
 
             return sensorData
         } catch {
@@ -190,6 +191,8 @@ struct DeviceController: RouteCollection {
         do {
             let addSensorData = try req.content.decode(AddSensorData.self)
 
+            let device = try await getDeviceOrAddDevice(req: req)
+
             // todo use sensor name
             guard let sensor = try await Sensor.query(on: req.db).filter(\.$name == addSensorData.sensor_id).first() else {
                 print("Error, sensor not found", addSensorData.sensor_id)
@@ -199,9 +202,10 @@ struct DeviceController: RouteCollection {
             for value in addSensorData.values {
                 let sensorData = SensorData(
                     id: nil,
-                    recording_start: Date(timeIntervalSince1970: addSensorData.recordingStart),
+                    recording_start: Date(timeIntervalSinceReferenceDate: addSensorData.recordingStart),
+                    device_id: device.id!,
                     sensor_id: sensor.id!,
-                    timestamp: Date(timeIntervalSince1970: value.timestamp),
+                    timestamp: Date(timeIntervalSinceReferenceDate: value.timestamp),
                     x: value.x,
                     y: value.y,
                     z: value.z
@@ -242,7 +246,7 @@ struct DeviceController: RouteCollection {
             let recordingData = RecordingData(
                 id: nil,
                 device_id: device_id,
-                start_time: Date(timeIntervalSince1970: addRecordingData.startTimestamp),
+                start_time: Date(timeIntervalSinceReferenceDate: addRecordingData.startTimestamp),
                 exercise: addRecordingData.exercise
             )
 

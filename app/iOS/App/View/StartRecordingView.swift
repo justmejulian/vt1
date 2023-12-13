@@ -72,7 +72,6 @@ struct StartRecordingView: View {
                 .padding(.bottom, 32).padding(.horizontal, 20)
         })
         .onAppear {
-            print("StartRecordingView.onAppear")
             sessionManager.refreshSessionState()
         }
     }

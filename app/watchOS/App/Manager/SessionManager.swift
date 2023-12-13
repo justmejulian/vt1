@@ -40,6 +40,8 @@ class SessionManager: NSObject, ObservableObject {
 
     @MainActor
     func start(exerciseName: String = "Default") async {
+        print("Starting session")
+        
         if (!workoutManager.started) {
             await startWorkout()
         }
@@ -53,6 +55,8 @@ class SessionManager: NSObject, ObservableObject {
         started = true
         sensorDataCount = 0
         startTimer()
+        
+        sendSessionState(isSessionRunning: true)
         
         do {
             // Start Recording
@@ -75,6 +79,7 @@ class SessionManager: NSObject, ObservableObject {
             
         } catch {
             print("Error starting session", error)
+            sendSessionState(isSessionRunning: false)
         }
     }
     
@@ -92,6 +97,10 @@ class SessionManager: NSObject, ObservableObject {
                 return
             }
         })
+    }
+    
+    func sendSessionState(isSessionRunning: Bool){
+        connectivityManager.sendSessionState(isSessionRunning: isSessionRunning)
     }
     
     func sendRecording(recording: RecordingData) {
@@ -125,12 +134,13 @@ class SessionManager: NSObject, ObservableObject {
     }
 
     func stop() {
-        
-        // todo send to ios that stoped
-        
+        print("Stopping session")
         stopTimer()
         started = false
         recordingManager.stop()
+        
+        sendSessionState(isSessionRunning: false)
+        
         Task {
             await workoutManager.resetWorkout()
         }
@@ -149,6 +159,7 @@ class SessionManager: NSObject, ObservableObject {
     }
     
     private func startTimer() {
+        print("Starting Timer")
         if timer != nil {
             print("Timer already running")
         }
@@ -160,6 +171,7 @@ class SessionManager: NSObject, ObservableObject {
     }
     
     private func stopTimer() {
+        print("Stopping Timer")
         if timer == nil {
             print("No Timer running")
         }

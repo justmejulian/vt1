@@ -13,8 +13,9 @@ extension ConnectivityManager {
     func getSessionState() {
         let context = ["getSessionState": true]
         self.session.sendMessage(context, replyHandler: { replyData in
-            if replyData["sucess"] != nil {
-                print("sucessfully started session")
+            if let isSessionRunning = replyData["isSessionRunning"] as? Bool {
+                print("Got Session state", isSessionRunning)
+                SessionManager.shared.isSessionRunning = isSessionRunning
                 return
             }
             print("Something went wrong getSessionState")
@@ -97,17 +98,12 @@ extension ConnectivityManager {
             return
         }
 
-        if let isSessionRunning = data["isSessionRunning"] {
-            if let isSessionRunning = isSessionRunning as? Bool {
-                print("recived isSessionRunning:", isSessionRunning)
-                DispatchQueue.main.async {
-                    SessionManager.shared.isSessionRunning = isSessionRunning
-                }
-                replyHandler(["sucess": true])
-                return
+        if let isSessionRunning = data["isSessionRunning"] as? Bool{
+            print("recived isSessionRunning:", isSessionRunning)
+            DispatchQueue.main.async {
+                SessionManager.shared.isSessionRunning = isSessionRunning
             }
-            print("Failed to convert isSessionRunning to bool", isSessionRunning)
-            replyHandler(["error": "Failed to convert isSessionRunning to bool"])
+            replyHandler(["sucess": true])
             return
         }
 
