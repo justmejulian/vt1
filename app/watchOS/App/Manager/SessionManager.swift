@@ -68,18 +68,26 @@ class SessionManager: NSObject, ObservableObject {
             // Send Recording
             sendRecording(recording: recording)
             
-            recordingManager.monitorUpdates(recording: recording, handleUpdate: { sensorData in
-                
-                self.sensorDataCount += sensorData.values.count
-                // Store Sensor Data
-                self.dataSource.appendSensorData(sensorData)
-                // Send Sensor Data
-                self.sendSensorData(sensorData: sensorData)
-            })
+            Task {
+                do {
+                    try await recordingManager.monitorUpdates(recording: recording, handleUpdate: { sensorData in
+                        DispatchQueue.main.async {
+                            self.sensorDataCount += sensorData.values.count
+                        }
+                        // Store Sensor Data
+                        self.dataSource.appendSensorData(sensorData)
+                        // Send Sensor Data
+                        self.sendSensorData(sensorData: sensorData)
+                    })
+                } catch {
+                    print("Error starting monitorUpdates", error)
+                    self.stop()
+                }
+            }
             
         } catch {
             print("Error starting session", error)
-            sendSessionState(isSessionRunning: false)
+            stop()
         }
     }
     

@@ -1,4 +1,3 @@
-
 //
 //  Created by Julian Visser on 20.11.2023.
 //
@@ -10,8 +9,8 @@ import SwiftData
 struct SyncView: View {
     
     @ObservationIgnored
-    private let dataSource = DataSource.shared
-
+    private let syncViewModel = SyncViewModel()
+    
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
 
@@ -63,7 +62,7 @@ struct SyncView: View {
 
             VStack {
                 Button(action: {
-                    postData()
+                    syncViewModel.postData(ip: ip)
                 }) {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)
@@ -72,21 +71,16 @@ struct SyncView: View {
                     .buttonStyle(BorderedProminentButtonStyle())
                     .disabled(ip == "")
 
+                Button(action: {
+                    syncViewModel.deleteAll()
+                }) {
+                    Label("Delete All", systemImage: "trash")
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
+                }
+                    .buttonStyle(BorderedButtonStyle())
+                    .disabled(ip == "")
             }.padding(.bottom, 32).padding(.horizontal, 20)
-        }
-    }
-
-    func postData(){
-        let networkManager = NetworkViewModel(ip: ip)
-        Task{
-            recordingData.forEach {recording in
-                networkManager.postRecordingToAPI(recording, handleSuccess: { data in dataSource.removeData(recording)})
-            }
-        }
-        Task{
-            sensorData.forEach {sensor in
-                networkManager.postSensorDataToAPI(sensor, handleSuccess: { data in dataSource.removeData(sensor)})
-            }
         }
     }
 }

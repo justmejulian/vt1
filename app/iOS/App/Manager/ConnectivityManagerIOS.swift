@@ -15,7 +15,9 @@ extension ConnectivityManager {
         self.session.sendMessage(context, replyHandler: { replyData in
             if let isSessionRunning = replyData["isSessionRunning"] as? Bool {
                 print("Got Session state", isSessionRunning)
-                SessionManager.shared.isSessionRunning = isSessionRunning
+                DispatchQueue.main.async {
+                    SessionManager.shared.isSessionRunning = isSessionRunning
+                }
                 return
             }
             print("Something went wrong getSessionState")

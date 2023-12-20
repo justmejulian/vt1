@@ -32,8 +32,9 @@ extension ConnectivityManager {
         
         if (data["stopSession"] != nil) {
             print("recived stop session")
-
-            sessionManager.stop()
+            DispatchQueue.main.async {
+                sessionManager.stop()
+            }
             replyHandler(["sucess": true])
         }
 

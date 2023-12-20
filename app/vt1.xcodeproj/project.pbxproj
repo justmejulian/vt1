@@ -16,13 +16,11 @@
 		C70462772ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */; };
 		C70462792ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */; };
 		C704627C2ADFCF70009F5DD4 /* vt1 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */; };
 		C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
 		C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
 		C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
 		C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */; };
 		C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE22AFD409D00A3A563 /* SyncView.swift */; };
-		C72BDCE52AFD416F00A3A563 /* RecordingDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE42AFD416F00A3A563 /* RecordingDetailModel.swift */; };
 		C72BDCE72AFD418E00A3A563 /* RecordingDetailModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */; };
 		C7327B832ADD5D8200F16E63 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B822ADD5D8200F16E63 /* App.swift */; };
 		C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B842ADD5D8200F16E63 /* ContentView.swift */; };
@@ -44,7 +42,6 @@
 		C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC82B0D008600E5D9ED /* WorkoutManagerWatchOS.swift */; };
 		C7778DCB2B0D0D1C00E5D9ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DCA2B0D0D1C00E5D9ED /* AppDelegate.swift */; };
 		C7778DCF2B10A9FF00E5D9ED /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DCD2B10A9FF00E5D9ED /* RecordingManager.swift */; };
-		C7778DD72B10CDF300E5D9ED /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DD52B10CDEE00E5D9ED /* ContentViewModel.swift */; };
 		C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* RecordingListView.swift */; };
 		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* RecordingListView.swift */; };
@@ -53,6 +50,7 @@
 		C7C44CF02B136B5700789EAA /* ConnectivityManagerWatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C44CEF2B136B5700789EAA /* ConnectivityManagerWatchOS.swift */; };
 		C7C44CF22B136BA200789EAA /* ConnectivityManagerIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C44CF12B136BA200789EAA /* ConnectivityManagerIOS.swift */; };
 		C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8A2C82AE948F500D7CFBF /* MotionView.swift */; };
+		C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,7 +106,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkViewModel.swift; sourceTree = "<group>"; };
 		C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C704625B2ADFCF6F009F5DD4 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -124,7 +121,6 @@
 		C72BDCDA2AF908DE00A3A563 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		C72BDCE22AFD409D00A3A563 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
-		C72BDCE42AFD416F00A3A563 /* RecordingDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailModel.swift; sourceTree = "<group>"; };
 		C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailModelView.swift; sourceTree = "<group>"; };
 		C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Mobile App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B822ADD5D8200F16E63 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -146,7 +142,6 @@
 		C7778DCA2B0D0D1C00E5D9ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C7778DCC2B0D222300E5D9ED /* vt1 Mobile App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "vt1 Mobile App.entitlements"; sourceTree = "<group>"; };
 		C7778DCD2B10A9FF00E5D9ED /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
-		C7778DD52B10CDEE00E5D9ED /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		C778EF902AE954D90086F894 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
 		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
@@ -156,6 +151,7 @@
 		C7C44CF12B136BA200789EAA /* ConnectivityManagerIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManagerIOS.swift; sourceTree = "<group>"; };
 		C7C8A2C82AE948F500D7CFBF /* MotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionView.swift; sourceTree = "<group>"; };
 		C7CA489E2B07D09D00023112 /* vt1 Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "vt1 Watch App.entitlements"; sourceTree = "<group>"; };
+		C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,7 +206,6 @@
 				C7778DD02B10B17200E5D9ED /* Manager */,
 				C72BDCD52AF8F73700A3A563 /* Model */,
 				C73A2C3D2AF296FE009C046B /* View */,
-				C73A2C3C2AF296F5009C046B /* ViewModel */,
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
 				C70462612ADFCF70009F5DD4 /* Preview Content */,
@@ -280,14 +275,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C72BDCD62AF8F74200A3A563 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				C72BDCE42AFD416F00A3A563 /* RecordingDetailModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		C72BDCD72AF8F74800A3A563 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +293,7 @@
 				C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */,
 				C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */,
 				C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */,
+				C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -351,7 +339,6 @@
 				C7778DD12B10B18E00E5D9ED /* Manager */,
 				C72BDCD82AF8F74E00A3A563 /* ViewModel */,
 				C72BDCD72AF8F74800A3A563 /* View */,
-				C72BDCD62AF8F74200A3A563 /* Model */,
 				C7327B822ADD5D8200F16E63 /* App.swift */,
 				C7327B882ADD5D8300F16E63 /* Assets.xcassets */,
 				C7327B8A2ADD5D8300F16E63 /* Preview Content */,
@@ -391,15 +378,6 @@
 				C778EF922AE95A120086F894 /* RecordingData.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		C73A2C3C2AF296F5009C046B /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				C704621D2ADEC7FD009F5DD4 /* MotionViewModel.swift */,
-				C7778DD52B10CDEE00E5D9ED /* ContentViewModel.swift */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		C73A2C3D2AF296FE009C046B /* View */ = {
@@ -664,11 +642,9 @@
 				C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C7778DC52B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */,
-				C7778DD72B10CDF300E5D9ED /* ContentViewModel.swift in Sources */,
 				C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */,
 				C7778DCB2B0D0D1C00E5D9ED /* AppDelegate.swift in Sources */,
-				C704628E2AE01544009F5DD4 /* MotionViewModel.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
 				C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */,
@@ -702,7 +678,6 @@
 				C755927D2B17918F00972671 /* SessionManager.swift in Sources */,
 				C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
-				C72BDCE52AFD416F00A3A563 /* RecordingDetailModel.swift in Sources */,
 				C7C44CF22B136BA200789EAA /* ConnectivityManagerIOS.swift in Sources */,
 				C7778DC72B0D007900E5D9ED /* WorkoutManagerIOS.swift in Sources */,
 				C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */,
@@ -714,6 +689,7 @@
 				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
 				C72BDCE72AFD418E00A3A563 /* RecordingDetailModelView.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
+				C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */,
 				C70462222ADEDB67009F5DD4 /* NetworkViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

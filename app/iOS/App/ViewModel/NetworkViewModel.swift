@@ -11,7 +11,7 @@ class NetworkViewModel: ObservableObject {
 
     let uuid: String
 
-    internal init(ip: String) {
+    init(ip: String) {
         self.ip = ip
         guard let uuid = UIDevice.current.identifierForVendor?.uuidString else {
             fatalError("uuid not found")
@@ -19,7 +19,6 @@ class NetworkViewModel: ObservableObject {
         self.uuid = uuid
     }
 
-    // todo remove any
     func postDataToAPI(url: String,  data: Codable, handleSuccess: ((_ data: Codable) -> Void)?) {
 
         guard let url = URL(string: url) else {

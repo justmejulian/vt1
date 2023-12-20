@@ -13,9 +13,6 @@ struct RecordingDetailView: View {
     
     var recording: RecordingData
 
-    // add delete button
-    // add why to change exercise type
-
     @Query
     var sensorData: [SensorData]
 

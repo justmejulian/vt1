@@ -11,7 +11,7 @@ extension WorkoutManager {
         print("Running start Watch Workout")
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .functionalStrengthTraining
-        configuration.locationType = .outdoor
+        configuration.locationType = .indoor
         try await healthStore.startWatchApp(toHandle: configuration)
     }
 }

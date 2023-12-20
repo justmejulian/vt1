@@ -26,7 +26,6 @@ class SessionManager: NSObject, ObservableObject {
     }
 
     func toggle(text: String?) async {
-        print("toggle session", isSessionRunning!)
         guard isSessionRunning != nil else {
             return
         }
@@ -49,6 +48,9 @@ class SessionManager: NSObject, ObservableObject {
     }
 
     private func stop() async {
+        
+        // todo do i need to run start workout here?
+        // what happens when the watch is sleeping
         isSessionRunning = false
         connectivityManager.sendStopSession()
     }
