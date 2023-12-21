@@ -21,7 +21,6 @@
 		C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
 		C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */; };
 		C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE22AFD409D00A3A563 /* SyncView.swift */; };
-		C72BDCE72AFD418E00A3A563 /* RecordingDetailModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */; };
 		C7327B832ADD5D8200F16E63 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B822ADD5D8200F16E63 /* App.swift */; };
 		C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B842ADD5D8200F16E63 /* ContentView.swift */; };
 		C7327B892ADD5D8300F16E63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7327B882ADD5D8300F16E63 /* Assets.xcassets */; };
@@ -51,6 +50,7 @@
 		C7C44CF22B136BA200789EAA /* ConnectivityManagerIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C44CF12B136BA200789EAA /* ConnectivityManagerIOS.swift */; };
 		C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8A2C82AE948F500D7CFBF /* MotionView.swift */; };
 		C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */; };
+		C7F8C1AD2B3333A800FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +121,6 @@
 		C72BDCDA2AF908DE00A3A563 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		C72BDCE22AFD409D00A3A563 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
-		C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailModelView.swift; sourceTree = "<group>"; };
 		C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Mobile App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7327B822ADD5D8200F16E63 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C7327B842ADD5D8200F16E63 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -152,6 +151,7 @@
 		C7C8A2C82AE948F500D7CFBF /* MotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionView.swift; sourceTree = "<group>"; };
 		C7CA489E2B07D09D00023112 /* vt1 Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "vt1 Watch App.entitlements"; sourceTree = "<group>"; };
 		C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
+		C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,8 +203,8 @@
 		C704625A2ADFCF6F009F5DD4 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				C7F8C1AB2B33339100FABF84 /* ViewModel */,
 				C7778DD02B10B17200E5D9ED /* Manager */,
-				C72BDCD52AF8F73700A3A563 /* Model */,
 				C73A2C3D2AF296FE009C046B /* View */,
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
@@ -268,13 +268,6 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		C72BDCD52AF8F73700A3A563 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		C72BDCD72AF8F74800A3A563 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,7 +284,6 @@
 			isa = PBXGroup;
 			children = (
 				C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */,
-				C72BDCE62AFD418E00A3A563 /* RecordingDetailModelView.swift */,
 				C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */,
 				C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */,
 			);
@@ -410,6 +402,14 @@
 				C7C44CF12B136BA200789EAA /* ConnectivityManagerIOS.swift */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		C7F8C1AB2B33339100FABF84 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -641,6 +641,7 @@
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
 				C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C7778DC52B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
+				C7F8C1AD2B3333A800FABF84 /* SyncViewModel.swift in Sources */,
 				C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */,
 				C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */,
@@ -687,7 +688,6 @@
 				C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,
 				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
-				C72BDCE72AFD418E00A3A563 /* RecordingDetailModelView.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
 				C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */,
 				C70462222ADEDB67009F5DD4 /* NetworkViewModel.swift in Sources */,

@@ -19,7 +19,6 @@ struct RecordingListView: View {
 
         // add lazy loading
         List(recordingDataList) { recordingData in
-            Spacer()
             VStack{
                 Text(String(recordingData.exercise))
                     .font(.caption)
@@ -28,7 +27,7 @@ struct RecordingListView: View {
                     .font(.caption2)
                     .bold()
             }
-            Spacer()
+
         }
             .listStyle(.automatic)
             .overlay(Group {

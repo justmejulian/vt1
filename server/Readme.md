@@ -8,6 +8,14 @@ This is a server-side Swift project using Vapor framework.
 swift run App
 ```
 
+### OpenApi Swagger
+
+/swagger/index.html
+
+### Postman
+
+collection found ../postman
+
 ### Connect via iPhone
 
 Make sure you iPhone and server are on the same local network.

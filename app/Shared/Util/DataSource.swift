@@ -29,7 +29,7 @@ final class DataSource {
             fatalError(error.localizedDescription)
         }
 
-        self.clear()
+        // self.clear()
     }
 
     func getModelContainer() -> ModelContainer {
@@ -55,7 +55,6 @@ final class DataSource {
     }
 
     func appendSensorData(_ sensorData: SensorData) {
-        // todo check if already exists
         appendData(sensorData)
     }
 

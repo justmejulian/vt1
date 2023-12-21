@@ -10,13 +10,10 @@ import SwiftUI
 import SwiftData
 
 struct SyncView: View {
-    @Environment(\.modelContext) var modelContext
+    @ObservedObject
+    var syncViewModel = SyncViewModel()
     @Query var recordings: [RecordingData]
     @Query var sensorData: [SensorData]
-
-    @ObservedObject var sessionManager = SessionManager.shared
-
-    @State var syncing = false
 
     var body: some View {
         VStack{
@@ -29,13 +26,10 @@ struct SyncView: View {
                 .font(.caption2)
             Spacer()
             Button("Sync") {
-                syncing = true
-                sessionManager.sync()
-                // todo reacte to no more data
-                syncing = false
+                syncViewModel.sync()
             }
                 .buttonStyle(.borderedProminent)
-                .disabled(sensorData.count <= 0 || recordings.count <= 0 || syncing)
+                .disabled(sensorData.count <= 0 || recordings.count <= 0 || syncViewModel.syncing)
         }
     }
 

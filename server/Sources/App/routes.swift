@@ -14,8 +14,8 @@ func routes(_ app: Application) throws {
     app.get("swagger", "swagger.json") { req in
       req.application.routes.openAPI(
         info: InfoObject(
-          title: "Example API",
-          description: "Example API description",
+          title: "VT1 API",
+          description: "API used to export data from VT1",
           version: "0.1.0"
         )
       )

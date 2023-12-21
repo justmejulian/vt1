@@ -4,7 +4,6 @@
 //  Created by Julian Visser on 05.11.2023.
 //
 
-// todo clean up imports
 import Foundation
 import SwiftUI
 import SwiftData
@@ -31,8 +30,9 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     }
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        print("Handling activationDidCompleteWith")
         if let error = error {
-            print(error.localizedDescription)
+            print("Error trying to activate WCSession: ",error.localizedDescription)
         } else {
             print("The session has completed activation.")
         }

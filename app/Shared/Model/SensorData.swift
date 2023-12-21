@@ -20,7 +20,7 @@ class SensorData: Codable{
 
     var recordingStart: Date
     var timestamp: Date
-    var sensor_id: String // todo rename to camelcase
+    var sensor_id: String
 
     var values: [Value] // batch of values
 

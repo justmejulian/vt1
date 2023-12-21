@@ -22,9 +22,7 @@ class RecordingManager: NSObject, ObservableObject {
         
         print("start recording")
         
-        
-        
-        isRecording = true
+        isRecording = true 
 
         let startDate = Date()
         
@@ -38,13 +36,15 @@ class RecordingManager: NSObject, ObservableObject {
     }
     
     func monitorUpdates(recording: RecordingData, handleUpdate: @escaping (_ sensorData: SensorData) -> Void) async throws {
-        
+        print("Monitoring Updates")
         let startDate = recording.startTimestamp
         
         guard CMBatchedSensorManager.isAccelerometerSupported && CMBatchedSensorManager.isDeviceMotionSupported else {
-            print("Error CMBatchedSensorManager not supported")
-            return
+            throw RecordingError("Error CMBatchedSensorManager not supported")
         }
+        
+        self.motionManager.startAccelerometerUpdates()
+        self.motionManager.startDeviceMotionUpdates()
         
         do {
             for try await batchedData in self.motionManager.accelerometerUpdates() {
@@ -77,7 +77,6 @@ class RecordingManager: NSObject, ObservableObject {
                 }
                 
                 let firstValue = rotationRateValues.first!
-                // todo do they all have the same timestamp?
                 let date = startDate.addingTimeInterval(firstValue.timestamp)
                 
                 let rotationRateSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "rotationRate", values: rotationRateValues)
@@ -89,6 +88,7 @@ class RecordingManager: NSObject, ObservableObject {
                 let gravitySensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "gravity", values: gravityValues)
                 handleUpdate(gravitySensorData)
             }
+            throw RecordingError("Failed to start deviceMotionUpdates")
         } catch {
             print("Error handling deviceMotionUpdates", error)
             throw RecordingError("Failed to start deviceMotionUpdates")

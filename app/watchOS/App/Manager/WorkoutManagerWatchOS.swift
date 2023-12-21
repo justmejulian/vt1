@@ -53,17 +53,14 @@ extension WorkoutManager {
     }
 
     func handleReceivedData(_ data: Data) throws {
-        // todo what needs to be done here?
     }
 }
 
 extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
 
     func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
-        // todo what needs to be done here?
     }
 
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
-        // todo what needs to be done here?
     }
 }

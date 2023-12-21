@@ -8,8 +8,6 @@ struct ContentView: View {
 
     @ObservedObject var sessionManager = SessionManager.shared
 
-    //todo add connection state
-
     var body: some View {
         NavigationStack {
             switch sessionManager.started {

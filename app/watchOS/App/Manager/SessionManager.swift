@@ -46,8 +46,6 @@ class SessionManager: NSObject, ObservableObject {
             await startWorkout()
         }
         
-        // todo send to ios that started
-        
         self.exerciseName = exerciseName
         
         print("Start Session")
@@ -59,6 +57,7 @@ class SessionManager: NSObject, ObservableObject {
         sendSessionState(isSessionRunning: true)
         
         do {
+            print("Start Recording")
             // Start Recording
             let recording = try recordingManager.start(exercise: exerciseName)
             
@@ -70,6 +69,7 @@ class SessionManager: NSObject, ObservableObject {
             
             Task {
                 do {
+                    print("Start monitororig Updates")
                     try await recordingManager.monitorUpdates(recording: recording, handleUpdate: { sensorData in
                         DispatchQueue.main.async {
                             self.sensorDataCount += sensorData.values.count
