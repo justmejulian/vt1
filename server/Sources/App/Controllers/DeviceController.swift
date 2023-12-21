@@ -6,29 +6,61 @@ struct DeviceController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         
         let _ = routes.group("devices") { route in
-            route.get(use: index)
+            route.get(use: index).openAPI(
+                summary: "Get all devices",
+                description: "Get all devices",
+                response: .type([Device].self)
+            )
         }
         
         
         let _ = routes.group("device") { route in
-            route.post(use: create)
+            route.post(use: create).openAPI(
+                summary: "Create a device",
+                description: "Create a device",
+                response: .type(Device.self)
+            )
             
             let _ = route.group(":id") { device in
                 
-                device.post(use: create)
+                device.post(use: create).openAPI(
+                    summary: "Create a device",
+                    description: "Create a device",
+                    response: .type(Device.self)
+                )
                 
-                device.get(use: show)
-                device.delete(use: delete)
+                device.get(use: show).openAPI(
+                    summary: "Get a device",
+                    description: "Get a device",
+                    response: .type(ShowDevice.self)
+                )
+                device.delete(use: delete).openAPI(
+                    summary: "Delete a device",
+                    description: "Delete a device",
+                    response: .type(HTTPStatus.self)
+                )
 
                 device.group("sensorData") { data in
-                    data.post(use: addSensorData)
+                    data.post(use: addSensorData).openAPI(
+                        summary: "Add sensor data",
+                        description: "Add sensor data",
+                        response: .type(HTTPStatus.self)
+                    )
                 }
 
                 device.group("recording") { data in
-                    data.post(use: addRecordingData)
+                    data.post(use: addRecordingData).openAPI(
+                        summary: "Add recording data",
+                        description: "Add recording data",
+                        response: .type(HTTPStatus.self)
+                    )
                 }
                 device.group("recordings") { data in
-                    data.get(use: getRecordings)
+                    data.get(use: getRecordings).openAPI(
+                        summary: "Get recordings",
+                        description: "Get recordings",
+                        response: .type([RecordingData].self)
+                    )
                 }
             }
         }
@@ -37,7 +69,11 @@ struct DeviceController: RouteCollection {
         
         let _ = routes.group("recording") { route in
             route.group(":recordingId") { recording in
-                recording.get(use: getSensorDataForRecording)
+                recording.get(use: getSensorDataForRecording).openAPI(
+                    summary: "Get sensor data for recording",
+                    description: "Get sensor data for recording",
+                    response: .type([SensorData].self)
+                )
             }
         }
     }

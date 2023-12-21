@@ -1,10 +1,10 @@
 window.onload = function() {
   //<editor-fold desc="Changeable Configuration Block">
 
-  const jsonURL = document.location.origin + "/Swagger/swagger.json";
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
+  const jsonURL = document.location.origin + "/swagger/swagger.json";
   window.ui = SwaggerUIBundle({
-    url:  "./swagger.json",
+    url: jsonURL,
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
