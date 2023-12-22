@@ -30,7 +30,6 @@ struct RecordingDetailView: View {
 
     var body: some View {
         let valluesCount = sensorData.reduce(0) { $0 + $1.values.count }
-        // todo filter for different sensors
         VStack{
             Spacer()
             Text("Recording: ")
@@ -46,7 +45,6 @@ struct RecordingDetailView: View {
                 .font(.title3)
             Spacer()
 
-            // todo count values
             Text("# of datapoints: " + String(valluesCount))
                 .font(.title2)
 

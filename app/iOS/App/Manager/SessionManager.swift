@@ -49,7 +49,6 @@ class SessionManager: NSObject, ObservableObject {
 
     private func stop() async {
         
-        // todo do i need to run start workout here?
         // what happens when the watch is sleeping
         isSessionRunning = false
         connectivityManager.sendStopSession()

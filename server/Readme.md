@@ -51,8 +51,9 @@ Connect to PGAdmin
 http://127.0.0.1:8888
 ```
 
- #### Add the server
-Username: vapor_username@domain-name.com
+#### Add the server
+
+Username: <vapor_username@domain-name.com>
 PASSWORD: vapor-password
 
 ![pgadmin](../img/pgadmin-server.png)
