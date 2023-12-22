@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "da02cd17-dc65-4f13-9b72-0f55878f1b86",
+		"name": "VT1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25541492"
+	},
+	"item": [
+		{
+			"name": "Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/status",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Devices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/devices",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Device by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/device/BC06AA7E-F84E-41BF-A4D1-0AFFCFCEEE05",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"device",
+						"BC06AA7E-F84E-41BF-A4D1-0AFFCFCEEE05"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Recordings for Device",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/device/BC06AA7E-F84E-41BF-A4D1-0AFFCFCEEE05/recordings",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"device",
+						"BC06AA7E-F84E-41BF-A4D1-0AFFCFCEEE05",
+						"recordings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sensor Data for Recording",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/recording/E9CBD75E-5AC3-4A6B-B9F2-0FC878EFBF08",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"recording",
+						"E9CBD75E-5AC3-4A6B-B9F2-0FC878EFBF08"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
