@@ -53,7 +53,6 @@ Add the server
 
 ![pgadmin](../img/pgadmin-server.png)
 
-
 ## FAQ
 
 ## What do I do if I can't start the sever because the port is already used?
@@ -66,6 +65,17 @@ App     80913 julian.visser   16u  IPv4 0x6a20422a63379f4d      0t0  TCP *:http-
 vt1/app
 ❯ kill 80913
 ```
+
 ## How do I connect to the DB
 
+Connect to docker container
+
+```bash
+docker exec -it vt-1-db-1 bash
+```
+
+Then connect to the database.
+
+```bash
 psql -U vapor_username vapor_database
+```
