@@ -10,11 +10,16 @@ swift run App
 
 ### OpenApi Swagger
 
-/swagger/index.html
+All the api endpoints are documented with the help of Swagger.
+
+Once the server is running that can be found here:
+[http://127.0.0.1:8080](http://127.0.0.1:8080)
 
 ### Postman
 
-collection found ../postman
+We have added a simple post man collection, that can be used to test the application.
+
+[See Postman collection](../postman)
 
 ### Connect via iPhone
 
@@ -46,16 +51,15 @@ Connect to PGAdmin
 http://127.0.0.1:8888
 ```
 
+ #### Add the server
 Username: vapor_username@domain-name.com
 PASSWORD: vapor-password
-
-Add the server
 
 ![pgadmin](../img/pgadmin-server.png)
 
 ## FAQ
 
-## What do I do if I can't start the sever because the port is already used?
+### What do I do if I can't start the sever because the port is already used?
 
 ```bash
 ❯ lsof -i :8080
@@ -66,7 +70,7 @@ vt1/app
 ❯ kill 80913
 ```
 
-## How do I connect to the DB
+### How do I connect to the DB
 
 Connect to docker container
 
