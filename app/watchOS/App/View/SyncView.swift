@@ -29,7 +29,7 @@ struct SyncView: View {
                 syncViewModel.sync()
             }
                 .buttonStyle(.borderedProminent)
-                .disabled(sensorData.count <= 0 || recordings.count <= 0 || syncViewModel.syncing)
+                .disabled(sensorData.count <= 0 && recordings.count <= 0)
         }
     }
 
