@@ -53,7 +53,7 @@ docker compose up --build db pgadmin --detach
 Once the containers are up and running, you will be able to view the contents of the DB using PGAdmin.
 
 ```bash
-http://127.0.0.1:8888
+http://127.0.0.1:8889
 ```
 
 ### REST Api Documentation
@@ -98,7 +98,7 @@ docker compose up -build
 Connect to PGAdmin
 
 ```bash
-http://127.0.0.1:8888
+http://127.0.0.1:8889
 ```
 
 #### Add the server
