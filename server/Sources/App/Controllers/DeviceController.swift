@@ -4,6 +4,14 @@ import Vapor
 
 struct DeviceController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
+
+        let _ = routes.group("sensors") { route in
+            route.get(use: getSensors).openAPI(
+                summary: "Get all sensors",
+                description: "Get all sensors",
+                response: .type([Sensor].self)
+            )
+        }
         
         let _ = routes.group("devices") { route in
             route.get(use: index).openAPI(
@@ -120,6 +128,16 @@ struct DeviceController: RouteCollection {
         } catch {
             print("Error in getDevice: \(String(reflecting: error))")
             throw Abort(.notFound)
+        }
+    }
+
+    func getSensors(req: Request) async throws -> [Sensor] {
+        do {
+            let sensors = try await Sensor.query(on: req.db).all()
+            return sensors
+        } catch {
+            print("Error in getSensors: \(error)")
+            throw Abort(.internalServerError)
         }
     }
 
