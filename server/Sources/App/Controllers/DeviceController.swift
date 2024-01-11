@@ -240,8 +240,6 @@ struct DeviceController: RouteCollection {
     }
 
     func addSensorData(req: Request) async throws -> HTTPStatus {
-        print("addSensorData")
-        print(req)
         do {
             let addSensorData = try req.content.decode(AddSensorData.self)
 
@@ -286,8 +284,6 @@ struct DeviceController: RouteCollection {
     }
 
     func addRecordingData(req: Request) async throws -> HTTPStatus {
-        print("addRecordingData")
-        print(req)
         do {
             let device = try await getDeviceOrAddDevice(req: req)
             guard let device_id = device.id else {
