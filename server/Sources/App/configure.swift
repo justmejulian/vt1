@@ -5,6 +5,15 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
+    
+    // use ms for dates
+    let jsonEncoder = JSONEncoder()
+    let jsonDecoder = JSONDecoder()
+    jsonEncoder.dateEncodingStrategy = .millisecondsSince1970
+    jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+    ContentConfiguration.global.use(encoder: jsonEncoder, for: .json)
+    ContentConfiguration.global.use(decoder: jsonDecoder, for: .json)
+    
     // todo maybe remove and send in chunks
     app.routes.defaultMaxBodySize = "100mb"
     
