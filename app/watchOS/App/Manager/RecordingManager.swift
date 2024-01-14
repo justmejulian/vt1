@@ -79,10 +79,13 @@ class RecordingManager: NSObject, ObservableObject {
                     var rotationRateValues: [Value] = []
                     var userAccelerationValues: [Value] = []
                     var gravityValues: [Value] = []
+                    var quaternionValues: [Value] = []
+                    
                     batchedData.forEach { data in
                         rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
                         userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: data.timestamp))
                         gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: data.timestamp))
+                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, timestamp: data.timestamp))
                     }
                     
                     let firstValue = rotationRateValues.first!
@@ -97,6 +100,9 @@ class RecordingManager: NSObject, ObservableObject {
 
                     let gravitySensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "gravity", values: gravityValues)
                     handleUpdate(gravitySensorData)
+                    
+                    let quaternionSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "quaternion", values: quaternionValues)
+                    handleUpdate(quaternionSensorData)
                 }
                 throw RecordingError("Failed to start deviceMotionUpdates")
             } catch {
