@@ -52,5 +52,5 @@ struct Value: Codable {
     var x: Double
     var y: Double
     var z: Double
-    var timestamp: TimeInterval
+    var timestamp: Date
 }

@@ -50,8 +50,9 @@ class RecordingManager: NSObject, ObservableObject {
             do {
                 for try await batchedData in self.motionManager.accelerometerUpdates() {
                     var values: [Value] = []
+                    
                     batchedData.forEach { data in
-                        values.append(Value(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z, timestamp: data.timestamp))
+                        values.append(Value(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
                     }
                     
                     // all have differnt timestamps
@@ -82,10 +83,10 @@ class RecordingManager: NSObject, ObservableObject {
                     var quaternionValues: [Value] = []
                     
                     batchedData.forEach { data in
-                        rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: data.timestamp))
-                        userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: data.timestamp))
-                        gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: data.timestamp))
-                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, timestamp: data.timestamp))
+                        rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
+                        userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
+                        gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
+                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
                     }
                     
                     let firstValue = rotationRateValues.first!
