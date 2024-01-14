@@ -33,6 +33,8 @@
 		C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
 		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */; };
+		C75583812B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
+		C75583822B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
 		C755927D2B17918F00972671 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C755927C2B17918F00972671 /* SessionManager.swift */; };
 		C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7713C1A2B0B71DB001C7768 /* SyncView.swift */; };
 		C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */; };
@@ -142,6 +144,7 @@
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListViewModel.swift; sourceTree = "<group>"; };
+		C75583802B54471500451621 /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
 		C755927C2B17918F00972671 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		C7713C1A2B0B71DB001C7768 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
@@ -315,6 +318,7 @@
 				C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */,
 				C72BDCDA2AF908DE00A3A563 /* DataSource.swift */,
 				C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */,
+				C75583802B54471500451621 /* TimeInterval.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -666,6 +670,7 @@
 				C7C44CF02B136B5700789EAA /* ConnectivityManagerWatchOS.swift in Sources */,
 				C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */,
 				C7778DCF2B10A9FF00E5D9ED /* RecordingManager.swift in Sources */,
+				C75583822B54471500451621 /* TimeInterval.swift in Sources */,
 				C7C8A2C92AE948F500D7CFBF /* MotionView.swift in Sources */,
 				C704625E2ADFCF6F009F5DD4 /* ContentView.swift in Sources */,
 				C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
@@ -710,6 +715,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */,
+				C75583812B54471500451621 /* TimeInterval.swift in Sources */,
 				C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */,
 				C755927D2B17918F00972671 /* SessionManager.swift in Sources */,
 				C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,

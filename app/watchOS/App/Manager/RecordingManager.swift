@@ -54,8 +54,13 @@ class RecordingManager: NSObject, ObservableObject {
                         values.append(Value(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z, timestamp: data.timestamp))
                     }
                     
+                    // all have differnt timestamps
+                    // use first as batch tiemstamp
+                    // The timestamp is the amount of time in seconds since the device booted.
                     let firstValue = values.first!
-                    let date = startDate.addingTimeInterval(firstValue.timestamp)
+                    
+                    let date = Date(timeIntervalSince1970: firstValue.timestamp.timeIntervalSince1970)
+                    
                     
                     let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "acceleration", values: values)
                     
@@ -81,7 +86,8 @@ class RecordingManager: NSObject, ObservableObject {
                     }
                     
                     let firstValue = rotationRateValues.first!
-                    let date = startDate.addingTimeInterval(firstValue.timestamp)
+                    
+                    let date = Date(timeIntervalSince1970: firstValue.timestamp.timeIntervalSince1970)
                     
                     let rotationRateSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "rotationRate", values: rotationRateValues)
                     handleUpdate(rotationRateSensorData)
