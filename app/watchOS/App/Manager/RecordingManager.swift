@@ -83,10 +83,11 @@ class RecordingManager: NSObject, ObservableObject {
                     var quaternionValues: [Value] = []
                     
                     batchedData.forEach { data in
-                        rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
-                        userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
-                        gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
-                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, timestamp: Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970)))
+                        let dataDate = Date(timeIntervalSince1970: data.timestamp.timeIntervalSince1970);
+                        rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: dataDate))
+                        userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: dataDate))
+                        gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: dataDate))
+                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, timestamp: dataDate))
                     }
                     
                     let firstValue = rotationRateValues.first!
