@@ -230,6 +230,7 @@ struct DeviceController: RouteCollection {
         var x: Double
         var y: Double
         var z: Double
+        var w: Double?
         var timestamp: Double
     }
     struct AddSensorData: Content {
@@ -260,7 +261,8 @@ struct DeviceController: RouteCollection {
                     timestamp: Date(timeIntervalSinceReferenceDate: value.timestamp),
                     x: value.x,
                     y: value.y,
-                    z: value.z
+                    z: value.z,
+                    w: value.w
                 )
                 try await sensorData.save(on: req.db)
             }

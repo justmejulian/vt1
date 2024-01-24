@@ -34,6 +34,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateRecordingData())
     app.migrations.add(AddSensors())
     app.migrations.add(AddQuaternionSensor())
+    app.migrations.add(AddSensorDataFieldW())
 
     // run migrations
     try await app.autoMigrate()

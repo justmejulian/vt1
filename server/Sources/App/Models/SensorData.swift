@@ -28,9 +28,12 @@ final class SensorData: Model, Content {
     @Field(key: "z")
     var z: Double
 
+    @Field(key: "w")
+    var w: Double?
+
     init() { }
 
-    init(id: UUID? = UUID(), recording_start: Date, device_id: UUID, sensor_id: UUID, timestamp: Date, x: Double, y: Double, z: Double) {
+    init(id: UUID? = UUID(), recording_start: Date, device_id: UUID, sensor_id: UUID, timestamp: Date, x: Double, y: Double, z: Double, w: Double? = nil) {
         self.id = id
         self.recording_start = recording_start
         self.device_id = device_id
@@ -39,5 +42,6 @@ final class SensorData: Model, Content {
         self.x = x
         self.y = y
         self.z = z
+        self.w = w
     }
 }

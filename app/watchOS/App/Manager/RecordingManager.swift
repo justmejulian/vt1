@@ -87,7 +87,7 @@ class RecordingManager: NSObject, ObservableObject {
                         rotationRateValues.append(Value(x:data.rotationRate.x, y: data.rotationRate.y, z: data.rotationRate.z, timestamp: dataDate))
                         userAccelerationValues.append(Value(x:data.userAcceleration.x, y: data.userAcceleration.y, z: data.userAcceleration.z, timestamp: dataDate))
                         gravityValues.append(Value(x:data.gravity.x, y: data.gravity.y, z: data.gravity.z, timestamp: dataDate))
-                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, timestamp: dataDate))
+                        quaternionValues.append(Value(x:data.attitude.quaternion.x, y: data.attitude.quaternion.y, z: data.attitude.quaternion.z, w: data.attitude.quaternion.w, timestamp: dataDate))
                     }
                     
                     let firstValue = rotationRateValues.first!
