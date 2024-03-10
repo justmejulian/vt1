@@ -4,6 +4,7 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct MotionView: View {
 
@@ -55,6 +56,8 @@ struct MotionView: View {
         .navigationBarBackButtonHidden(sessionManager.started)
         .onAppear {
             sessionManager.requestAuthorization()
+
+            Logger.viewCycle.info("MotionView Appeared!")
         }
     }
 

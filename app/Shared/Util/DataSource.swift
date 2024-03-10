@@ -1,4 +1,6 @@
 //
+//  vt1
+//
 //  Created by Julian Visser on 06.11.2023.
 //
 
@@ -7,6 +9,7 @@
 
 import Foundation
 import SwiftData
+import OSLog
 
 enum DataTypes {
     case recording(RecordingData)
@@ -22,13 +25,16 @@ final class DataSource {
 
     @MainActor
     private init() {
+        Logger.statistics.debug("Creating DataSource")
         do {
             self.modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self)
             self.modelContext = modelContainer.mainContext
         } catch {
+            Logger.statistics.error("Fatal Error creating DataSource \(error.localizedDescription)")
             fatalError(error.localizedDescription)
         }
 
+        // Delete all
         // self.clear()
     }
 
@@ -46,6 +52,7 @@ final class DataSource {
         do {
             return try modelContext.fetch(FetchDescriptor<T>())
         } catch {
+            Logger.statistics.error("Fatal Error fetchData DataSource \(error.localizedDescription)")
             fatalError(error.localizedDescription)
         }
     }
@@ -76,12 +83,12 @@ final class DataSource {
     }
 
     func clear() {
-        print("Clearing all data.")
+        Logger.viewCycle.info("Clearing all data from DataSource.")
         do {
             try modelContext.delete(model: RecordingData.self)
             try modelContext.delete(model: SensorData.self)
         } catch {
-            print("Failed to clear all data.")
+            Logger.viewCycle.error("Failed to clear all data from DataSource.")
         }
     }
 }

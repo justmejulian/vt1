@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import WatchConnectivity
+import OSLog
 
 extension ConnectivityManager {
     func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
@@ -15,9 +16,10 @@ extension ConnectivityManager {
         let sessionManager = SessionManager.shared
         
         if let exerciseName = data["startSession"] {
-            print("recived start session with exerciseName:", exerciseName)
+            Logger.viewCycle.info("recived start session")
             
             if let exerciseName = exerciseName as? String {
+                Logger.viewCycle.info("start session with exerciseName: \(exerciseName)")
                 Task {
                     await sessionManager.start(exerciseName: exerciseName)
                     replyHandler(["sucess": true])
@@ -25,13 +27,13 @@ extension ConnectivityManager {
                 return
             }
             
-            print("Failed to convert exerciseName to string", exerciseName)
+            Logger.viewCycle.error("Failed to convert exerciseName to string")
             
             replyHandler(["error": "Failed to convert exerciseName to string"])
         }
         
         if (data["stopSession"] != nil) {
-            print("recived stop session")
+            Logger.viewCycle.info("recived stop session")
             DispatchQueue.main.async {
                 sessionManager.stop()
             }
@@ -39,7 +41,7 @@ extension ConnectivityManager {
         }
 
         if (data["getSessionState"] != nil) {
-            print("received get session state")
+            Logger.viewCycle.debug("received get session state")
             replyHandler(["isSessionRunning": sessionManager.started])
             return
         }
@@ -59,9 +61,9 @@ extension ConnectivityManager {
     func sendSessionState(isSessionRunning: Bool) {
         let context = ["isSessionRunning": isSessionRunning]
         self.session.sendMessage(context, replyHandler: { replyData in
-            print("sucessfully sent session state")
+            Logger.viewCycle.debug("sucessfully sent session state: isSessionRunning \(isSessionRunning)")
         }, errorHandler: { (error) in
-            print("error sending", context, error.localizedDescription)
+            Logger.viewCycle.error("error sending \(context) \(error.localizedDescription)")
         })
     }
 }

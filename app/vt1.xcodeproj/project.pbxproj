@@ -60,6 +60,10 @@
 		C7CF34252B34D7DC006EE207 /* WorkoutManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF34232B34D7DC006EE207 /* WorkoutManagerTest.swift */; };
 		C7CF34272B34D803006EE207 /* RecordingManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF34262B34D803006EE207 /* RecordingManagerTest.swift */; };
 		C7CF34292B34D82E006EE207 /* ConnectivityManagerWatchOSTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF34282B34D82E006EE207 /* ConnectivityManagerWatchOSTest.swift */; };
+		C7DF9C762B9C6B350096FD89 /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C752B9C6B350096FD89 /* LogStore.swift */; };
+		C7DF9C772B9C6B350096FD89 /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C752B9C6B350096FD89 /* LogStore.swift */; };
+		C7DF9C792B9CD31D0096FD89 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C782B9CD31D0096FD89 /* Logger.swift */; };
+		C7DF9C7A2B9CD31D0096FD89 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C782B9CD31D0096FD89 /* Logger.swift */; };
 		C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */; };
 		C7F8C1AD2B3333A800FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -168,6 +172,8 @@
 		C7CF34232B34D7DC006EE207 /* WorkoutManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManagerTest.swift; sourceTree = "<group>"; };
 		C7CF34262B34D803006EE207 /* RecordingManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManagerTest.swift; sourceTree = "<group>"; };
 		C7CF34282B34D82E006EE207 /* ConnectivityManagerWatchOSTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManagerWatchOSTest.swift; sourceTree = "<group>"; };
+		C7DF9C752B9C6B350096FD89 /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
+		C7DF9C782B9CD31D0096FD89 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
 		C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -319,6 +325,7 @@
 				C72BDCDA2AF908DE00A3A563 /* DataSource.swift */,
 				C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */,
 				C75583802B54471500451621 /* TimeInterval.swift */,
+				C7DF9C782B9CD31D0096FD89 /* Logger.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -391,6 +398,7 @@
 			children = (
 				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
 				C778EF922AE95A120086F894 /* RecordingData.swift */,
+				C7DF9C752B9C6B350096FD89 /* LogStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -667,6 +675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7DF9C7A2B9CD31D0096FD89 /* Logger.swift in Sources */,
 				C7C44CF02B136B5700789EAA /* ConnectivityManagerWatchOS.swift in Sources */,
 				C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */,
 				C7778DCF2B10A9FF00E5D9ED /* RecordingManager.swift in Sources */,
@@ -679,6 +688,7 @@
 				C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */,
 				C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */,
+				C7DF9C772B9C6B350096FD89 /* LogStore.swift in Sources */,
 				C7778DCB2B0D0D1C00E5D9ED /* AppDelegate.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
@@ -721,6 +731,7 @@
 				C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C7C44CF22B136BA200789EAA /* ConnectivityManagerIOS.swift in Sources */,
+				C7DF9C762B9C6B350096FD89 /* LogStore.swift in Sources */,
 				C7778DC72B0D007900E5D9ED /* WorkoutManagerIOS.swift in Sources */,
 				C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */,
 				C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */,
@@ -728,6 +739,7 @@
 				C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */,
 				C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,
+				C7DF9C792B9CD31D0096FD89 /* Logger.swift in Sources */,
 				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
 				C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */,
@@ -815,6 +827,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
@@ -850,6 +863,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
@@ -998,6 +1012,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
 			};
 			name = Debug;
 		};
@@ -1053,6 +1068,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1087,6 +1103,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1122,6 +1139,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
