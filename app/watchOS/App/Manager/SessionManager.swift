@@ -94,15 +94,14 @@ class SessionManager: NSObject, ObservableObject {
     }
     
     func sendSensorData(sensorData: SensorData) {
-        Logger.viewCycle.debug("Calling SessionManager sendSensorData for \(sensorData.timestamp)")
+        // Logger.viewCycle.debug("Calling SessionManager sendSensorData for \(sensorData.timestamp)")
         self.connectivityManager.sendSensorData(sensorData: sensorData, replyHandler:  { (replyData: [String: Any]) in
             if replyData["sucess"] != nil {
-                Logger.viewCycle.debug("Sucsessfuly sent sensorData timestamp \(sensorData.timestamp)")
+                // Logger.viewCycle.debug("Sucsessfuly sent sensorData timestamp \(sensorData.timestamp)")
                 
                 // Remove synced Sensor Data
                 self.dataSource.removeData(sensorData)
-                
-                Logger.viewCycle.debug("Removed sensorData timestamp \(sensorData.timestamp) from store")
+                // Logger.viewCycle.debug("Removed sensorData timestamp \(sensorData.timestamp) from store")
                 
                 return
             }
@@ -130,11 +129,14 @@ class SessionManager: NSObject, ObservableObject {
     }
     
     func sendRecording(recording: RecordingData) {
-        Logger.viewCycle.debug("Calling SessionManager sendRecording for \(recording.startTimestamp)")
+        // Logger.viewCycle.debug("Calling SessionManager sendRecording for \(recording.startTimestamp)")
         self.connectivityManager.sendRecording(recording: recording, replyHandler:  { replyData in
             if replyData["sucess"] != nil {
+                // Logger.viewCycle.debug("Sucsessfuly sent recording timestamp \(recording.startTimestamp)")
                 // Remove synced Sensor Data
                 self.dataSource.removeData(recording)
+                
+                // Logger.viewCycle.debug("Removed recording timestamp \(recording.startTimestamp) from store")
                 return
             }
 

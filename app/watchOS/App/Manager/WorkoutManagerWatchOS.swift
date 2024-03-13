@@ -24,12 +24,19 @@ extension WorkoutManager {
 
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
-            // Handle error.
+            
+            // todo we need to wait for this
+            if success {
+                Logger.viewCycle.info("successfuly requested Authorization from WorkoutManager")
+                return
+            }
+
             if let error = error {
                 Logger.viewCycle.error("requestAuthorization error: \(error.localizedDescription)")
                 return
             }
         }
+
     }
 
     func startWorkout() async throws {
@@ -50,7 +57,7 @@ extension WorkoutManager {
 
         session?.startActivity(with: startDate)
         try await builder?.beginCollection(at: startDate)
-        
+
         started = true
         Logger.viewCycle.debug("started workout from WorkoutManager \(startDate)")
     }
