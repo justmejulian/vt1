@@ -50,6 +50,7 @@ final class DataSource {
 
     private func fetchData<T>() -> [T] where T : PersistentModel {
         do {
+            // todo does this need to be on main?
             return try modelContext.fetch(FetchDescriptor<T>())
         } catch {
             Logger.statistics.error("Fatal Error fetchData DataSource \(error.localizedDescription)")
