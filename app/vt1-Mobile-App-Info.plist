@@ -4,7 +4,7 @@
 <dict>
 	<key>OSLogPreferences</key>
 	<dict>
-		<key>com.julianvisser.vt1.watchos-App</key>
+		<key>com.julianvisser.vt1</key>
 		<dict>
 			<key>statistics</key>
 			<dict>
@@ -22,13 +22,5 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string></string>
-	</array>
-	<key>WKBackgroundModes</key>
-	<array>
-		<string>workout-processing</string>
-	</array>
 </dict>
 </plist>

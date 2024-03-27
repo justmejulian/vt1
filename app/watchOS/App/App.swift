@@ -9,6 +9,7 @@ import SwiftData
 struct Main: App {
     @WKApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
+    // why not pass to connectivityManager here?
     let sessionManager = SessionManager.shared
     
     let connectivityManager = ConnectivityManager.shared

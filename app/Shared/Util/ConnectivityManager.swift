@@ -1,5 +1,5 @@
 //
-//  SessionDelegater.swift
+//  vt1
 //
 //  Created by Julian Visser on 05.11.2023.
 //
@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import Combine
 import WatchConnectivity
+import OSLog
 
 class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     @MainActor
@@ -21,6 +22,7 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
 
     @MainActor
     init(dataSource: DataSource = DataSource.shared) {
+        Logger.statistics.debug("Creating ConnectivityManager")
         self.dataSource = dataSource
 
         super.init()
@@ -30,11 +32,11 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     }
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        print("Handling activationDidCompleteWith")
+        Logger.viewCycle.debug("Handling activationDidCompleteWith")
         if let error = error {
-            print("Error trying to activate WCSession: ",error.localizedDescription)
+            Logger.viewCycle.error("Error trying to activate WCSession: \(error.localizedDescription)")
         } else {
-            print("The session has completed activation.")
+            Logger.viewCycle.info("The session has completed activation.")
         }
     }
 
@@ -45,10 +47,10 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
             let context = [key: encodedData]
             // do this async?
             self.session.sendMessage(context, replyHandler: replyHandler, errorHandler: { (error) in
-                print("error sending", key, error.localizedDescription)
+                Logger.viewCycle.error("Error sending: \(key) \(error.localizedDescription)")
             })
         } catch {
-            print("Error sending Presistent Model: ", error)
+            Logger.viewCycle.error("Error sending Presistent Model: \(error)")
         }
     }
 

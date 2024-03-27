@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import OSLog
 
 @Observable
 class RecordingListViewModel {
@@ -14,6 +15,6 @@ class RecordingListViewModel {
         init(dataSource: DataSource = DataSource.shared) {
             self.dataSource = dataSource
             recordings = dataSource.fetchRecordingArray()
-            print(recordings)
+            Logger.statistics.debug("Count of recordings \(self.recordings.count)")
         }
 }

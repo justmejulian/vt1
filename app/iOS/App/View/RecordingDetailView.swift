@@ -4,7 +4,7 @@
 
 import SwiftUI
 import SwiftData
-
+import OSLog
 import Foundation
 
 struct RecordingDetailView: View {
@@ -68,14 +68,18 @@ struct RecordingDetailView: View {
             }
                 .buttonStyle(BorderedButtonStyle())
         }
-
+        .onAppear {
+            Logger.viewCycle.info("RecordingDetailView Appeared!")
+        }
     }
 
     func updateData() {
+        Logger.viewCycle.info("updateData from RecordingDetailView new text: \(text)")
         recording.exercise = text
     }
 
     func deleteData() {
+        Logger.viewCycle.info("deleteData from RecordingDetailView")
         dataSource.removeData(recording)
     }
 }

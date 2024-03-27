@@ -4,6 +4,7 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct ContentView: View {
     
@@ -76,6 +77,9 @@ struct ContentView: View {
                 }
                     .buttonStyle(BorderedButtonStyle())
             }.padding(.bottom, 32).padding(.horizontal, 20)
+        }
+        .onAppear {
+            Logger.viewCycle.info("ContentView Appeared!")
         }
     }
 
