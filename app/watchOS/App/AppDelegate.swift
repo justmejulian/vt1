@@ -16,6 +16,9 @@ class AppDelegate: NSObject, WKApplicationDelegate {
                 WorkoutManager.shared.resetWorkout()
                 Logger.viewCycle.debug("calling startWorkout from AppDelegate")
                 try await WorkoutManager.shared.startWorkout()
+                
+                // todo send info to iphone to start session
+                ConnectivityManager.shared.sendSessionReadyToStart()
             } catch {
                 Logger.viewCycle.error("Failed stating workout from AppDelegate")
             }

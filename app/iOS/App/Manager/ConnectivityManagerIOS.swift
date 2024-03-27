@@ -127,6 +127,15 @@ extension ConnectivityManager {
             replyHandler(["sucess": true])
             return
         }
+        
+        if let isSessionReady = data["isSessionReady"] as? Bool{
+            Logger.viewCycle.debug("recived isSessionReady: \(isSessionReady)")
+            Task {
+                await SessionManager.shared.startSession()
+            }
+            replyHandler(["sucess": true])
+            return
+        }
 
         replyHandler(["error in iOS ConnectivityManager": "unknown data type"])
     }
