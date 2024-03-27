@@ -133,6 +133,8 @@
 		C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C704628F2AE5899E009F5DD4 /* SensorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorData.swift; sourceTree = "<group>"; };
+		C729084E2BA5BA5E00ED7183 /* vt1-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "vt1-Watch-App-Info.plist"; sourceTree = "<group>"; };
+		C729084F2BA5BA6C00ED7183 /* vt1-Mobile-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "vt1-Mobile-App-Info.plist"; sourceTree = "<group>"; };
 		C72BDCDA2AF908DE00A3A563 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		C72BDCE22AFD409D00A3A563 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
@@ -333,6 +335,8 @@
 		C7327B762ADD5D8200F16E63 = {
 			isa = PBXGroup;
 			children = (
+				C729084F2BA5BA6C00ED7183 /* vt1-Mobile-App-Info.plist */,
+				C729084E2BA5BA5E00ED7183 /* vt1-Watch-App-Info.plist */,
 				C7778DCC2B0D222300E5D9ED /* vt1 Mobile App.entitlements */,
 				C7CA489E2B07D09D00023112 /* vt1 Watch App.entitlements */,
 				C704628D2ADFD3F3009F5DD4 /* Shared */,
