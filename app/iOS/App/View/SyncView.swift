@@ -16,6 +16,8 @@ struct SyncView: View {
     @Query var recordingData: [RecordingData]
 
     @State private var ip: String = "192.168.1.251:8080"
+    
+    @State private var isConfirming = false
 
     var body: some View {
         
@@ -74,14 +76,22 @@ struct SyncView: View {
                     .disabled(ip == "")
 
                 Button(action: {
-                    syncViewModel.deleteAll()
+                    isConfirming = true
                 }) {
                     Label("Delete All", systemImage: "trash")
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
                 }
                     .buttonStyle(BorderedButtonStyle())
-                    .disabled(ip == "")
+                    .confirmationDialog(
+                               "Are you sure you want delete all?",
+                               isPresented: $isConfirming
+                    ) {
+                        Button("Delete All", role: .destructive) {
+                            syncViewModel.deleteAll()
+                        }
+                        Button("Cancel", role: .cancel) {}
+                    }
             }.padding(.bottom, 32).padding(.horizontal, 20)
         }
         .onAppear {
