@@ -73,7 +73,7 @@ struct StartRecordingView: View {
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
             }
-                .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil)
+            .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil || sessionManager.isLoading == true)
                 .buttonStyle(BorderedProminentButtonStyle())
                 .padding(.bottom, 32).padding(.horizontal, 20)
         })

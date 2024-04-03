@@ -103,7 +103,7 @@ http://127.0.0.1:8889
 
 #### Add the server
 
-Username: <vapor_username@domain-name.com>
+Username: vapor_username@domain-name.com
 PASSWORD: vapor-password
 
 ![pgadmin](../img/pgadmin-server.png)

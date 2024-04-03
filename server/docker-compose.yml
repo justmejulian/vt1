@@ -75,8 +75,6 @@ services:
       - '5432:5432'
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin4_container
-    restart: always
     ports:
       - "8889:80"
     environment:

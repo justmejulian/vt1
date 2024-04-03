@@ -21,6 +21,7 @@ class SessionManager: NSObject, ObservableObject {
     private let workoutManager = WorkoutManager.shared
 
     @Published var isSessionRunning: Bool? = nil
+    @Published var isLoading: Bool? = nil
     
     var exerciseName: String? = nil
 
@@ -30,6 +31,7 @@ class SessionManager: NSObject, ObservableObject {
     }
 
     func toggle(text: String?) async {
+        isLoading = true
         Logger.viewCycle.debug("toggle from SessionManager")
         guard isSessionRunning != nil else {
             Logger.viewCycle.debug("isSessionRunning was null")
@@ -67,15 +69,17 @@ class SessionManager: NSObject, ObservableObject {
         isSessionRunning = true
         connectivityManager.sendStartSession(exerciseName: exerciseName ?? "")
         
+        isLoading = false
+        
         Logger.viewCycle.debug("started watchWorkout and session from SessionManager at \(Date())")
-
     }
 
     private func stop() async {
         Logger.viewCycle.debug("stop from SessionManager")
 
-        // what happens when the watch is sleeping
+        // todo what happens when the watch is sleeping
         isSessionRunning = false
+        isLoading = false
         connectivityManager.sendStopSession()
     }
 }
