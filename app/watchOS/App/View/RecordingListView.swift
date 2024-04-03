@@ -6,7 +6,7 @@
 //
 import SwiftUI
 import SwiftData
-
+import OSLog
 import Foundation
 
 struct RecordingListView: View {
@@ -35,5 +35,8 @@ struct RecordingListView: View {
                     Text("Oops, looks like there's no data...")
                 }
             })
+            .onAppear {
+                Logger.viewCycle.info("RecordingListView Appeared!")
+            }
     }
 }

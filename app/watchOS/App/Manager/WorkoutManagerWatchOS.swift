@@ -5,10 +5,12 @@
 import Foundation
 import CoreMotion
 import HealthKit
+import OSLog
 
 extension WorkoutManager {
     // Request authorization to access HealthKit.
     func requestAuthorization() {
+        Logger.viewCycle.info("requestAuthorization from WorkoutManager")
         // The quantity type to write to the health store.
         let typesToShare: Set = [
             HKQuantityType.workoutType()
@@ -22,16 +24,23 @@ extension WorkoutManager {
 
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
-            // Handle error.
-            if error != nil {
-                print(error!)
+            
+            // todo we need to wait for this
+            if success {
+                Logger.viewCycle.info("successfuly requested Authorization from WorkoutManager")
+                return
+            }
+
+            if let error = error {
+                Logger.viewCycle.error("requestAuthorization error: \(error.localizedDescription)")
                 return
             }
         }
+
     }
 
     func startWorkout() async throws {
-        print("start workout")
+        Logger.viewCycle.info("startWorkout from WorkoutManager")
 
 
         let configuration = HKWorkoutConfiguration()
@@ -48,8 +57,9 @@ extension WorkoutManager {
 
         session?.startActivity(with: startDate)
         try await builder?.beginCollection(at: startDate)
-        
+
         started = true
+        Logger.viewCycle.debug("started workout from WorkoutManager \(startDate)")
     }
 
     func handleReceivedData(_ data: Data) throws {
@@ -59,6 +69,7 @@ extension WorkoutManager {
 extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
 
     func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+        Logger.viewCycle.debug("workoutBuilderDidCollectEvent in WorkoutManager")
     }
 
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {

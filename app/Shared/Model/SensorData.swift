@@ -1,8 +1,7 @@
 //
-//  SensorData.swift
-//  vt1 Watch App
+//  vt1
 //
-//  Created by Julian Visser on 229.10.2023.
+//  Created by Julian Visser on 25.10.2023.
 //
 
 import Foundation

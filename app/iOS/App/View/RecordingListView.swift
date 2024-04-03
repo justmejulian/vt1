@@ -4,7 +4,7 @@
 
 import SwiftUI
 import SwiftData
-
+import OSLog
 import Foundation
 
 struct RecordingListView: View {
@@ -17,6 +17,9 @@ struct RecordingListView: View {
                 Spacer()
                 Text("Looks like there are no Recordings yet...")
                 Spacer()
+            }
+            .onAppear {
+                Logger.viewCycle.info("RecordingListView Empty VStack Appeared!")
             }
         } else {
             NavigationStack {
@@ -35,6 +38,9 @@ struct RecordingListView: View {
                     }
                 }
                     .listStyle(.automatic)
+            }
+            .onAppear {
+                Logger.viewCycle.info("RecordingListView NavigationStack Appeared!")
             }
         }
     }

@@ -8,6 +8,7 @@
 import Foundation
 import CoreMotion
 import SwiftUI
+import OSLog
 
 class RecordingManager: NSObject, ObservableObject {
     let motionManager = CMBatchedSensorManager()
@@ -15,12 +16,13 @@ class RecordingManager: NSObject, ObservableObject {
     @Published private(set) var isRecording = false
     
     func start(exercise: String) throws -> RecordingData {
+        Logger.viewCycle.debug("Calling start RecordingManager")
         
         if (isRecording) {
             throw RecordingError("Recording already running")
         }
         
-        print("start recording")
+        Logger.viewCycle.info("Starting recording")
         
         isRecording = true 
 
@@ -36,7 +38,7 @@ class RecordingManager: NSObject, ObservableObject {
     }
     
     func monitorUpdates(recording: RecordingData, handleUpdate: @escaping (_ sensorData: SensorData) -> Void) async throws {
-        print("Monitoring Updates")
+        Logger.viewCycle.debug("Started Monitoring Updates")
         let startDate = recording.startTimestamp
         
         guard CMBatchedSensorManager.isAccelerometerSupported && CMBatchedSensorManager.isDeviceMotionSupported else {
@@ -48,6 +50,7 @@ class RecordingManager: NSObject, ObservableObject {
         
         Task {
             do {
+                Logger.viewCycle.debug("Starting accelerometerUpdates")
                 for try await batchedData in self.motionManager.accelerometerUpdates() {
                     var values: [Value] = []
                     
@@ -62,13 +65,12 @@ class RecordingManager: NSObject, ObservableObject {
                     
                     let date = Date(timeIntervalSince1970: firstValue.timestamp.timeIntervalSince1970)
                     
-                    
                     let sensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "acceleration", values: values)
                     
                     handleUpdate(sensorData)
                 }
             } catch {
-                print("Error handling accelerometerUpdates", error)
+                Logger.viewCycle.error("Error handling accelerometerUpdates \(error)")
                 throw RecordingError("Failed to start accelerometerUpdates")
             }
         }
@@ -76,6 +78,7 @@ class RecordingManager: NSObject, ObservableObject {
 
         Task {
             do {
+                Logger.viewCycle.debug("Starting deviceMotionUpdates")
                 for try await batchedData in self.motionManager.deviceMotionUpdates() {
                     var rotationRateValues: [Value] = []
                     var userAccelerationValues: [Value] = []
@@ -106,9 +109,8 @@ class RecordingManager: NSObject, ObservableObject {
                     let quaternionSensorData = SensorData(recordingStart: startDate, timestamp: date, sensor_id: "quaternion", values: quaternionValues)
                     handleUpdate(quaternionSensorData)
                 }
-                throw RecordingError("Failed to start deviceMotionUpdates")
             } catch {
-                print("Error handling deviceMotionUpdates", error)
+                Logger.viewCycle.error("Error handling deviceMotionUpdates \(error)")
                 throw RecordingError("Failed to start deviceMotionUpdates")
             }
         }

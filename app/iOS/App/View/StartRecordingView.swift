@@ -6,6 +6,7 @@ import Foundation
 import SwiftUI
 import SwiftData
 import HealthKit
+import OSLog
 
 struct StartRecordingView: View {
     @ObservedObject
@@ -60,18 +61,24 @@ struct StartRecordingView: View {
             
             Button(action: {
                 Task {
+                    Logger.viewCycle.info("Calling toggle from StartRecordingView")
+                    // todo disable
                     await sessionManager.toggle(text: text)
+                    
+                    // also try alert
+                    // https://www.hackingwithswift.com/quick-start/swiftui/how-to-show-an-alert
                 }
             }) {
                 Label(sessionManager.isSessionRunning ?? false ? "Stop Recording" : "Start Recording", systemImage: "arrow.triangle.2.circlepath")
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
             }
-                .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil)
+            .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil || sessionManager.isLoading == true)
                 .buttonStyle(BorderedProminentButtonStyle())
                 .padding(.bottom, 32).padding(.horizontal, 20)
         })
         .onAppear {
+            Logger.viewCycle.info("StartRecordingView Appeared!")
             sessionManager.refreshSessionState()
         }
     }

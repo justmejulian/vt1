@@ -5,6 +5,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct SyncView: View {
     
@@ -62,6 +63,7 @@ struct SyncView: View {
 
             VStack {
                 Button(action: {
+                    Logger.viewCycle.info("Calling postData from SyncView")
                     syncViewModel.postData(ip: ip)
                 }) {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
@@ -81,6 +83,9 @@ struct SyncView: View {
                     .buttonStyle(BorderedButtonStyle())
                     .disabled(ip == "")
             }.padding(.bottom, 32).padding(.horizontal, 20)
+        }
+        .onAppear {
+            Logger.viewCycle.info("SyncView Appeared!")
         }
     }
 }

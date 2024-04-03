@@ -6,7 +6,7 @@ func routes(_ app: Application) throws {
 
     app.get { req -> EventLoopFuture<View> in
         let fileURL = app.directory.publicDirectory + "index.html"
-        print(fileURL)
+
         return req.view.render(fileURL)
     }.excludeFromOpenAPI()
 

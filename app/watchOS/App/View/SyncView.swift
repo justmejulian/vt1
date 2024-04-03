@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct SyncView: View {
     @ObservedObject
@@ -30,6 +31,9 @@ struct SyncView: View {
             }
                 .buttonStyle(.borderedProminent)
                 .disabled(sensorData.count <= 0 && recordings.count <= 0)
+        }
+        .onAppear {
+            Logger.viewCycle.info("SyncView Appeared!")
         }
     }
 

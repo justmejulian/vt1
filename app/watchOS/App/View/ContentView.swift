@@ -3,11 +3,12 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct ContentView: View {
 
     @ObservedObject var sessionManager = SessionManager.shared
-
+    
     var body: some View {
         NavigationStack {
             switch sessionManager.started {
@@ -35,5 +36,8 @@ struct ContentView: View {
         }
         .listStyle(.plain)
         .navigationTitle("Color")
+        .onAppear {
+            Logger.viewCycle.info("ContentView Appeared!")
+        }
     }
 }
