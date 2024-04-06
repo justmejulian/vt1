@@ -27,6 +27,7 @@ class SessionManager: NSObject, ObservableObject {
 
     var timer: Timer? = nil
     
+    @Published var loading = false
     @Published var started = false
     @Published var exerciseName: String? = nil
     @Published var sensorDataCount: Int = 0
@@ -43,6 +44,7 @@ class SessionManager: NSObject, ObservableObject {
     @MainActor
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
+        loading = true
         
         if (!workoutManager.started) {
             await startWorkout()
@@ -54,7 +56,6 @@ class SessionManager: NSObject, ObservableObject {
         
         started = true
         sensorDataCount = 0
-        startTimer()
         
         sendSessionState(isSessionRunning: true)
         
@@ -75,6 +76,15 @@ class SessionManager: NSObject, ObservableObject {
                     try await recordingManager.monitorUpdates(recording: recording, handleUpdate: { sensorData in
                         DispatchQueue.main.async {
                             self.sensorDataCount += sensorData.values.count
+                        }
+                        
+                        // Start Timer after first monitorUpdate is recieved
+                        if (self.loading){
+                            DispatchQueue.main.async {
+                                Logger.viewCycle.debug("First monitorUpdate revieved. Starting Timer.")
+                                self.startTimer()
+                                self.loading = false
+                            }
                         }
                         // Store Sensor Data
                         self.dataSource.appendSensorData(sensorData)
@@ -173,15 +183,20 @@ class SessionManager: NSObject, ObservableObject {
     }
 
     func stop() {
+        loading = true
         Logger.viewCycle.debug("Stopping SessionManager session")
-        stopTimer()
+        DispatchQueue.main.async {
+            self.stopTimer()
+        }
         started = false
         recordingManager.stop()
         
         sendSessionState(isSessionRunning: false)
-        
         Task {
             await workoutManager.resetWorkout()
+            DispatchQueue.main.async {
+                self.loading = false
+            }
         }
     }
 
@@ -200,7 +215,8 @@ class SessionManager: NSObject, ObservableObject {
         }
     }
     
-    private func startTimer() {
+    // Timer needs to run on main to make sure it updated correctly
+    @MainActor private func startTimer() {
         Logger.viewCycle.debug("Starting Timer")
         if timer != nil {
             Logger.viewCycle.warning("Timer already running")
@@ -212,7 +228,7 @@ class SessionManager: NSObject, ObservableObject {
         }
     }
     
-    private func stopTimer() {
+    @MainActor private func stopTimer() {
         Logger.viewCycle.debug("Stopping Timer")
         if timer == nil {
             Logger.viewCycle.warning("No Timer running")
@@ -247,7 +263,7 @@ class SessionManager: NSObject, ObservableObject {
         return dataSource.fetchRecordingArray().count
     }
 
-    func requestAuthorization(){
+    func requestAuthorization() async {
         Logger.viewCycle.debug("Requestion requestAuthorization in SessionManager")
         Task{
             await workoutManager.requestAuthorization()

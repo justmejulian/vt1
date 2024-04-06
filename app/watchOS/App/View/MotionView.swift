@@ -46,19 +46,28 @@ struct MotionView: View {
             }
             Spacer()
             Button(action: sessionManager.toggle) {
-                Text(sessionManager.started ? "Stop" : "Start")
+                Text(sessionManager.loading
+                     ? "Loading"
+                     : sessionManager.started ? "Stop" : "Start")
                     .font(.title2)
             }
-            .background(sessionManager.started ? Color.red : Color.blue)
+            .disabled(sessionManager.loading)
+            .background(
+                sessionManager.loading
+                    ? Color.gray
+                    : sessionManager.started
+                        ? Color.red
+                        : Color.blue
+            )
                 .clipShape(Capsule())
                 .padding(.all)
         })
         .navigationBarBackButtonHidden(sessionManager.started)
         .onAppear {
             sessionManager.requestAuthorization()
-
             Logger.viewCycle.info("MotionView Appeared!")
         }
+        .navigationBarBackButtonHidden(sessionManager.started)
     }
 
 }
