@@ -1,4 +1,4 @@
-# vt1
+# vt1 / vt2
 
 Project contains a watchOS and iOS Application written is Swift and a server written using Vapor.
 

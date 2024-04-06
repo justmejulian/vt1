@@ -46,6 +46,8 @@ class SessionManager: NSObject, ObservableObject {
         Logger.viewCycle.info("Called start SessionManager")
         loading = true
         
+        await requestAuthorization()
+        
         if (!workoutManager.started) {
             await startWorkout()
         }
@@ -265,9 +267,7 @@ class SessionManager: NSObject, ObservableObject {
 
     func requestAuthorization() async {
         Logger.viewCycle.debug("Requestion requestAuthorization in SessionManager")
-        Task{
-            await workoutManager.requestAuthorization()
-        }
+        await workoutManager.requestAuthorization()
     }
 }
 

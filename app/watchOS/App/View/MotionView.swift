@@ -64,7 +64,6 @@ struct MotionView: View {
         })
         .navigationBarBackButtonHidden(sessionManager.started)
         .onAppear {
-            sessionManager.requestAuthorization()
             Logger.viewCycle.info("MotionView Appeared!")
         }
         .navigationBarBackButtonHidden(sessionManager.started)
