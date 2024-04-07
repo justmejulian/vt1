@@ -19,11 +19,78 @@ class SessionManager: NSObject, ObservableObject {
 
     @ObservationIgnored
     private let workoutManager = WorkoutManager.shared
+    
+    @ObservationIgnored
+    private let dataSource = DataSource.shared
 
     @Published var isSessionRunning: Bool? = nil
     @Published var isLoading: Bool? = nil
     
     var exerciseName: String? = nil
+    
+    // todo why override?
+    override init() {
+        super.init()
+        
+        // todo maybe create a LinsterMangager or SessionConnectity
+        let recordingListener = Listener(key: "recording", handleData: { data in
+            if let endcodedRecording = data["recording"] {
+                guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
+                    throw SessionError("Could not decode recording")
+                }
+                
+                self.dataSource.appendRecording(recording)
+                return
+            }
+        })
+        connectivityManager.addListener(recordingListener)
+
+        let sensorDataListener = Listener(key: "sensorData", handleData: { data in
+            if let endcodedSensorData = data["sensorData"] {
+                guard let sensorData = try? JSONDecoder().decode(SensorData.self, from: endcodedSensorData as! Data) else {
+                    throw SessionError("Could not decode sensorData")
+                }
+
+                self.dataSource.appendSensorData(sensorData)
+                return
+            }
+        })
+        connectivityManager.addListener(sensorDataListener)
+
+        let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
+            if let isSessionRunning = data["isSessionRunning"] {
+                guard let isSessionRunningBool = data["isSessionRunning"] as? Bool else {
+                    throw SessionError("Could not decode isSessionRunning")
+                }
+
+                Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
+
+                DispatchQueue.main.async {
+                    self.isSessionRunning = isSessionRunningBool
+                }
+                return
+            }
+        })
+        connectivityManager.addListener(isSessionRunningListener)
+
+        let isSessionReadyListener = Listener(key: "isSessionReady", handleData: { data in
+            if let isSessionReady = data["isSessionReady"] {
+                guard let isSessionReadyBool = data["isSessionReady"] as? Bool else {
+                    throw SessionError("Could not decode isSessionReady")
+                }
+
+                Logger.viewCycle.debug("recived isSessionReady: \(isSessionReadyBool)")
+
+                Task {
+                    await SessionManager.shared.startSession()
+                }
+                return
+            }
+        })
+        connectivityManager.addListener(isSessionReadyListener)
+        
+        //todo maybe create a addListeners
+    }
 
     func refreshSessionState() {
         Logger.viewCycle.debug("refreshSessionState from SessionManager")
@@ -81,5 +148,17 @@ class SessionManager: NSObject, ObservableObject {
         isSessionRunning = false
         isLoading = false
         connectivityManager.sendStopSession()
+    }
+}
+
+struct SessionError: LocalizedError {
+    let description: String
+
+    init(_ description: String) {
+        self.description = description
+    }
+
+    var errorDescription: String? {
+        description
     }
 }

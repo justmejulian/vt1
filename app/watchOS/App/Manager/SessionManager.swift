@@ -32,6 +32,54 @@ class SessionManager: NSObject, ObservableObject {
     @Published var exerciseName: String? = nil
     @Published var sensorDataCount: Int = 0
     
+    // todo why override?
+    override init() {
+        super.init()
+
+        let startSessionListener = Listener(key: "startSession", handleData: { data in
+            if let exerciseName = data["startSession"] {
+                Logger.viewCycle.info("recived start session")
+                
+                guard let exerciseName = exerciseName as? String else {
+                    throw SessionError("Could not decode exerciseName")
+                }
+                
+                    Logger.viewCycle.info("start session with exerciseName: \(exerciseName)")
+                    DispatchQueue.main.async {
+                        Task {
+                            await self.start(exerciseName: exerciseName)
+                        }
+                    }
+                    return
+            }
+        })
+
+        connectivityManager.addListener(startSessionListener)
+
+        let stopSessionListener = Listener(key: "stopSession", handleData: { data in
+            if let stopSession = data["stopSession"] {
+                Logger.viewCycle.info("recived stop session")
+                self.stop()
+                return
+            }
+        })
+
+        connectivityManager.addListener(stopSessionListener)
+
+        let getSessionStateListener = Listener(key: "getSessionState", handleData: { data in
+            if let getSessionState = data["getSessionState"] {
+                Logger.viewCycle.info("recived getSessionState")
+                
+                // send session state
+                self.connectivityManager.sendSessionState(isSessionRunning: self.started)
+                
+                return
+            }
+        })
+
+        connectivityManager.addListener(getSessionStateListener)
+    }
+    
     func startWorkout() async {
         Logger.viewCycle.info("Crating Workout to start Session")
         do {
