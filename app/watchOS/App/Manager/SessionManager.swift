@@ -37,48 +37,7 @@ class SessionManager: NSObject, ObservableObject {
 
         super.init()
 
-        let startSessionListener = Listener(key: "startSession", handleData: { data in
-            if let exerciseName = data["startSession"] {
-                Logger.viewCycle.info("recived start session")
-                
-                guard let exerciseName = exerciseName as? String else {
-                    throw SessionError("Could not decode exerciseName")
-                }
-                
-                    Logger.viewCycle.info("start session with exerciseName: \(exerciseName)")
-                    DispatchQueue.main.async {
-                        Task {
-                            await self.start(exerciseName: exerciseName)
-                        }
-                    }
-                    return
-            }
-        })
-
-        connectivityManager.addListener(startSessionListener)
-
-        let stopSessionListener = Listener(key: "stopSession", handleData: { data in
-            if let stopSession = data["stopSession"] {
-                Logger.viewCycle.info("recived stop session")
-                self.stop()
-                return
-            }
-        })
-
-        connectivityManager.addListener(stopSessionListener)
-
-        let getSessionStateListener = Listener(key: "getSessionState", handleData: { data in
-            if let getSessionState = data["getSessionState"] {
-                Logger.viewCycle.info("recived getSessionState")
-                
-                // send session state
-                self.connectivityManager.sendSessionState(isSessionRunning: self.started)
-                
-                return
-            }
-        })
-
-        connectivityManager.addListener(getSessionStateListener)
+        self.addListeners()
     }
     
     func startWorkout() async {
@@ -92,21 +51,24 @@ class SessionManager: NSObject, ObservableObject {
 
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
-        loading = true
+        DispatchQueue.main.async {
+            self.loading = true
+        }
         
         await requestAuthorization()
 
-        if await (!workoutManager.started) {
+        if (!workoutManager.started) {
             await startWorkout()
         }
-
-        self.exerciseName = exerciseName
+        
+        DispatchQueue.main.async {
+            self.exerciseName = exerciseName
+            self.started = true
+            self.sensorDataCount = 0
+        }
         
         Logger.viewCycle.info("Starting Session for exerciseName \(exerciseName)")
-        
-        started = true
-        sensorDataCount = 0
-        
+
         sendSessionState(isSessionRunning: true)
         
         do {
@@ -131,9 +93,11 @@ class SessionManager: NSObject, ObservableObject {
                         // Start Timer after first monitorUpdate is recieved
                         if (self.loading){
                             DispatchQueue.main.async {
-                                Logger.viewCycle.debug("First monitorUpdate revieved. Starting Timer.")
-                                self.startTimer()
-                                self.loading = false
+                                if (self.loading){
+                                    Logger.viewCycle.debug("First monitorUpdate revieved. Starting Timer.")
+                                    self.loading = false
+                                    self.startTimer()
+                                }
                             }
                         }
                         // Store Sensor Data
@@ -242,12 +206,9 @@ class SessionManager: NSObject, ObservableObject {
         recordingManager.stop()
         
         sendSessionState(isSessionRunning: false)
-        Task {
-            await workoutManager.resetWorkout()
-            DispatchQueue.main.async {
-                self.loading = false
-            }
-        }
+
+        workoutManager.resetWorkout()
+        self.loading = false
     }
 
     func toggle() {
@@ -258,10 +219,10 @@ class SessionManager: NSObject, ObservableObject {
             sync()
             return
         }
-
+        
         Task{
             Logger.viewCycle.debug("SessionManager session was stopped, starting")
-            await start()
+            await self.start()
         }
     }
     
@@ -278,6 +239,7 @@ class SessionManager: NSObject, ObservableObject {
         }
     }
     
+    // Timer needs to run on main to make sure it updated correctly
     @MainActor private func stopTimer() {
         Logger.viewCycle.debug("Stopping Timer")
         if timer == nil {
@@ -316,6 +278,50 @@ class SessionManager: NSObject, ObservableObject {
     func requestAuthorization() async {
         Logger.viewCycle.debug("Requestion requestAuthorization in SessionManager")
         await workoutManager.requestAuthorization()
+    }
+    
+    private func addListeners() {
+        let startSessionListener = Listener(key: "startSession", handleData: { data in
+            if let exerciseName = data["startSession"] {
+                Logger.viewCycle.info("recived start session")
+                
+                guard let exerciseName = exerciseName as? String else {
+                    throw SessionError("Could not decode exerciseName")
+                }
+                
+                    Logger.viewCycle.info("start session with exerciseName: \(exerciseName)")
+
+                    Task {
+                        await self.start(exerciseName: exerciseName)
+                    }
+                    return
+            }
+        })
+
+        connectivityManager.addListener(startSessionListener)
+
+        let stopSessionListener = Listener(key: "stopSession", handleData: { data in
+            if data["stopSession"] != nil {
+                Logger.viewCycle.info("recived stop session")
+                self.stop()
+                return
+            }
+        })
+
+        connectivityManager.addListener(stopSessionListener)
+
+        let getSessionStateListener = Listener(key: "getSessionState", handleData: { data in
+            if data["getSessionState"] != nil {
+                Logger.viewCycle.info("recived getSessionState")
+                
+                // send session state
+                self.connectivityManager.sendSessionState(isSessionRunning: self.started)
+                
+                return
+            }
+        })
+
+        connectivityManager.addListener(getSessionStateListener)
     }
 }
 

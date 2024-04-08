@@ -33,65 +33,8 @@ class SessionManager: NSObject, ObservableObject {
         self.dataSource = dataSource
         
         super.init()
-        
-        // todo maybe create a LinsterMangager or SessionConnectity
-        let recordingListener = Listener(key: "recording", handleData: { data in
-            if let endcodedRecording = data["recording"] {
-                guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
-                    throw SessionError("Could not decode recording")
-                }
-                
-                self.dataSource.appendRecording(recording)
-                return
-            }
-        })
-        connectivityManager.addListener(recordingListener)
 
-        let sensorDataListener = Listener(key: "sensorData", handleData: { data in
-            if let endcodedSensorData = data["sensorData"] {
-                guard let sensorData = try? JSONDecoder().decode(SensorData.self, from: endcodedSensorData as! Data) else {
-                    throw SessionError("Could not decode sensorData")
-                }
-
-                self.dataSource.appendSensorData(sensorData)
-                return
-            }
-        })
-        connectivityManager.addListener(sensorDataListener)
-
-        let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
-            if let isSessionRunning = data["isSessionRunning"] {
-                guard let isSessionRunningBool = data["isSessionRunning"] as? Bool else {
-                    throw SessionError("Could not decode isSessionRunning")
-                }
-
-                Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
-
-                DispatchQueue.main.async {
-                    self.isSessionRunning = isSessionRunningBool
-                }
-                return
-            }
-        })
-        connectivityManager.addListener(isSessionRunningListener)
-
-        let isSessionReadyListener = Listener(key: "isSessionReady", handleData: { data in
-            if let isSessionReady = data["isSessionReady"] {
-                guard let isSessionReadyBool = data["isSessionReady"] as? Bool else {
-                    throw SessionError("Could not decode isSessionReady")
-                }
-
-                Logger.viewCycle.debug("recived isSessionReady: \(isSessionReadyBool)")
-
-                Task {
-                    await self.startSession()
-                }
-                return
-            }
-        })
-        connectivityManager.addListener(isSessionReadyListener)
-        
-        //todo maybe create a addListeners
+        addListeners()
     }
 
     func refreshSessionState() {
@@ -150,6 +93,65 @@ class SessionManager: NSObject, ObservableObject {
         isSessionRunning = false
         isLoading = false
         connectivityManager.sendStopSession()
+    }
+    
+    private func addListeners() {
+        // todo maybe create a LinsterMangager or SessionConnectity
+        let recordingListener = Listener(key: "recording", handleData: { data in
+            if let endcodedRecording = data["recording"] {
+                guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
+                    throw SessionError("Could not decode recording")
+                }
+                
+                self.dataSource.appendRecording(recording)
+                return
+            }
+        })
+        connectivityManager.addListener(recordingListener)
+
+        let sensorDataListener = Listener(key: "sensorData", handleData: { data in
+            if let endcodedSensorData = data["sensorData"] {
+                guard let sensorData = try? JSONDecoder().decode(SensorData.self, from: endcodedSensorData as! Data) else {
+                    throw SessionError("Could not decode sensorData")
+                }
+
+                self.dataSource.appendSensorData(sensorData)
+                return
+            }
+        })
+        connectivityManager.addListener(sensorDataListener)
+
+        let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
+            if let isSessionRunning = data["isSessionRunning"] {
+                guard let isSessionRunningBool = data["isSessionRunning"] as? Bool else {
+                    throw SessionError("Could not decode isSessionRunning")
+                }
+
+                Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
+
+                DispatchQueue.main.async {
+                    self.isSessionRunning = isSessionRunningBool
+                }
+                return
+            }
+        })
+        connectivityManager.addListener(isSessionRunningListener)
+
+        let isSessionReadyListener = Listener(key: "isSessionReady", handleData: { data in
+            if let isSessionReady = data["isSessionReady"] {
+                guard let isSessionReadyBool = data["isSessionReady"] as? Bool else {
+                    throw SessionError("Could not decode isSessionReady")
+                }
+
+                Logger.viewCycle.debug("recived isSessionReady: \(isSessionReadyBool)")
+
+                Task {
+                    await self.startSession()
+                }
+                return
+            }
+        })
+        connectivityManager.addListener(isSessionReadyListener)
     }
 }
 
