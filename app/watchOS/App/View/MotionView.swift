@@ -8,6 +8,7 @@ import OSLog
 
 struct MotionView: View {
 
+    @ObservedObject
     var sessionManager: SessionManager
     
     @Query
@@ -66,7 +67,6 @@ struct MotionView: View {
         .onAppear {
             Logger.viewCycle.info("MotionView Appeared!")
         }
-        .navigationBarBackButtonHidden(sessionManager.started)
     }
 
 }

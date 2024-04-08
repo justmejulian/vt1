@@ -13,12 +13,20 @@ struct ContentView: View {
     @ObservationIgnored
     var dataSource: DataSource
     
+    let motionView:MotionView
+    
+    init(sessionManager: SessionManager, dataSource: DataSource) {
+        self.sessionManager = sessionManager
+        self.dataSource = dataSource
+        self.motionView = MotionView(sessionManager: sessionManager)
+    }
+    
     var body: some View {
         NavigationStack {
             switch sessionManager.started {
             case false :
                     NavigationLink {
-                        MotionView(sessionManager: sessionManager)
+                        motionView
                     } label: {
                         Label("New Recording", systemImage: "plus")
                     }
@@ -35,7 +43,7 @@ struct ContentView: View {
                     }.buttonStyle(.borderedProminent)
 
             case true:
-                MotionView(sessionManager: sessionManager)
+                motionView
             }
         }
         .listStyle(.plain)

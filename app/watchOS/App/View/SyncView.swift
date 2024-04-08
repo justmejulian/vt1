@@ -11,7 +11,7 @@ import SwiftData
 import OSLog
 
 struct SyncView: View {
-    
+    @ObservationIgnored
     var sessionManager: SessionManager
 
     @ObservedObject
