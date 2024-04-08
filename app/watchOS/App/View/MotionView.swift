@@ -41,7 +41,7 @@ struct MotionView: View {
                     .frame(maxWidth: .infinity)
                     .font(.caption2)
                     .bold()
-                Text("\(sessionManager.timeCounter)")
+                Text("\(sessionManager.timeManager.counter)")
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.caption2)
             }

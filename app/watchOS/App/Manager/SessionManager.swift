@@ -19,9 +19,7 @@ class SessionManager: NSObject, ObservableObject {
 
     private let connectivityManager: ConnectivityManager
 
-    @Published var timeCounter = 0
-
-    var timer: Timer? = nil
+    let timeManager = TimerManager()
 
     @Published var loading = false
     @Published var started = false
@@ -96,7 +94,7 @@ class SessionManager: NSObject, ObservableObject {
                                 if (self.loading){
                                     Logger.viewCycle.debug("First monitorUpdate revieved. Starting Timer.")
                                     self.loading = false
-                                    self.startTimer()
+                                    self.timeManager.start()
                                 }
                             }
                         }
@@ -200,7 +198,7 @@ class SessionManager: NSObject, ObservableObject {
         loading = true
         Logger.viewCycle.debug("Stopping SessionManager session")
         DispatchQueue.main.async {
-            self.stopTimer()
+            self.timeManager.stop()
         }
         started = false
         recordingManager.stop()
@@ -224,29 +222,6 @@ class SessionManager: NSObject, ObservableObject {
             Logger.viewCycle.debug("SessionManager session was stopped, starting")
             await self.start()
         }
-    }
-    
-    // Timer needs to run on main to make sure it updated correctly
-    @MainActor private func startTimer() {
-        Logger.viewCycle.debug("Starting Timer")
-        if timer != nil {
-            Logger.viewCycle.warning("Timer already running")
-        }
-        timeCounter = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            // Update the counter every second
-            self.timeCounter += 1
-        }
-    }
-    
-    // Timer needs to run on main to make sure it updated correctly
-    @MainActor private func stopTimer() {
-        Logger.viewCycle.debug("Stopping Timer")
-        if timer == nil {
-            Logger.viewCycle.warning("No Timer running")
-        }
-        timer?.invalidate()
-        timer = nil
     }
 
     func getCountOfUnsyncedData() -> Int? {
