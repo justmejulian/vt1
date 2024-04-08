@@ -11,10 +11,18 @@ import SwiftData
 import OSLog
 
 struct SyncView: View {
+    
+    var sessionManager: SessionManager
+
     @ObservedObject
-    var syncViewModel = SyncViewModel()
+    var syncViewModel: SyncViewModel
     @Query var recordings: [RecordingData]
     @Query var sensorData: [SensorData]
+    
+    init(sessionManager: SessionManager) {
+        self.sessionManager = sessionManager
+        self.syncViewModel = SyncViewModel(sessionManager: sessionManager)
+    }
 
     var body: some View {
         VStack{

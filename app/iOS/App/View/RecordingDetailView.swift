@@ -8,8 +8,7 @@ import OSLog
 import Foundation
 
 struct RecordingDetailView: View {
-    @ObservationIgnored
-    private let dataSource = DataSource.shared
+    private let dataSource: DataSource
     
     var recording: RecordingData
 
@@ -18,8 +17,9 @@ struct RecordingDetailView: View {
 
     @State private var text: String
 
-    init(recording: RecordingData) {
+    init(recording: RecordingData, dataSource: DataSource) {
         self.recording = recording
+        self.dataSource = dataSource
 
         self._text = State(initialValue: recording.exercise)
 

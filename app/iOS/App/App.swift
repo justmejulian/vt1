@@ -7,13 +7,22 @@ import SwiftData
 
 @main
 struct Main: App {
-    let modelContainer = DataSource.shared.getModelContainer()
     
-    let connectivityManager = ConnectivityManager.shared
+    let connectivityManager: ConnectivityManager
+    let dataSource: DataSource
+    let sessionManager: SessionManager
+    let workoutManager: WorkoutManager
+    
+    init() {
+        self.connectivityManager = ConnectivityManager()
+        self.dataSource = DataSource()
+        self.workoutManager = WorkoutManager()
+        self.sessionManager = SessionManager(workoutManager: workoutManager,  connectivityManager: connectivityManager, dataSource: dataSource)
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-        }.modelContainer(modelContainer)
+            ContentView(sessionManager: sessionManager, dataSource: dataSource)
+        }.modelContainer(dataSource.getModelContainer())
     }
 }

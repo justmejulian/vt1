@@ -17,14 +17,11 @@ enum DataTypes {
 }
 
 final class DataSource {
-    @MainActor
-    static let shared = DataSource()
-
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
 
     @MainActor
-    private init() {
+    init() {
         Logger.statistics.debug("Creating DataSource")
         do {
             self.modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self)

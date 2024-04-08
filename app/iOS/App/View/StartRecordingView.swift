@@ -9,8 +9,7 @@ import HealthKit
 import OSLog
 
 struct StartRecordingView: View {
-    @ObservedObject
-    private var sessionManager = SessionManager.shared
+    let sessionManager: SessionManager
 
     @Query
     var sensorData: [SensorData]

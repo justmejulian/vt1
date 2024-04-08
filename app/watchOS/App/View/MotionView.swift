@@ -8,7 +8,7 @@ import OSLog
 
 struct MotionView: View {
 
-    @ObservedObject var sessionManager = SessionManager.shared
+    var sessionManager: SessionManager
     
     @Query
     var sensorData: [SensorData]

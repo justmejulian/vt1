@@ -10,8 +10,7 @@ import OSLog
 import Foundation
 
 struct RecordingListView: View {
-    @ObservationIgnored
-    private let dataSource = DataSource.shared
+    let dataSource: DataSource
 
     var body: some View {
 

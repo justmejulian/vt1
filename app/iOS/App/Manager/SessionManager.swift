@@ -12,24 +12,26 @@ import HealthKit
 import OSLog
 
 class SessionManager: NSObject, ObservableObject {
-    static let shared = SessionManager()
-
     @ObservedObject
-    private var connectivityManager = ConnectivityManager.shared
+    private var connectivityManager: ConnectivityManager
 
     @ObservationIgnored
-    private let workoutManager = WorkoutManager.shared
+    private let workoutManager: WorkoutManager
     
     @ObservationIgnored
-    private let dataSource = DataSource.shared
+    private let dataSource: DataSource
 
     @Published var isSessionRunning: Bool? = nil
     @Published var isLoading: Bool? = nil
     
     var exerciseName: String? = nil
     
-    // todo why override?
-    override init() {
+    init(workoutManager: WorkoutManager, connectivityManager: ConnectivityManager, dataSource: DataSource) {
+        
+        self.connectivityManager = connectivityManager
+        self.workoutManager = workoutManager
+        self.dataSource = dataSource
+        
         super.init()
         
         // todo maybe create a LinsterMangager or SessionConnectity
@@ -82,7 +84,7 @@ class SessionManager: NSObject, ObservableObject {
                 Logger.viewCycle.debug("recived isSessionReady: \(isSessionReadyBool)")
 
                 Task {
-                    await SessionManager.shared.startSession()
+                    await self.startSession()
                 }
                 return
             }

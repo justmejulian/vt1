@@ -6,8 +6,11 @@ import Foundation
 import OSLog
 
 class SyncViewModel{
-    @ObservationIgnored
-    private let dataSource = DataSource.shared
+    private let dataSource: DataSource
+    
+    init(dataSource: DataSource) {
+        self.dataSource = dataSource
+    }
     
     func postData(ip: String){
         Logger.viewCycle.info("Calling postData from SyncViewModel")

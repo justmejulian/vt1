@@ -8,6 +8,9 @@ import OSLog
 import Foundation
 
 struct RecordingListView: View {
+    @ObservationIgnored
+    let dataSource: DataSource
+
     @Environment(\.modelContext) var modelContext
     @Query var recordings: [RecordingData]
 
@@ -25,7 +28,7 @@ struct RecordingListView: View {
             NavigationStack {
                 List(recordings) { recordingData in
                     NavigationLink {
-                        RecordingDetailView(recording: recordingData)
+                        RecordingDetailView(recording: recordingData, dataSource: dataSource)
                     } label: {
                         VStack{
                             Text(String(recordingData.exercise))

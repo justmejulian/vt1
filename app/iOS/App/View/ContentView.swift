@@ -14,6 +14,11 @@ struct ContentView: View {
     @Query
     var recordingData: [RecordingData]
 
+    let sessionManager: SessionManager
+    
+    @ObservationIgnored
+    let dataSource: DataSource
+
     var body: some View {
         NavigationStack {
             Text("VT 1")
@@ -54,13 +59,13 @@ struct ContentView: View {
             
             Spacer()
 
-            RecordingListView()
+            RecordingListView(dataSource: dataSource)
 
             Spacer()
 
             VStack {
                 NavigationLink {
-                    StartRecordingView()
+                    StartRecordingView(sessionManager: sessionManager)
                 } label: {
                     Label("New Recording", systemImage: "plus")
                         .padding(.vertical, 8)
@@ -69,7 +74,7 @@ struct ContentView: View {
                     .buttonStyle(BorderedProminentButtonStyle())
 
                 NavigationLink {
-                    SyncView()
+                    SyncView(dataSource: dataSource)
                 } label: {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)

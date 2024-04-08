@@ -10,30 +10,31 @@ import HealthKit
 import OSLog
 
 class SessionManager: NSObject, ObservableObject {
-    static let shared = SessionManager()
-    
-    let recordingManager = RecordingManager()
-    
+    private let recordingManager = RecordingManager()
+
     // do these all need to be shared?
-    let workoutManager = WorkoutManager.shared
-    
-    let modelContainer = DataSource.shared.getModelContainer()
-    
-    private let dataSource = DataSource.shared
-    
-    private let connectivityManager = ConnectivityManager.shared
-    
+    private let workoutManager: WorkoutManager
+
+    private let dataSource: DataSource
+
+    private let connectivityManager: ConnectivityManager
+
     @Published var timeCounter = 0
 
     var timer: Timer? = nil
-    
+
     @Published var loading = false
     @Published var started = false
     @Published var exerciseName: String? = nil
     @Published var sensorDataCount: Int = 0
-    
+
     // todo why override?
-    override init() {
+    init(workoutManager: WorkoutManager, dataSource: DataSource, connectivityManager: ConnectivityManager) {
+
+        self.workoutManager = workoutManager
+        self.dataSource = dataSource
+        self.connectivityManager = connectivityManager
+
         super.init()
 
         let startSessionListener = Listener(key: "startSession", handleData: { data in
@@ -89,17 +90,16 @@ class SessionManager: NSObject, ObservableObject {
         }
     }
 
-    @MainActor
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
         loading = true
         
         await requestAuthorization()
-        
-        if (!workoutManager.started) {
+
+        if await (!workoutManager.started) {
             await startWorkout()
         }
-        
+
         self.exerciseName = exerciseName
         
         Logger.viewCycle.info("Starting Session for exerciseName \(exerciseName)")

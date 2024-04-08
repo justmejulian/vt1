@@ -12,7 +12,7 @@ class RecordingListViewModel {
 
         var recordings: [RecordingData]
 
-        init(dataSource: DataSource = DataSource.shared) {
+        init(dataSource: DataSource) {
             self.dataSource = dataSource
             recordings = dataSource.fetchRecordingArray()
             Logger.statistics.debug("Count of recordings \(self.recordings.count)")

@@ -9,10 +9,7 @@ import CoreMotion
 import HealthKit
 import OSLog
 
-@MainActor
 class WorkoutManager: NSObject, ObservableObject {
-    static let shared = WorkoutManager()
-
     let healthStore = HKHealthStore()
     
     var session: HKWorkoutSession?

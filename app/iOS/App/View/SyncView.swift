@@ -10,7 +10,7 @@ import OSLog
 struct SyncView: View {
     
     @ObservationIgnored
-    private let syncViewModel = SyncViewModel()
+    private let syncViewModel: SyncViewModel
     
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
@@ -18,6 +18,10 @@ struct SyncView: View {
     @State private var ip: String = "192.168.1.251:8080"
     
     @State private var isConfirming = false
+    
+    init(dataSource: DataSource) {
+        syncViewModel = SyncViewModel(dataSource: dataSource)
+    }
 
     var body: some View {
         

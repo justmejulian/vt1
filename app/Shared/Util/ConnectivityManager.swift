@@ -12,20 +12,13 @@ import WatchConnectivity
 import OSLog
 
 class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
-    @MainActor
-    static let shared = ConnectivityManager()
-
     internal var session: WCSession = .default
 
-    @ObservationIgnored
-    internal let dataSource: DataSource
-    
     var listeners = [Listener]()
 
-    @MainActor
-    init(dataSource: DataSource = DataSource.shared) {
+    // todo why override?
+    override init() {
         Logger.statistics.debug("Creating ConnectivityManager")
-        self.dataSource = dataSource
 
         super.init()
 
