@@ -15,6 +15,13 @@ struct MotionView: View {
     var sensorData: [SensorData]
 
     var body: some View {
+        
+        let loading = self.sessionManager.loadingMap.contains(where: { $0.value == true})
+        
+        let text = loading ? "Loading" : sessionManager.started ? "Stop" : "Start"
+        
+        let color = loading ? Color.gray : sessionManager.started ? Color.red : Color.blue
+        
         VStack(content: {
             if sessionManager.started {
                 Spacer()
@@ -47,19 +54,11 @@ struct MotionView: View {
             }
             Spacer()
             Button(action: sessionManager.toggle) {
-                Text(sessionManager.loading
-                     ? "Loading"
-                     : sessionManager.started ? "Stop" : "Start")
+                Text(text)
                     .font(.title2)
             }
-            .disabled(sessionManager.loading)
-            .background(
-                sessionManager.loading
-                    ? Color.gray
-                    : sessionManager.started
-                        ? Color.red
-                        : Color.blue
-            )
+            .disabled(loading)
+            .background(color)
                 .clipShape(Capsule())
                 .padding(.all)
         })

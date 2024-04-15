@@ -21,7 +21,14 @@ class SessionManager: NSObject, ObservableObject {
 
     let timeManager = TimerManager()
 
-    @Published var loading = false
+    @Published var loadingMap = [
+        "acceleration": false,
+        "rotationRate": false,
+        "userAcceleration": false,
+        "gravity": false,
+        "quaternion": false,
+    ]
+    
     @Published var started = false
     @Published var exerciseName: String? = nil
     @Published var sensorDataCount: Int = 0
@@ -50,7 +57,10 @@ class SessionManager: NSObject, ObservableObject {
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
         DispatchQueue.main.async {
-            self.loading = true
+            let newLoading = self.loadingMap.mapValues { value in
+                return true
+            }
+            self.loadingMap = newLoading
         }
         
         await requestAuthorization()
@@ -89,12 +99,17 @@ class SessionManager: NSObject, ObservableObject {
                         }
                         
                         // Start Timer after first monitorUpdate is recieved
-                        if (self.loading){
-                            DispatchQueue.main.async {
-                                if (self.loading){
-                                    Logger.viewCycle.debug("First monitorUpdate revieved. Starting Timer.")
-                                    self.loading = false
-                                    self.timeManager.start()
+                        if let isCurrentLoading = self.loadingMap[sensorData.sensor_id] {
+                            if (isCurrentLoading){
+                                DispatchQueue.main.async {
+                                    Logger.viewCycle.debug("\(sensorData.sensor_id) monitorUpdate revieved.")
+                                    self.loadingMap[sensorData.sensor_id] = false
+                                    
+                                    if (!self.loadingMap.contains(where: {$0.value == true})){
+                                        Logger.viewCycle.debug("All first monitorUpdates revieved. Starting Timer.")
+                                        self.timeManager.start()
+                                    }
+
                                 }
                             }
                         }
@@ -197,7 +212,6 @@ class SessionManager: NSObject, ObservableObject {
     func stop() {
         Logger.viewCycle.debug("Stopping SessionManager session")
         DispatchQueue.main.async {
-            self.loading = true
             self.timeManager.stop()
             self.started = false
         }
@@ -207,10 +221,6 @@ class SessionManager: NSObject, ObservableObject {
         sendSessionState(isSessionRunning: false)
 
         workoutManager.resetWorkout()
-
-        DispatchQueue.main.async {
-            self.loading = false
-        }
     }
 
     func toggle() {
