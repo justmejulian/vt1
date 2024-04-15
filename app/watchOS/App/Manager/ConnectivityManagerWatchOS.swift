@@ -28,13 +28,23 @@ extension ConnectivityManager {
         })
     }
     
-    func sendSessionReadyToStart() {
+    func sendSessionReadyToStart(retryCount: Int = 3) {
         Logger.viewCycle.debug("sendSessionReadyToStart from ConnectivityManager")
         let context = ["isSessionReady": true]
-        self.session.sendMessage(context, replyHandler: { replyData in
-            Logger.viewCycle.debug("sucessfully sent session ready to Start.")
-        }, errorHandler: { (error) in
-            Logger.viewCycle.error("error sending \(context) \(error.localizedDescription)")
-        })
+        
+        if (self.session.isReachable) {
+            self.session.sendMessage(context, replyHandler: { replyData in
+                Logger.viewCycle.debug("sucessfully sent session ready to Start.")
+            }, errorHandler: { (error) in
+                Logger.viewCycle.error("error sending \(context) \(error.localizedDescription)")
+            })
+        } else {
+            Logger.viewCycle.debug("iPhone is not reachable yet.")
+            // Wait 1s and then retry
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                Logger.viewCycle.debug("Retrying to sendSessionReadyToStart \(retryCount)")
+                self.sendSessionReadyToStart(retryCount: retryCount - 1)
+            }
+        }
     }
 }

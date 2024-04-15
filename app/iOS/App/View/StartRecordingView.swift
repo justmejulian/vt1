@@ -9,7 +9,9 @@ import HealthKit
 import OSLog
 
 struct StartRecordingView: View {
-    let sessionManager: SessionManager
+    
+    @ObservedObject
+    var sessionManager: SessionManager
 
     @Query
     var sensorData: [SensorData]
@@ -20,6 +22,10 @@ struct StartRecordingView: View {
     @State private var text: String = ""
 
     var body: some View {
+        
+        let disabled = ((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isLoading == true
+        let color = sessionManager.isSessionRunning ? Color.red : .blue
+        let label = sessionManager.isSessionRunning ? "Stop Recording" : "Start Recording"
         
         VStack(content: {
             Spacer()
@@ -60,24 +66,27 @@ struct StartRecordingView: View {
             
             Button(action: {
                 Task {
+                    // todo move this into a viewModel
                     Logger.viewCycle.info("Calling toggle from StartRecordingView")
                     // todo disable
                     await sessionManager.toggle(text: text)
-                    
+
                     // also try alert
                     // https://www.hackingwithswift.com/quick-start/swiftui/how-to-show-an-alert
                 }
             }) {
-                Label(sessionManager.isSessionRunning ?? false ? "Stop Recording" : "Start Recording", systemImage: "arrow.triangle.2.circlepath")
+                Label(label, systemImage: "arrow.triangle.2.circlepath")
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
             }
-            .disabled(((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isSessionRunning == nil || sessionManager.isLoading == true)
-                .buttonStyle(BorderedProminentButtonStyle())
-                .padding(.bottom, 32).padding(.horizontal, 20)
+            .disabled(disabled)
+            .buttonStyle(.borderedProminent)
+            .padding(.bottom, 32).padding(.horizontal, 20)
+            .tint(color)
         })
         .onAppear {
             Logger.viewCycle.info("StartRecordingView Appeared!")
+            // todo do this in task
             sessionManager.refreshSessionState()
         }
     }

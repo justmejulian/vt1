@@ -195,18 +195,22 @@ class SessionManager: NSObject, ObservableObject {
     }
 
     func stop() {
-        loading = true
         Logger.viewCycle.debug("Stopping SessionManager session")
         DispatchQueue.main.async {
+            self.loading = true
             self.timeManager.stop()
+            self.started = false
         }
-        started = false
+
         recordingManager.stop()
         
         sendSessionState(isSessionRunning: false)
 
         workoutManager.resetWorkout()
-        self.loading = false
+
+        DispatchQueue.main.async {
+            self.loading = false
+        }
     }
 
     func toggle() {

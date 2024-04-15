@@ -21,8 +21,11 @@ class SessionManager: NSObject, ObservableObject {
     @ObservationIgnored
     private let dataSource: DataSource
 
-    @Published var isSessionRunning: Bool? = nil
-    @Published var isLoading: Bool? = nil
+    @Published
+    var isSessionRunning: Bool = false
+
+    @Published
+    var isLoading: Bool? = nil
     
     var exerciseName: String? = nil
     
@@ -45,12 +48,8 @@ class SessionManager: NSObject, ObservableObject {
     func toggle(text: String?) async {
         isLoading = true
         Logger.viewCycle.debug("toggle from SessionManager")
-        guard isSessionRunning != nil else {
-            Logger.viewCycle.debug("isSessionRunning was null")
-            return
-        }
         
-        if isSessionRunning! {
+        if isSessionRunning {
             Logger.viewCycle.debug("isSessionRunning was true, stopping")
             await stop()
         } else {
@@ -123,13 +122,14 @@ class SessionManager: NSObject, ObservableObject {
 
         let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
             if let isSessionRunning = data["isSessionRunning"] {
-                guard let isSessionRunningBool = data["isSessionRunning"] as? Bool else {
+                guard let isSessionRunningBool = isSessionRunning as? Bool else {
                     throw SessionError("Could not decode isSessionRunning")
                 }
 
                 Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
 
                 DispatchQueue.main.async {
+
                     self.isSessionRunning = isSessionRunningBool
                 }
                 return
