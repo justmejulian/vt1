@@ -4,12 +4,36 @@
 
 import Foundation
 import OSLog
+import SwiftUI
 
-class SyncViewModel{
+class SyncViewModel: ObservableObject {
     private let dataSource: DataSource
+    
+    @Published
+    var syncData: SyncData
     
     init(dataSource: DataSource) {
         self.dataSource = dataSource
+        do {
+            let fetchedSyncDataArray = dataSource.fetchSyncData()
+            if !fetchedSyncDataArray.isEmpty {
+                let fetchedSyncData = fetchedSyncDataArray[0]
+                self.syncData = fetchedSyncData
+            } else {
+                let newSyncData = SyncData(ip: "")
+                self.syncData = newSyncData
+                dataSource.appendSyncData(newSyncData)
+            }
+        } catch {
+            let newSyncData = SyncData(ip: "")
+            self.syncData = newSyncData
+            dataSource.appendSyncData(newSyncData)
+        }
+    }
+    
+    func setIp(_ ip: String) {
+        Logger.viewCycle.debug("Stored IP changed. New ip \(ip)")
+        self.syncData.ip = ip
     }
     
     func postData(ip: String){

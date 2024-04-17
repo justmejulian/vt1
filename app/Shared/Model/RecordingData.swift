@@ -18,7 +18,7 @@ class RecordingData: Codable{
     var exercise: String
     let startTimestamp: Date
 
-    init(exercise: String = "Default", startTimestamp: Date, isSynced: Bool = false) {
+    init(exercise: String = "Default", startTimestamp: Date) {
         self.exercise = exercise
         self.startTimestamp = startTimestamp
     }

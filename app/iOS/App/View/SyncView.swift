@@ -8,19 +8,21 @@ import SwiftData
 import OSLog
 
 struct SyncView: View {
-    
-    @ObservationIgnored
-    private let syncViewModel: SyncViewModel
+    var syncViewModel: SyncViewModel
     
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
-
-    @State private var ip: String = "192.168.1.251:8080"
+    @Query var syncData: [SyncData]
     
     @State private var isConfirming = false
     
+    @State
+    var ip: String
+    
     init(dataSource: DataSource) {
         syncViewModel = SyncViewModel(dataSource: dataSource)
+        
+        ip = syncViewModel.syncData.ip
     }
 
     var body: some View {
@@ -60,6 +62,7 @@ struct SyncView: View {
             VStack {
                 Button(action: {
                     Logger.viewCycle.info("Calling postData from SyncView")
+                    syncViewModel.setIp(ip)
                     syncViewModel.postData(ip: ip)
                 }) {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
@@ -90,6 +93,9 @@ struct SyncView: View {
         }
         .onAppear {
             Logger.viewCycle.info("SyncView Appeared!")
+        }
+        .onDisappear{
+            syncViewModel.setIp(ip)
         }
     }
 }

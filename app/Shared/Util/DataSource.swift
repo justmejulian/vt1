@@ -11,42 +11,29 @@ import Foundation
 import SwiftData
 import OSLog
 
-enum DataTypes {
-    case recording(RecordingData)
-    case sensorData(SensorData)
-}
-
 final class DataSource {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
 
-    @MainActor
-    init() {
+    init(modelContainer: ModelContainer, modelContext: ModelContext) {
         Logger.statistics.debug("Creating DataSource")
-        do {
-            self.modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self)
-            self.modelContext = modelContainer.mainContext
-        } catch {
-            Logger.statistics.error("Fatal Error creating DataSource \(error.localizedDescription)")
-            fatalError(error.localizedDescription)
-        }
-
-        // Delete all
-        // self.clear()
+        self.modelContainer = modelContainer
+        self.modelContext = modelContext
     }
 
     func getModelContainer() -> ModelContainer {
         return self.modelContainer
     }
 
-    private func appendData<T>(_ data: T) where T : PersistentModel{
+    internal func appendData<T>(_ data: T) where T : PersistentModel{
         DispatchQueue.main.async {
             self.modelContext.insert(data)
         }
     }
 
-    private func fetchData<T>() -> [T] where T : PersistentModel {
+    internal func fetchData<T>() -> [T] where T : PersistentModel {
         do {
+            // todo does this need to be on main?
             return try modelContext.fetch(FetchDescriptor<T>())
         } catch {
             Logger.statistics.error("Fatal Error fetchData DataSource \(error.localizedDescription)")
@@ -54,7 +41,7 @@ final class DataSource {
         }
     }
 
-    func removeData<T>(_ data: T) where T: PersistentModel {
+    internal func removeData<T>(_ data: T) where T: PersistentModel {
         modelContext.delete(data)
     }
 
