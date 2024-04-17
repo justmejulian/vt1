@@ -25,8 +25,6 @@ struct SyncView: View {
 
     var body: some View {
         
-        let valluesCount = sensorData.reduce(0) { $0 + $1.values.count }
-        
         VStack{
             Text("Sync Data")
                 .font(.largeTitle)
@@ -38,14 +36,6 @@ struct SyncView: View {
                         .bold()
                     Spacer()
                     Text(String(recordingData.count))
-                        .font(.title3)
-                }.padding(.all)
-                HStack {
-                    Text("Data #")
-                        .font(.title3)
-                        .bold()
-                    Spacer()
-                    Text(String(valluesCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
