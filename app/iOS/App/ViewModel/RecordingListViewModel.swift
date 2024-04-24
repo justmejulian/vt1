@@ -10,11 +10,12 @@ class RecordingListViewModel {
         @ObservationIgnored
         private let dataSource: DataSource
 
-        var recordings: [RecordingData]
-
         init(dataSource: DataSource) {
             self.dataSource = dataSource
-            recordings = dataSource.fetchRecordingArray()
-            Logger.statistics.debug("Count of recordings \(self.recordings.count)")
         }
+    
+    func deleteAll(){
+        Logger.viewCycle.info("Calling dataSource.clear from RecordingListViewModel")
+        dataSource.clear()
+    }
 }

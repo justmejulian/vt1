@@ -61,8 +61,5 @@ class SyncViewModel: ObservableObject {
         }
 
     }
-    func deleteAll(){
-        Logger.viewCycle.info("Calling dataSource.clear from SyncViewModel")
-        dataSource.clear()
-    }
+
 }

@@ -13,9 +13,7 @@ struct SyncView: View {
     @Query var sensorData: [SensorData]
     @Query var recordingData: [RecordingData]
     @Query var syncData: [SyncData]
-    
-    @State private var isConfirming = false
-    
+
     @State
     var ip: String
     
@@ -28,6 +26,7 @@ struct SyncView: View {
     var body: some View {
         
         VStack{
+            Spacer()
             Text("Sync Data")
                 .font(.largeTitle)
                 .padding(.all)
@@ -50,8 +49,6 @@ struct SyncView: View {
                 }.padding(.all)
             }.padding(.all)
 
-            Spacer()
-
             VStack(content: {
                 TextField("Enter IP:", text: $ip)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -59,37 +56,20 @@ struct SyncView: View {
                     .padding(.all)
             }).padding(.all)
 
-            VStack {
-                Button(action: {
-                    Logger.viewCycle.info("Calling postData from SyncView")
-                    syncViewModel.setIp(ip)
-                    syncViewModel.postData(ip: ip)
-                }) {
-                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedProminentButtonStyle())
-                    .disabled(ip == "")
+            Button(action: {
+                Logger.viewCycle.info("Calling postData from SyncView")
+                syncViewModel.setIp(ip)
+                syncViewModel.postData(ip: ip)
+            }) {
+                Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
+            }
+                .buttonStyle(BorderedProminentButtonStyle())
+                .disabled(ip == "")
 
-                Button(action: {
-                    isConfirming = true
-                }) {
-                    Label("Delete All", systemImage: "trash")
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedButtonStyle())
-                    .confirmationDialog(
-                               "Are you sure you want delete all?",
-                               isPresented: $isConfirming
-                    ) {
-                        Button("Delete All", role: .destructive) {
-                            syncViewModel.deleteAll()
-                        }
-                        Button("Cancel", role: .cancel) {}
-                    }
-            }.padding(.bottom, 32).padding(.horizontal, 20)
+            Spacer()
+            Spacer()
         }
         .onAppear {
             Logger.viewCycle.info("SyncView Appeared!")

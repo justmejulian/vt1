@@ -52,14 +52,17 @@ struct ContentView: View {
             Spacer()
             Spacer()
             
-            Text("Unsynced Data")
-                .font(.title3)
-                .bold()
-                .padding(.top, 32)
-            
-            Spacer()
-
-            RecordingListView(dataSource: dataSource)
+            VStack {
+                List {
+                    NavigationLink {
+                        RecordingListView(dataSource: dataSource)
+                    } label: {
+                        Text("Recordings")
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+            }.padding(.bottom, 32).padding(.horizontal, 20)
 
             Spacer()
 
@@ -70,8 +73,7 @@ struct ContentView: View {
                     Label("New Recording", systemImage: "plus")
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedProminentButtonStyle())
+                }.buttonStyle(BorderedProminentButtonStyle())
 
                 NavigationLink {
                     SyncView(dataSource: dataSource)
@@ -79,8 +81,7 @@ struct ContentView: View {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedButtonStyle())
+                }.buttonStyle(BorderedButtonStyle())
             }.padding(.bottom, 32).padding(.horizontal, 20)
         }
         .onAppear {
