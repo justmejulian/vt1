@@ -52,18 +52,14 @@ struct StartRecordingView: View {
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)
-            
-            Spacer()
-            
+
             VStack(content: {
                 TextField("Enter Exercise Name:", text: $text)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .padding(.all)
             }).padding(.all)
-            
-            Spacer()
-            
+
             Button(action: {
                 Task {
                     // todo move this into a viewModel
@@ -83,6 +79,9 @@ struct StartRecordingView: View {
             .buttonStyle(.borderedProminent)
             .padding(.bottom, 32).padding(.horizontal, 20)
             .tint(color)
+
+            Spacer()
+            Spacer()
         })
         .onAppear {
             Logger.viewCycle.info("StartRecordingView Appeared!")
