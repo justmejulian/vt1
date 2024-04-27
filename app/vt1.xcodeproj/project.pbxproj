@@ -42,6 +42,11 @@
 		C768E5C42BD000580051E567 /* SyncData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5C32BD000580051E567 /* SyncData.swift */; };
 		C768E5C62BD001260051E567 /* DataSourceIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5C52BD001260051E567 /* DataSourceIOS.swift */; };
 		C768E5C82BD00C2A0051E567 /* DataSourceWatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5C72BD00C2A0051E567 /* DataSourceWatchOS.swift */; };
+		C768E5CD2BD947EF0051E567 /* CompressedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5CC2BD947EF0051E567 /* CompressedData.swift */; };
+		C768E5D02BD950800051E567 /* CompressionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5CF2BD950800051E567 /* CompressionManager.swift */; };
+		C768E5D12BD950800051E567 /* CompressionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5CF2BD950800051E567 /* CompressionManager.swift */; };
+		C768E5D32BD95A100051E567 /* CompressedDataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5D22BD95A100051E567 /* CompressedDataListView.swift */; };
+		C768E5D52BDCFBFB0051E567 /* CompressedDataListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5D42BDCFBFB0051E567 /* CompressedDataListViewModel.swift */; };
 		C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7713C1A2B0B71DB001C7768 /* SyncView.swift */; };
 		C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */; };
 		C7778DC52B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */; };
@@ -162,6 +167,10 @@
 		C768E5C32BD000580051E567 /* SyncData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncData.swift; sourceTree = "<group>"; };
 		C768E5C52BD001260051E567 /* DataSourceIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceIOS.swift; sourceTree = "<group>"; };
 		C768E5C72BD00C2A0051E567 /* DataSourceWatchOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceWatchOS.swift; sourceTree = "<group>"; };
+		C768E5CC2BD947EF0051E567 /* CompressedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressedData.swift; sourceTree = "<group>"; };
+		C768E5CF2BD950800051E567 /* CompressionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressionManager.swift; sourceTree = "<group>"; };
+		C768E5D22BD95A100051E567 /* CompressedDataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressedDataListView.swift; sourceTree = "<group>"; };
+		C768E5D42BDCFBFB0051E567 /* CompressedDataListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressedDataListViewModel.swift; sourceTree = "<group>"; };
 		C7713C1A2B0B71DB001C7768 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		C7778DC62B0D007900E5D9ED /* WorkoutManagerIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManagerIOS.swift; sourceTree = "<group>"; };
@@ -314,6 +323,7 @@
 				C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */,
 				C7327B842ADD5D8200F16E63 /* ContentView.swift */,
 				C7713C1A2B0B71DB001C7768 /* SyncView.swift */,
+				C768E5D22BD95A100051E567 /* CompressedDataListView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -325,6 +335,7 @@
 				C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */,
 				C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */,
 				C768E5C02BCD696E0051E567 /* StartRecordingViewModel.swift */,
+				C768E5D42BDCFBFB0051E567 /* CompressedDataListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -338,6 +349,7 @@
 				C75583802B54471500451621 /* TimeInterval.swift */,
 				C7DF9C782B9CD31D0096FD89 /* Logger.swift */,
 				C71BA4592BC43ABF007430D2 /* TimerManager.swift */,
+				C768E5CF2BD950800051E567 /* CompressionManager.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -433,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				C768E5C32BD000580051E567 /* SyncData.swift */,
+				C768E5CC2BD947EF0051E567 /* CompressedData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -711,6 +724,7 @@
 				C7778DC52B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C7F8C1AD2B3333A800FABF84 /* SyncViewModel.swift in Sources */,
 				C768E5C82BD00C2A0051E567 /* DataSourceWatchOS.swift in Sources */,
+				C768E5D12BD950800051E567 /* CompressionManager.swift in Sources */,
 				C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */,
 				C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */,
@@ -754,12 +768,15 @@
 				C75583812B54471500451621 /* TimeInterval.swift in Sources */,
 				C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */,
 				C755927D2B17918F00972671 /* SessionManager.swift in Sources */,
+				C768E5D32BD95A100051E567 /* CompressedDataListView.swift in Sources */,
+				C768E5D02BD950800051E567 /* CompressionManager.swift in Sources */,
 				C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C7C44CF22B136BA200789EAA /* ConnectivityManagerIOS.swift in Sources */,
 				C768E5C42BD000580051E567 /* SyncData.swift in Sources */,
 				C768E5C12BCD696E0051E567 /* StartRecordingViewModel.swift in Sources */,
 				C7DF9C762B9C6B350096FD89 /* LogStore.swift in Sources */,
+				C768E5CD2BD947EF0051E567 /* CompressedData.swift in Sources */,
 				C7778DC72B0D007900E5D9ED /* WorkoutManagerIOS.swift in Sources */,
 				C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */,
 				C768E5C62BD001260051E567 /* DataSourceIOS.swift in Sources */,
@@ -772,6 +789,7 @@
 				C7DF9C792B9CD31D0096FD89 /* Logger.swift in Sources */,
 				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
+				C768E5D52BDCFBFB0051E567 /* CompressedDataListViewModel.swift in Sources */,
 				C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */,
 				C70462222ADEDB67009F5DD4 /* NetworkViewModel.swift in Sources */,
 			);

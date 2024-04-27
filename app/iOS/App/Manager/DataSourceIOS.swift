@@ -14,7 +14,7 @@ extension DataSource {
     @MainActor
     convenience init() {
         do {
-            let modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self, SyncData.self)
+            let modelContainer = try ModelContainer(for: RecordingData.self, SensorData.self, SyncData.self, CompressedData.self)
             let modelContext = modelContainer.mainContext
             
             self.init(modelContainer: modelContainer,modelContext: modelContext)
@@ -34,6 +34,14 @@ extension DataSource {
     }
 
     func fetchSyncData() -> [SyncData] {
+        fetchData()
+    }
+    
+    func appendCompressedData(_ compressedData: CompressedData) {
+        appendData(compressedData)
+    }
+
+    func fetchCompressedData() -> [CompressedData] {
         fetchData()
     }
 }

@@ -42,7 +42,9 @@ final class DataSource {
     }
 
     internal func removeData<T>(_ data: T) where T: PersistentModel {
-        modelContext.delete(data)
+        DispatchQueue.main.async {
+            self.modelContext.delete(data)
+        }
     }
 
     func appendSensorData(_ sensorData: SensorData) {
@@ -67,12 +69,21 @@ final class DataSource {
     }
 
     func clear() {
-        Logger.viewCycle.info("Clearing all data from DataSource.")
+        Logger.viewCycle.info("Clearing all RecordingData and SensorData from DataSource.")
         do {
             try modelContext.delete(model: RecordingData.self)
             try modelContext.delete(model: SensorData.self)
         } catch {
-            Logger.viewCycle.error("Failed to clear all data from DataSource.")
+            Logger.viewCycle.error("Failed to clear all all RecordingData and SensorData from DataSource.")
+        }
+    }
+    
+    func clear<T>(dataModel: T.Type) where T : PersistentModel {
+        Logger.viewCycle.info("Clearing all data from \(T.self)")
+        do {
+            try modelContext.delete(model: T.self)
+        } catch {
+            Logger.viewCycle.error("Failed to clear all data from \(T.self).")
         }
     }
 }
