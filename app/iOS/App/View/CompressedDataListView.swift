@@ -15,7 +15,8 @@ struct CompressedDataListView: View {
     
     @Query var compressedDataList: [CompressedData]
 
-    @State private var isConfirming = false
+    @State private var isConfirming: Bool = false
+    @State private var exporting: Bool = false
 
     init(dataSource: DataSource) {
         self.compressedDataListViewModel = CompressedDataListViewModel(dataSource: dataSource)
@@ -49,9 +50,22 @@ struct CompressedDataListView: View {
             NavigationStack {
                 List(compressedDataList) { compressedData in
                     VStack{
-                        Text(String(compressedData.fileName))
-                            .font(.caption)
-                            .bold()
+                        Button(String(compressedData.fileName)) {
+                            exporting = true
+                        }
+                        .fileExporter(
+                            isPresented: $exporting,
+                            document: compressedData,
+                            contentType: .json,
+                            defaultFilename: compressedData.fileName
+                        ){ result in
+                            switch result {
+                            case .success(let url):
+                                print("Saved to \(url)")
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
                     }
                 }
                     .listStyle(.automatic)
