@@ -7,6 +7,8 @@ import UIKit
 import OSLog
 
 class NetworkViewModel: ObservableObject {
+    
+    let compressionManager = CompressionManager()
 
     let ip: String
 
@@ -22,8 +24,8 @@ class NetworkViewModel: ObservableObject {
         
         self.uuid = uuid
     }
-
-    func postDataToAPI(url: String,  data: Codable, handleSuccess: ((_ data: Codable) -> Void)?) {
+    
+    func postDataToAPI(url: String,  data: Data, handleSuccess: ((_ data: Codable) -> Void)?) {
 
         guard let url = URL(string: url) else {
             Logger.viewCycle.error("Invalid URL in postDataToAPI \(url)")
@@ -34,9 +36,9 @@ class NetworkViewModel: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let jsonData = try? JSONEncoder().encode(data)
-        request.httpBody = jsonData
+        request.httpBody = data
 
+        // todo send the compressed data
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 Logger.viewCycle.error("\(error.localizedDescription)")
@@ -56,18 +58,48 @@ class NetworkViewModel: ObservableObject {
         }.resume()
     }
 
+    func postCodableDataToAPI(url: String,  data: Codable, handleSuccess: ((_ data: Codable) -> Void)?) {
+        guard let jsonData = try? JSONEncoder().encode(data) else {
+            Logger.viewCycle.error("Failed to convert to Json")
+            return
+        }
+        postDataToAPI(url: url, data: jsonData, handleSuccess: handleSuccess)
+    }
+
     func postRecordingToAPI(_ recording: RecordingData, handleSuccess: ((_ data: Codable) -> Void)?) {
         
         // todo move these urls out so that they are only built 1
         let url = "http://" + ip + "/device/" + uuid + "/" + "recording"
         Logger.viewCycle.debug("postRecordingToAPI :\(url)")
-        postDataToAPI(url: url, data: recording, handleSuccess: handleSuccess)
+        postCodableDataToAPI(url: url, data: recording, handleSuccess: handleSuccess)
     }
 
     func postSensorDataToAPI(_ sensorData: SensorData, handleSuccess: ((_ data: Codable) -> Void)?) {
         let url = "http://" + ip + "/device/" + uuid + "/" + "sensorData"
         Logger.viewCycle.debug("postSensorDataToAPI :\(url)")
-        postDataToAPI(url: url, data: sensorData, handleSuccess: handleSuccess)
+        postCodableDataToAPI(url: url, data: sensorData, handleSuccess: handleSuccess)
+    }
+    
+    func postSensorDataArrayToAPI(_ sensorDataArray: [SensorData], handleSuccess: ((_ data: Codable) -> Void)?) {
+        let url = "http://" + ip + "/device/" + uuid + "/" + "sensorData/batch"
+        Logger.viewCycle.debug("postSensorDataToAPI :\(url)")
+
+        guard let jsonData = try? JSONEncoder().encode(sensorDataArray) else {
+            Logger.viewCycle.error("Failed to convert to Json")
+            return
+        }
+
+        guard let compressedJsonData = try? compressionManager.compressData(jsonData) else {
+            Logger.viewCycle.error("Failed to compress to sensorDataArray")
+            return
+        }
+
+        guard let compressedJsonDataEncoded = try? JSONEncoder().encode(compressedJsonData as Data) else {
+            Logger.viewCycle.error("Failed to convert compressedJsonData to Json")
+            return
+        }
+
+        postDataToAPI(url: url, data: compressedJsonDataEncoded, handleSuccess: handleSuccess)
     }
 
 }

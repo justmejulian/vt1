@@ -15,7 +15,8 @@ public func configure(_ app: Application) async throws {
     ContentConfiguration.global.use(decoder: jsonDecoder, for: .json)
     
     // todo maybe remove and send in chunks
-    app.routes.defaultMaxBodySize = "100mb"
+    // https://docs.vapor.codes/basics/routing/#body-streaming
+    app.routes.defaultMaxBodySize = "5mb"
     
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 

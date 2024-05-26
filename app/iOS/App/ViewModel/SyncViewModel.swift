@@ -12,6 +12,12 @@ class SyncViewModel: ObservableObject {
     @Published
     var syncData: SyncData
     
+    @Published
+    var openPostRequests: Int = 0
+    
+    @Published
+    var syncing: Bool = false
+    
     init(dataSource: DataSource) {
         self.dataSource = dataSource
         do {
@@ -41,25 +47,97 @@ class SyncViewModel: ObservableObject {
         let recordingData = dataSource.fetchRecordingArray()
         let sensorData = dataSource.fetchSensorDataArray(timestamp: nil)
         
-        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData)")
+        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
+        
+        DispatchQueue.main.async {
+            self.syncing = true
+            self.openPostRequests = 0
+        }
         
         let networkManager = NetworkViewModel(ip: ip)
-        
-        // todo do I need Task here?
-        // todo add some syncing state
-        Task{
-            recordingData.forEach {recording in
-                networkManager.postRecordingToAPI(recording, handleSuccess: { data in self.dataSource.removeData(recording)})
+
+        // todo add array of errors that occured
+        for recording in recordingData {
+//            if (!syncing) {
+//                break
+//            }
+            DispatchQueue.main.async {
+                self.openPostRequests += 1
             }
-            Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
+            networkManager.postRecordingToAPI(recording, handleSuccess: {
+                data in
+                DispatchQueue.main.async {
+                    self.openPostRequests -= 1
+                }
+                self.dataSource.removeData(recording)
+            })
         }
-        Task{
-            sensorData.forEach {sensor in
-                networkManager.postSensorDataToAPI(sensor, handleSuccess: { data in self.dataSource.removeData(sensor)})
+        Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
+        
+        Logger.statistics.info("Started sync: \(Date.now)")
+        Logger.statistics.info("SensorData count \(sensorData.count)")
+
+        let chunkSize = 100
+        Logger.statistics.info("Chunk size \(chunkSize)")
+
+        let chunkedSensorData = sensorData.chunked(into: chunkSize)
+            
+        for chunk in chunkedSensorData {
+            // if (!syncing) {
+            //     break
+            // }
+            DispatchQueue.main.async {
+                self.openPostRequests += 1
             }
-            Logger.viewCycle.info("Finished posting sensorData from SyncViewModel")
+            
+            networkManager.postSensorDataArrayToAPI(chunk, handleSuccess: {
+                data in
+                DispatchQueue.main.async {
+                    self.openPostRequests -= 1
+                    if (self.openPostRequests == 0) {
+                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
+                    }
+                }
+                
+                 for sensor in chunk {
+                     self.dataSource.removeData(sensor)
+                 }
+            })
         }
 
+//        for sensor in sensorData {
+//            DispatchQueue.main.async {
+//                self.openPostRequests += 1
+//            }
+//            
+//            print(sensor.values.count)
+//            do{
+//                print(sensor.sensor_id)
+//                print(sensor.values.count)
+//                let values = try JSONEncoder().encode(sensor.values)
+//                print(values.count)
+//            } catch {
+//                print("that did not work")
+//            }
+//            
+//            networkManager.postSensorDataToAPI(sensor, handleSuccess: {
+//                // todo test time it takes to send
+//                data in
+//                DispatchQueue.main.async {
+//                    self.openPostRequests -= 1
+//                    if (self.openPostRequests == 0) {
+//                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
+//                    }
+//                }
+//                self.dataSource.removeData(sensor)
+//            })
+//        }
+    }
+    
+    func cancel() {
+        DispatchQueue.main.async {
+            self.syncing = false
+        }
     }
 
 }

@@ -54,6 +54,13 @@ struct DeviceController: RouteCollection {
                         description: "Add sensor data",
                         response: .type(HTTPStatus.self)
                     )
+                    data.group("batch") { batch in
+                        batch.post(use: addSensorDataArray).openAPI(
+                            summary: "Add sensor data Array",
+                            description: "Add sensor data Array",
+                            response: .type(HTTPStatus.self)
+                        )
+                    }
                 }
 
                 device.group("recording") { data in
@@ -238,6 +245,58 @@ struct DeviceController: RouteCollection {
         var sensor_id: String
         var timestamp: Double
         var values: [Values]
+    }
+    
+    func addSensorDataArray(req: Request) async throws -> HTTPStatus {
+        print("Calling addSensorDataArray")
+        do {
+            let compressedData = try req.content.decode(Data.self)
+            print(compressedData)
+            let decompressedData = try (compressedData as NSData).decompressed(using: .lzma)
+            print(decompressedData)
+
+            guard let addSensorDataArray = try? JSONDecoder().decode([AddSensorData].self, from: decompressedData as Data) else {
+                print("Failed to decode addSensorDataArray")
+                throw Abort(.notFound)
+            }
+
+            let device = try await getDeviceOrAddDevice(req: req)
+
+            // todo use sensor name
+            var sensorDataArray: [SensorData] = []
+            for addSensorData in addSensorDataArray {
+                
+                guard let sensor = try await Sensor.query(on: req.db).filter(\.$name == addSensorData.sensor_id).first() else {
+                    print("Error, sensor not found", addSensorData.sensor_id)
+                    throw Abort(.notFound)
+                }
+                sensorDataArray = addSensorData.values.map({
+                    value in
+                    return SensorData(
+                        id: nil,
+                        recording_start: Date(timeIntervalSinceReferenceDate: addSensorData.recordingStart),
+                        device_id: device.id!,
+                        sensor_id: sensor.id!,
+                        timestamp: Date(timeIntervalSinceReferenceDate: value.timestamp),
+                        x: value.x,
+                        y: value.y,
+                        z: value.z,
+                        w: value.w
+                    )
+                })
+            }
+
+            try await sensorDataArray.create(on: req.db)
+            return .ok
+        } catch {
+            if (((error as? PSQLError)?.isConstraintFailure) != nil) {
+                print("Already exists in addSensorData: \(String(reflecting: error))")
+                return .ok
+            }
+            
+            print("Error in addSensorDataArray: \(String(reflecting: error))")
+            throw Abort(.notFound)
+        }
     }
 
     func addSensorData(req: Request) async throws -> HTTPStatus {

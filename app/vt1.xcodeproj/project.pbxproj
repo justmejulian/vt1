@@ -34,6 +34,8 @@
 		C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
 		C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
 		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
+		C74A61B62C03563400D4596A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A61B52C03563400D4596A /* Array.swift */; };
+		C74A61B72C03563400D4596A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A61B52C03563400D4596A /* Array.swift */; };
 		C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */; };
 		C75583812B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
 		C75583822B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
@@ -160,6 +162,7 @@
 		C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_ios_Mobile_App1UITests.swift; sourceTree = "<group>"; };
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
+		C74A61B52C03563400D4596A /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListViewModel.swift; sourceTree = "<group>"; };
 		C75583802B54471500451621 /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
 		C755927C2B17918F00972671 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -350,6 +353,7 @@
 				C7DF9C782B9CD31D0096FD89 /* Logger.swift */,
 				C71BA4592BC43ABF007430D2 /* TimerManager.swift */,
 				C768E5CF2BD950800051E567 /* CompressionManager.swift */,
+				C74A61B52C03563400D4596A /* Array.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -730,6 +734,7 @@
 				C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */,
 				C7DF9C772B9C6B350096FD89 /* LogStore.swift in Sources */,
 				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
+				C74A61B72C03563400D4596A /* Array.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
 				C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */,
 				C7C44CEE2B10FC6100789EAA /* SessionManager.swift in Sources */,
@@ -791,6 +796,7 @@
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
 				C768E5D52BDCFBFB0051E567 /* CompressedDataListViewModel.swift in Sources */,
 				C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */,
+				C74A61B62C03563400D4596A /* Array.swift in Sources */,
 				C70462222ADEDB67009F5DD4 /* NetworkViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
