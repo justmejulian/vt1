@@ -10,9 +10,8 @@ import OSLog
 struct SyncView: View {
     var syncViewModel: SyncViewModel
     
-    @Query var sensorData: [SensorData]
-    @Query var recordingData: [RecordingData]
-    @Query var syncData: [SyncData]
+    let sensorDataCount: Int
+    let recordingDataCount: Int
 
     @State
     var ip: String
@@ -21,6 +20,13 @@ struct SyncView: View {
         syncViewModel = SyncViewModel(dataSource: dataSource)
         
         ip = syncViewModel.syncData.ip
+        
+        let  modelContext = dataSource.getModelContext()
+        let descriptor = FetchDescriptor<RecordingData>()
+        recordingDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
+        
+        let descriptor2 = FetchDescriptor<SensorData>()
+        sensorDataCount = (try? modelContext.fetchCount(descriptor2)) ?? 0
     }
 
     var body: some View {
@@ -36,7 +42,7 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(recordingData.count))
+                    Text(String(recordingDataCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -44,7 +50,7 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(sensorData.count))
+                    Text(String(sensorDataCount))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)

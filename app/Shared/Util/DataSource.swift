@@ -24,6 +24,11 @@ final class DataSource {
     func getModelContainer() -> ModelContainer {
         return self.modelContainer
     }
+    
+    
+    func getModelContext() -> ModelContext {
+        return self.modelContext
+    }
 
     internal func appendData<T>(_ data: T) where T : PersistentModel{
         DispatchQueue.main.async {
