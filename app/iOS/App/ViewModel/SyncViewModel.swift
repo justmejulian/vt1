@@ -76,11 +76,17 @@ class SyncViewModel: ObservableObject {
         
         Logger.statistics.info("Started sync: \(Date.now)")
         Logger.statistics.info("SensorData count \(sensorData.count)")
-
+        
+        sendSensorDataChunked(networkManager: networkManager, sensorDataArray: sensorData)
+//        sendSensorDataOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
+    }
+    
+    func sendSensorDataChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorData]){
+        // todo: a test with 10 100 150 20
         let chunkSize = 100
         Logger.statistics.info("Chunk size \(chunkSize)")
 
-        let chunkedSensorData = sensorData.chunked(into: chunkSize)
+        let chunkedSensorData = sensorDataArray.chunked(into: chunkSize)
             
         for chunk in chunkedSensorData {
             // if (!syncing) {
@@ -104,34 +110,36 @@ class SyncViewModel: ObservableObject {
                  }
             })
         }
-
-//        for sensor in sensorData {
-//            DispatchQueue.main.async {
-//                self.openPostRequests += 1
-//            }
-//            
-//            print(sensor.values.count)
-//            do{
-//                print(sensor.sensor_id)
-//                print(sensor.values.count)
-//                let values = try JSONEncoder().encode(sensor.values)
-//                print(values.count)
-//            } catch {
-//                print("that did not work")
-//            }
-//            
-//            networkManager.postSensorDataToAPI(sensor, handleSuccess: {
-//                // todo test time it takes to send
-//                data in
-//                DispatchQueue.main.async {
-//                    self.openPostRequests -= 1
-//                    if (self.openPostRequests == 0) {
-//                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
-//                    }
-//                }
-//                self.dataSource.removeData(sensor)
-//            })
-//        }
+    }
+    
+    func sendSensorDataOneByOne(networkManager: NetworkViewModel, sensorDataArray: [SensorData]){
+        for sensor in sensorDataArray {
+            DispatchQueue.main.async {
+                self.openPostRequests += 1
+            }
+            
+            print(sensor.values.count)
+            do{
+                print(sensor.sensor_id)
+                print(sensor.values.count)
+                let values = try JSONEncoder().encode(sensor.values)
+                print(values.count)
+            } catch {
+                print("that did not work")
+            }
+            
+            networkManager.postSensorDataToAPI(sensor, handleSuccess: {
+                // todo test time it takes to send
+                data in
+                DispatchQueue.main.async {
+                    self.openPostRequests -= 1
+                    if (self.openPostRequests == 0) {
+                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
+                    }
+                }
+                self.dataSource.removeData(sensor)
+            })
+        }
     }
     
     func cancel() {
