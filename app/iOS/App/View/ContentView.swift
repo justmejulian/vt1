@@ -61,13 +61,6 @@ struct ContentView: View {
                             .padding(.vertical, 8)
                             .frame(maxWidth: .infinity)
                     }
-                    NavigationLink {
-                        CompressedDataListView(dataSource: dataSource)
-                    } label: {
-                        Text("Compressed Recordings")
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: .infinity)
-                    }
                 }
             }.padding(.bottom, 32).padding(.horizontal, 20)
 

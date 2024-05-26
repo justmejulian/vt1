@@ -30,12 +30,23 @@ class CompressedDataListViewModel: ObservableObject{
         recordingArray.forEach({ recording in
             do {
                 let sensorData = dataSource.fetchSensorDataArray(timestamp: recording.startTimestamp)
+                
+                Logger.viewCycle.debug("Sensor Data length \(sensorData.count)")
+                
+                let sensorDataJson = try JSONEncoder().encode(sensorData)
+
+                Logger.viewCycle.debug("Compressing Sensor Data")
+                let compressedSensorFile = try compressionManager.compressData(sensorDataJson)
+
+                // todo only compress the sensor data
                 let dict: RecordingDictionary = RecordingDictionary(
                     exercise: recording.exercise,
                     startTimestamp: recording.startTimestamp.timeIntervalSince1970,
-                    data: sensorData
+                    // todo we could remove the recordingStart from the sensorData
+                    data: compressedSensorFile as Data
                 )
 
+                Logger.viewCycle.debug("Compressing All")
                 let jsonData = try JSONEncoder().encode(dict)
                 let compressedFile = try compressionManager.compressData(jsonData)
                 
@@ -53,5 +64,5 @@ class CompressedDataListViewModel: ObservableObject{
 struct RecordingDictionary: Encodable {
     var exercise: String
     var startTimestamp: TimeInterval
-    var data: [SensorData]
+    var data: Data
 }

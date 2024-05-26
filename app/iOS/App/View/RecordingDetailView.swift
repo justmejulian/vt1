@@ -29,7 +29,7 @@ struct RecordingDetailView: View {
         self._sensorData = Query(filter: #Predicate<SensorData> {
             $0.recordingStart == recording.startTimestamp
         })
-        self.fileName = "Recording-\(recording.startTimestamp).csv"
+        self.fileName = "Recording-\(recording.startTimestamp)"
     }
 
     var body: some View {
@@ -62,9 +62,14 @@ struct RecordingDetailView: View {
             }
                 .buttonStyle(BorderedProminentButtonStyle())
 
-            Button("Export") {
+            Button(action: {
                 exporting = true
+            }){
+                Label("Export", systemImage: "square.and.arrow.up")
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
             }
+            .buttonStyle(BorderedProminentButtonStyle())
             .fileExporter(
                     isPresented: $exporting,
                     document: generateJson(),
@@ -105,7 +110,7 @@ struct RecordingDetailView: View {
     
     func generateJson() -> File? {
         do {
-            let dict: RecordingDict = RecordingDict(
+            let dict: RecordingDictionary = RecordingDictionary(
                 exercise: recording.exercise,
                 startTimestamp: recording.startTimestamp.timeIntervalSince1970,
                 // todo we could remove the recordingStart from the sensorData
@@ -123,7 +128,7 @@ struct RecordingDetailView: View {
     }
 }
 
-struct RecordingDict: Encodable {
+struct RecordingDictionary: Encodable {
     var exercise: String
     var startTimestamp: TimeInterval
     var sensorData: [SensorData]
