@@ -8,16 +8,25 @@ import OSLog
 
 struct ContentView: View {
     
-    @Query
-    var sensorData: [SensorData]
+    let sensorDataCount: Int
+    let recordingDataCount: Int
     
-    @Query
-    var recordingData: [RecordingData]
-
     let sessionManager: SessionManager
     
     @ObservationIgnored
     let dataSource: DataSource
+    
+    init(sessionManager: SessionManager, dataSource: DataSource) {
+        self.dataSource = dataSource
+        self.sessionManager = sessionManager
+        
+        let  modelContext = dataSource.getModelContext()
+        let descriptor = FetchDescriptor<RecordingData>()
+        recordingDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
+        
+        let descriptor2 = FetchDescriptor<SensorData>()
+        sensorDataCount = (try? modelContext.fetchCount(descriptor2)) ?? 0
+    }
 
     var body: some View {
         NavigationStack {
@@ -35,15 +44,15 @@ struct ContentView: View {
                     Text("Recording #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(recordingData.count))
+                    Text(String(recordingDataCount))
                         .font(.caption)
                 }
                 Spacer()
                 VStack {
-                    Text("Data Point #: ")
+                    Text("Batch #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(sensorData.count))
+                    Text(String(sensorDataCount))
                         .font(.caption)
                 }
                 Spacer()
@@ -68,7 +77,7 @@ struct ContentView: View {
 
             VStack {
                 NavigationLink {
-                    StartRecordingView(sessionManager: sessionManager)
+                    StartRecordingView(dataSource: dataSource, sessionManager: sessionManager)
                 } label: {
                     Label("New Recording", systemImage: "plus")
                         .padding(.vertical, 8)
