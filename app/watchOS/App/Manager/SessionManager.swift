@@ -7,6 +7,7 @@
 
 import Foundation
 import HealthKit
+import WatchKit
 import OSLog
 
 class SessionManager: NSObject, ObservableObject {
@@ -56,6 +57,9 @@ class SessionManager: NSObject, ObservableObject {
 
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
+        
+        WKInterfaceDevice.current().play(.start)
+        
         DispatchQueue.main.async {
             let newLoading = self.loadingMap.mapValues { value in
                 return true
@@ -107,6 +111,7 @@ class SessionManager: NSObject, ObservableObject {
                                     
                                     if (!self.loadingMap.contains(where: {$0.value == true})){
                                         Logger.viewCycle.debug("All first monitorUpdates revieved. Starting Timer.")
+                                        WKInterfaceDevice.current().play(.success)
                                         self.timeManager.start()
                                     }
 
@@ -211,6 +216,9 @@ class SessionManager: NSObject, ObservableObject {
 
     func stop() {
         Logger.viewCycle.debug("Stopping SessionManager session")
+        
+        WKInterfaceDevice.current().play(.stop)
+        
         DispatchQueue.main.async {
             self.timeManager.stop()
             self.started = false
