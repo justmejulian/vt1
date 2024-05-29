@@ -13,13 +13,22 @@ struct StartRecordingView: View {
     @ObservedObject
     var sessionManager: SessionManager
 
-    @Query
-    var sensorData: [SensorData]
-    
-    @Query
-    var recordingData: [RecordingData]
-
     @State private var text: String = ""
+    
+    let sensorDataCount: Int
+    let recordingDataCount: Int
+    
+    init(dataSource: DataSource, sessionManager: SessionManager){
+        
+        self.sessionManager = sessionManager
+        
+        let  modelContext = dataSource.getModelContext()
+        let descriptor = FetchDescriptor<RecordingData>()
+        self.recordingDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
+        
+        let descriptor2 = FetchDescriptor<SensorData>()
+        self.sensorDataCount = (try? modelContext.fetchCount(descriptor2)) ?? 0
+    }
 
     var body: some View {
         
@@ -40,15 +49,16 @@ struct StartRecordingView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(recordingData.count))
+                    Text(String(recordingDataCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
+                    // todo use some var in session for this
                     Text("Batch #")
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(sensorData.count))
+                    Text(String(sensorDataCount))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)
