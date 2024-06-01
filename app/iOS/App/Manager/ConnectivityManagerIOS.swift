@@ -68,7 +68,7 @@ extension ConnectivityManager {
         let context = ["stopSession": true]
         self.session.sendMessage(context, replyHandler: { replyData in
             if replyData["sucess"] != nil {
-                Logger.viewCycle.debug("sucessfully started session")
+                Logger.viewCycle.debug("sucessfully stopped session")
                 return
             }
             

@@ -36,6 +36,8 @@
 		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
 		C74A61B62C03563400D4596A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A61B52C03563400D4596A /* Array.swift */; };
 		C74A61B72C03563400D4596A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A61B52C03563400D4596A /* Array.swift */; };
+		C74A61BA2C0B48A200D4596A /* Throttler in Frameworks */ = {isa = PBXBuildFile; productRef = C74A61B92C0B48A200D4596A /* Throttler */; };
+		C74A61BC2C0B48AD00D4596A /* Throttler in Frameworks */ = {isa = PBXBuildFile; productRef = C74A61BB2C0B48AD00D4596A /* Throttler */; };
 		C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */; };
 		C75583812B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
 		C75583822B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
@@ -202,6 +204,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C74A61BC2C0B48AD00D4596A /* Throttler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,6 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C74A61BA2C0B48A200D4596A /* Throttler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +367,7 @@
 				C704628C2ADFD370009F5DD4 /* watchOS */,
 				C704628B2ADFD35E009F5DD4 /* iOS */,
 				C7327B802ADD5D8200F16E63 /* Products */,
+				C768E5D92BDD3CD10051E567 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -448,6 +453,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		C768E5D92BDD3CD10051E567 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C7778DD02B10B17200E5D9ED /* Manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -505,6 +517,9 @@
 			dependencies = (
 			);
 			name = "vt1 Watch App";
+			packageProductDependencies = (
+				C74A61BB2C0B48AD00D4596A /* Throttler */,
+			);
 			productName = "vt1_watchos Watch App";
 			productReference = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -560,6 +575,9 @@
 				C704627B2ADFCF70009F5DD4 /* PBXTargetDependency */,
 			);
 			name = "vt1 Mobile App";
+			packageProductDependencies = (
+				C74A61B92C0B48A200D4596A /* Throttler */,
+			);
 			productName = vt1;
 			productReference = C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */;
 			productType = "com.apple.product-type.application";
@@ -643,6 +661,9 @@
 				Base,
 			);
 			mainGroup = C7327B762ADD5D8200F16E63;
+			packageReferences = (
+				C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */,
+			);
 			productRefGroup = C7327B802ADD5D8200F16E63 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1337,6 +1358,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/boraseoksoon/Throttler.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C74A61B92C0B48A200D4596A /* Throttler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */;
+			productName = Throttler;
+		};
+		C74A61BB2C0B48AD00D4596A /* Throttler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */;
+			productName = Throttler;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C7327B772ADD5D8200F16E63 /* Project object */;
 }

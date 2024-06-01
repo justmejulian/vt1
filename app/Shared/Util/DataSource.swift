@@ -10,8 +10,9 @@
 import Foundation
 import SwiftData
 import OSLog
+import Throttler
 
-final class DataSource {
+final class DataSource: ObservableObject {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
 
@@ -19,6 +20,7 @@ final class DataSource {
         Logger.statistics.debug("Creating DataSource")
         self.modelContainer = modelContainer
         self.modelContext = modelContext
+        self.modelContext.autosaveEnabled = false
     }
 
     func getModelContainer() -> ModelContainer {
@@ -29,11 +31,17 @@ final class DataSource {
     func getModelContext() -> ModelContext {
         return self.modelContext
     }
+    
+    @MainActor
+    func save() throws {
+        Logger.viewCycle.debug("Saving ...")
+        try self.modelContext.save()
+    }
 
     internal func appendData<T>(_ data: T) where T : PersistentModel{
-        DispatchQueue.main.async {
-            self.modelContext.insert(data)
-        }
+        Logger.viewCycle.debug("Appending Data: \(T.self)")
+        self.modelContext.insert(data)
+        throtteledSave()
     }
 
     internal func fetchData<T>() -> [T] where T : PersistentModel {
@@ -47,9 +55,9 @@ final class DataSource {
     }
 
     internal func removeData<T>(_ data: T) where T: PersistentModel {
-        DispatchQueue.main.async {
-            self.modelContext.delete(data)
-        }
+        Logger.viewCycle.debug("Removing Data: \(T.self)")
+        self.modelContext.delete(data)
+        throtteledSave()
     }
 
     func appendSensorData(_ sensorData: SensorData) {
@@ -71,6 +79,19 @@ final class DataSource {
         }
 
         return data.filter { $0.recordingStart == timestamp }
+    }
+
+    private func throtteledSave() {
+        throttle(.seconds(10), option: .ensureLast) {
+            Logger.viewCycle.debug("Running Throttled Save")
+            DispatchQueue.main.async {
+                do {
+                    try self.save()
+                } catch {
+                    Logger.viewCycle.error("Failed to sace dataSource: \(error)")
+                }
+            }
+        }
     }
 
     func clear() {
