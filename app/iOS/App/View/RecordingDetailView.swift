@@ -12,29 +12,20 @@ struct RecordingDetailView: View {
     
     var recording: RecordingData
 
-    var sensorDataCount: Int
+    @State var sensorDataCount: Int
 
     @State private var text: String
     @State private var exporting: Bool = false
     
-    let fileName: String
+    @State private var fileName: String
     
     init(recording: RecordingData, dataSource: DataSource) {
         self.recording = recording
         self.dataSource = dataSource
 
         self._text = State(initialValue: recording.exercise)
-        
-        let  modelContext = dataSource.getModelContext()
-
-        
-        let descriptor = FetchDescriptor<SensorData>(
-            predicate: #Predicate<SensorData> {
-                $0.recordingStart == recording.startTimestamp
-            }
-        )
-        self.sensorDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
-        self.fileName = "Recording-\(recording.startTimestamp)"
+        self.sensorDataCount = 0
+        self.fileName = ""
     }
 
     var body: some View {
@@ -100,6 +91,16 @@ struct RecordingDetailView: View {
         }
         .onAppear {
             Logger.viewCycle.info("RecordingDetailView Appeared!")
+            let  modelContext = dataSource.getModelContext()
+
+            
+            let descriptor = FetchDescriptor<SensorData>(
+                predicate: #Predicate<SensorData> {
+                    $0.recordingStart == recording.startTimestamp
+                }
+            )
+            self.sensorDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
+            self.fileName = "Recording-\(recording.startTimestamp)"
         }
     }
 
