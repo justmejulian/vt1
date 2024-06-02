@@ -35,7 +35,7 @@ extension ConnectivityManager {
         })
     }
 
-    func sendStartSession(exerciseName: String) {
+    func sendStartSession(exerciseName: String, errorHandler: ((any Error) -> Void)? = nil ) {
         Logger.viewCycle.debug("sendStartSession from ConnectivityManager for \(exerciseName)")
         let context = ["startSession": exerciseName]
         self.session.sendMessage(context, replyHandler: { replyData in
@@ -55,7 +55,11 @@ extension ConnectivityManager {
             }
             Logger.viewCycle.error("Something went wrong sendStartSession, could not decode the response")
         }, errorHandler: { (error) in
-            Logger.viewCycle.error("error sending start session for exerciseName \(exerciseName): \(error.localizedDescription)")
+            Logger.viewCycle.error("ConnectivityManager: error sending start session for exerciseName \(exerciseName): \(error.localizedDescription)")
+            
+            if let errorHandler = errorHandler {
+                errorHandler(error)
+            }
         })
     }
     

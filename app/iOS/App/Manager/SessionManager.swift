@@ -88,7 +88,12 @@ class SessionManager: NSObject, ObservableObject {
         Logger.viewCycle.debug("startSession from SessionManager at \(Date())")
         
         isSessionRunning = true
-        connectivityManager.sendStartSession(exerciseName: exerciseName ?? "")
+        connectivityManager.sendStartSession(exerciseName: exerciseName ?? "", errorHandler: {
+            error in
+            Task {
+                await self.stop()
+            }
+        })
         
         isLoading = false
         
