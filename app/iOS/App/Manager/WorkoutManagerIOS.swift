@@ -8,7 +8,7 @@ import HealthKit
 import OSLog
 
 extension WorkoutManager {
-    func startWatchWorkout() async throws {
+    func startWatchWorkout() async {
 
         Logger.viewCycle.info("Running start Watch Workout from WorkoutManager")
 

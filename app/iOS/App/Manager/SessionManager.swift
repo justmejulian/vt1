@@ -42,7 +42,9 @@ class SessionManager: NSObject, ObservableObject {
 
     func refreshSessionState() {
         Logger.viewCycle.debug("refreshSessionState from SessionManager")
-        connectivityManager.getSessionState()
+        Task {
+            connectivityManager.getSessionState()
+        }
     }
 
     func toggle(text: String?) async {
@@ -62,14 +64,22 @@ class SessionManager: NSObject, ObservableObject {
     private func start(text: String?) async {
         Logger.viewCycle.debug("start from SessionManager at \(Date())")
         
-        do {
-            try await workoutManager.startWatchWorkout()
-            
-            exerciseName = text
-            
-            Logger.viewCycle.debug("started watchWorkout from SessionManager at \(Date())")
-        } catch {
-            Logger.viewCycle.error("\(error.localizedDescription)")
+        await workoutManager.startWatchWorkout()
+        
+        exerciseName = text
+        
+        Logger.viewCycle.debug("started watchWorkout from SessionManager at \(Date())")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            print("SessionManager timer fired: ", self.isLoading)
+            if let isLoading = self.isLoading {
+                if (isLoading ) {
+                    print("SessionManager timed out! Stopping Session.")
+                    Task{
+                        await self.stop()
+                    }
+                }
+            }
         }
     }
     
@@ -129,8 +139,8 @@ class SessionManager: NSObject, ObservableObject {
                 Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
 
                 DispatchQueue.main.async {
-
                     self.isSessionRunning = isSessionRunningBool
+                    self.isLoading = nil
                 }
                 return
             }
@@ -139,7 +149,7 @@ class SessionManager: NSObject, ObservableObject {
 
         let isSessionReadyListener = Listener(key: "isSessionReady", handleData: { data in
             if let isSessionReady = data["isSessionReady"] {
-                guard let isSessionReadyBool = data["isSessionReady"] as? Bool else {
+                guard let isSessionReadyBool = isSessionReady as? Bool else {
                     throw SessionError("Could not decode isSessionReady")
                 }
 

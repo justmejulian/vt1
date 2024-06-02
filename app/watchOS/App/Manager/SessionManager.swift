@@ -58,6 +58,15 @@ class SessionManager: NSObject, ObservableObject {
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            print("SessionManager timer fired: ", self.loadingMap)
+            if (self.loadingMap.contains(where: { $0.value == true})) {
+                print("SessionManager timed out! Stopping Session.")
+                WKInterfaceDevice.current().play(.failure)
+                self.stop()
+            }
+        }
+        
         WKInterfaceDevice.current().play(.start)
         
         DispatchQueue.main.async {
@@ -220,8 +229,12 @@ class SessionManager: NSObject, ObservableObject {
         WKInterfaceDevice.current().play(.stop)
         
         DispatchQueue.main.async {
-            self.timeManager.stop()
             self.started = false
+            self.timeManager.stop()
+            let newLoading = self.loadingMap.mapValues { value in
+                return false
+            }
+            self.loadingMap = newLoading
         }
 
         recordingManager.stop()

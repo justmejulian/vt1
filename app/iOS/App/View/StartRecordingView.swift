@@ -12,22 +12,15 @@ struct StartRecordingView: View {
     
     @ObservedObject
     var sessionManager: SessionManager
+    @ObservedObject
+    var dataSource: DataSource
+
 
     @State private var text: String = ""
     
-    let sensorDataCount: Int
-    let recordingDataCount: Int
-    
     init(dataSource: DataSource, sessionManager: SessionManager){
-        
+        self.dataSource = dataSource
         self.sessionManager = sessionManager
-        
-        let  modelContext = dataSource.getModelContext()
-        let descriptor = FetchDescriptor<RecordingData>()
-        self.recordingDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
-        
-        let descriptor2 = FetchDescriptor<SensorData>()
-        self.sensorDataCount = (try? modelContext.fetchCount(descriptor2)) ?? 0
     }
 
     var body: some View {
@@ -49,7 +42,7 @@ struct StartRecordingView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(recordingDataCount))
+                    Text(String(dataSource.recordingDataCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -58,7 +51,7 @@ struct StartRecordingView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(sensorDataCount))
+                    Text(String(dataSource.sensorDataCount))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)
@@ -71,12 +64,10 @@ struct StartRecordingView: View {
             }).padding(.all)
 
             Button(action: {
+                Logger.viewCycle.info("Calling toggle from StartRecordingView")
                 Task {
-                    // todo move this into a viewModel
-                    Logger.viewCycle.info("Calling toggle from StartRecordingView")
                     // todo disable
                     await sessionManager.toggle(text: text)
-
                     // also try alert
                     // https://www.hackingwithswift.com/quick-start/swiftui/how-to-show-an-alert
                 }

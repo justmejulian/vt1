@@ -12,8 +12,7 @@ struct RecordingDetailView: View {
     
     var recording: RecordingData
 
-    @Query
-    var sensorData: [SensorData]
+    var sensorDataCount: Int
 
     @State private var text: String
     @State private var exporting: Bool = false
@@ -25,10 +24,16 @@ struct RecordingDetailView: View {
         self.dataSource = dataSource
 
         self._text = State(initialValue: recording.exercise)
+        
+        let  modelContext = dataSource.getModelContext()
 
-        self._sensorData = Query(filter: #Predicate<SensorData> {
-            $0.recordingStart == recording.startTimestamp
-        })
+        
+        let descriptor = FetchDescriptor<SensorData>(
+            predicate: #Predicate<SensorData> {
+                $0.recordingStart == recording.startTimestamp
+            }
+        )
+        self.sensorDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
         self.fileName = "Recording-\(recording.startTimestamp)"
     }
 
@@ -48,7 +53,7 @@ struct RecordingDetailView: View {
                 .font(.title3)
             Spacer()
 
-            Text("# batches: " + String(sensorData.count))
+            Text("# batches: " + String(sensorDataCount))
                 .font(.title2)
 
             Spacer()
@@ -110,6 +115,18 @@ struct RecordingDetailView: View {
     
     func generateJson() -> File? {
         do {
+            let descriptor = FetchDescriptor<SensorData>(
+                predicate: #Predicate<SensorData> {
+                    $0.recordingStart == recording.startTimestamp
+                }
+            )
+
+            let sensorData = try? dataSource.getModelContext().fetch(descriptor)
+
+            guard let sensorData = try? dataSource.getModelContext().fetch(descriptor) else {
+                throw RecordingExportError("Error CMBatchedSensorManager not supported")
+            }
+
             let dict: RecordingDictionary = RecordingDictionary(
                 exercise: recording.exercise,
                 startTimestamp: recording.startTimestamp.timeIntervalSince1970,
@@ -163,5 +180,18 @@ class File: FileDocument {
     
     func fileWrapper(configuration: FileDocumentWriteConfiguration) throws -> FileWrapper {
         return FileWrapper(regularFileWithContents: file as Data)
+    }
+}
+
+
+struct RecordingExportError: LocalizedError {
+    let description: String
+
+    init(_ description: String) {
+        self.description = description
+    }
+
+    var errorDescription: String? {
+        description
     }
 }

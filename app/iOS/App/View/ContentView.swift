@@ -8,9 +8,6 @@ import OSLog
 
 struct ContentView: View {
     
-    let sensorDataCount: Int
-    let recordingDataCount: Int
-    
     let sessionManager: SessionManager
     
     @ObservationIgnored
@@ -19,13 +16,6 @@ struct ContentView: View {
     init(sessionManager: SessionManager, dataSource: DataSource) {
         self.dataSource = dataSource
         self.sessionManager = sessionManager
-        
-        let  modelContext = dataSource.getModelContext()
-        let descriptor = FetchDescriptor<RecordingData>()
-        recordingDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
-        
-        let descriptor2 = FetchDescriptor<SensorData>()
-        sensorDataCount = (try? modelContext.fetchCount(descriptor2)) ?? 0
     }
 
     var body: some View {
@@ -44,7 +34,7 @@ struct ContentView: View {
                     Text("Recording #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(recordingDataCount))
+                    Text(String(dataSource.recordingDataCount))
                         .font(.caption)
                 }
                 Spacer()
@@ -52,7 +42,7 @@ struct ContentView: View {
                     Text("Batch #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(sensorDataCount))
+                    Text(String(dataSource.sensorDataCount))
                         .font(.caption)
                 }
                 Spacer()

@@ -10,9 +10,6 @@ struct MotionView: View {
 
     @ObservedObject
     var sessionManager: SessionManager
-    
-    @Query
-    var sensorData: [SensorData]
 
     var body: some View {
         

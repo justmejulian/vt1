@@ -15,12 +15,22 @@ import Throttler
 final class DataSource: ObservableObject {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
-
+    
+    @Published
+    var sensorDataCount: Int = 0
+    @Published
+    var recordingDataCount: Int = 0
+    
     init(modelContainer: ModelContainer, modelContext: ModelContext) {
         Logger.statistics.debug("Creating DataSource")
         self.modelContainer = modelContainer
         self.modelContext = modelContext
         self.modelContext.autosaveEnabled = false
+        
+        DispatchQueue.main.async {
+            self.setSensorDataCount()
+            self.setRecordingDataCount()
+        }
     }
 
     func getModelContainer() -> ModelContainer {
@@ -36,6 +46,22 @@ final class DataSource: ObservableObject {
     func save() throws {
         Logger.viewCycle.debug("Saving ...")
         try self.modelContext.save()
+        
+        // todo maybe split up.
+        setSensorDataCount()
+        setRecordingDataCount()
+    }
+
+    @MainActor
+    func setSensorDataCount(){
+        let descriptor = FetchDescriptor<SensorData>()
+        self.sensorDataCount = (try? self.modelContext.fetchCount(descriptor)) ?? 0
+    }
+    
+    @MainActor
+    func setRecordingDataCount(){
+        let descriptor = FetchDescriptor<RecordingData>()
+        self.recordingDataCount = (try? self.modelContext.fetchCount(descriptor)) ?? 0
     }
 
     internal func appendData<T>(_ data: T) where T : PersistentModel{
@@ -82,7 +108,7 @@ final class DataSource: ObservableObject {
     }
 
     private func throtteledSave() {
-        throttle(.seconds(10), option: .ensureLast) {
+        throttle(.seconds(10)) {
             Logger.viewCycle.debug("Running Throttled Save")
             DispatchQueue.main.async {
                 do {

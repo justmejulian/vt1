@@ -32,6 +32,7 @@ class RecordingManager: NSObject, ObservableObject {
     }
     
     func stop() {
+        Logger.viewCycle.debug("Calling stop RecordingManager")
         isRecording = false
         motionManager.stopAccelerometerUpdates()
         motionManager.stopDeviceMotionUpdates()
