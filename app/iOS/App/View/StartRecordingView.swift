@@ -86,11 +86,7 @@ struct StartRecordingView: View {
             Spacer()
         })
         .toast(isPresenting: $sessionManager.hasError){
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                print("Reset Error")
-                sessionManager.resetError()
-            }
-            return AlertToast(type: .regular, title: sessionManager.errorMessage)
+            return AlertToast(type: .regular, title: sessionManager.errorMessage, style: .style(backgroundColor: .red))
         }
         .onAppear {
             Logger.viewCycle.info("StartRecordingView Appeared!")

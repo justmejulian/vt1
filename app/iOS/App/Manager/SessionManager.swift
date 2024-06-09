@@ -69,23 +69,25 @@ class SessionManager: NSObject, ObservableObject {
     private func start(text: String?) async {
         Logger.viewCycle.debug("start from SessionManager at \(Date())")
         
-        await workoutManager.startWatchWorkout()
-        
-        exerciseName = text
-        
-        Logger.viewCycle.debug("started watchWorkout from SessionManager at \(Date())")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-            print("SessionManager timer fired: ", self.isLoading)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            Logger.viewCycle.debug("SessionManager timer fired: \(String(self.isLoading ?? false))")
             if let isLoading = self.isLoading {
                 if (isLoading ) {
-                    print("SessionManager timed out! Stopping Session.")
+                    Logger.viewCycle.debug("SessionManager timed out! Stopping Session.")
+                    
                     Task{
+                        self.handleError(message: "SessionManager timed out! Stopping Session.")
                         await self.stop()
                     }
                 }
             }
         }
+        
+        await workoutManager.startWatchWorkout()
+        
+        exerciseName = text
+        
+        Logger.viewCycle.debug("started watchWorkout from SessionManager at \(Date())")
     }
     
     // Called when watch tell iphone that it is ready
@@ -178,12 +180,14 @@ class SessionManager: NSObject, ObservableObject {
     func handleError(message: String){
         self.errorMessage = message
         self.hasError = true
+        self.isLoading = false
     }
     
     @MainActor
-    func resetError(){
+    func reset(){
         self.errorMessage = ""
         self.hasError = false
+        self.isLoading = false
     }
 }
 
