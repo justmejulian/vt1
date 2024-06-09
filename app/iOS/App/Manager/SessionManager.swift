@@ -27,6 +27,11 @@ class SessionManager: NSObject, ObservableObject {
     @Published
     var isLoading: Bool? = nil
     
+    @Published
+    var hasError: Bool = false
+    @Published
+    var errorMessage: String = ""
+    
     var exerciseName: String? = nil
     
     init(workoutManager: WorkoutManager, connectivityManager: ConnectivityManager, dataSource: DataSource) {
@@ -167,6 +172,18 @@ class SessionManager: NSObject, ObservableObject {
             }
         })
         connectivityManager.addListener(isSessionReadyListener)
+    }
+    
+    @MainActor
+    func handleError(message: String){
+        self.errorMessage = message
+        self.hasError = true
+    }
+    
+    @MainActor
+    func resetError(){
+        self.errorMessage = ""
+        self.hasError = false
     }
 }
 

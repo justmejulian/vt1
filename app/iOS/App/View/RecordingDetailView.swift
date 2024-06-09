@@ -8,6 +8,7 @@ import OSLog
 import Foundation
 
 struct RecordingDetailView: View {
+    @ObservationIgnored
     private let dataSource: DataSource
     
     var recording: RecordingData

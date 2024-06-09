@@ -7,11 +7,11 @@ import SwiftData
 import OSLog
 
 struct ContentView: View {
-    
+    @ObservationIgnored
     let sessionManager: SessionManager
     
-    @ObservationIgnored
-    let dataSource: DataSource
+    @ObservedObject
+    var dataSource: DataSource
     
     init(sessionManager: SessionManager, dataSource: DataSource) {
         self.dataSource = dataSource

@@ -7,6 +7,7 @@ import SwiftUI
 import SwiftData
 import HealthKit
 import OSLog
+import AlertToast
 
 struct StartRecordingView: View {
     
@@ -84,6 +85,13 @@ struct StartRecordingView: View {
             Spacer()
             Spacer()
         })
+        .toast(isPresenting: $sessionManager.hasError){
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                print("Reset Error")
+                sessionManager.resetError()
+            }
+            return AlertToast(type: .regular, title: sessionManager.errorMessage)
+        }
         .onAppear {
             Logger.viewCycle.info("StartRecordingView Appeared!")
             // todo do this in task
