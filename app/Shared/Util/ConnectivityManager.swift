@@ -69,7 +69,9 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     }
     
     func addListener(_ listener: Listener) {
-        removeListener(listener.key)
+        if listeners.contains(where: { $0.key == listener.key}){
+            removeListener(listener.key)
+        }
         
         listeners.append(listener)
         Logger.viewCycle.debug("Added listener. Count: \(self.listeners.count)")
