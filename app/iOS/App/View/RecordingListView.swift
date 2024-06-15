@@ -12,16 +12,25 @@ struct RecordingListView: View {
     let dataSource: DataSource
     
     var recordingListViewModel: RecordingListViewModel
-
+    
     @Query var recordings: [RecordingData]
     
     @State private var isConfirming = false
+    @State private var searchText: String = ""
     
     init(dataSource: DataSource) {
         self.dataSource = dataSource
         self.recordingListViewModel = RecordingListViewModel(dataSource: dataSource)
     }
-
+    
+    var filteredRecordings: [RecordingData] {
+        if searchText.isEmpty {
+            recordings
+        } else {
+            recordings.filter { $0.exercise.localizedStandardContains(searchText) }
+        }
+    }
+    
     var body: some View {
         Text("List of Recordings")
             .font(.title3)
@@ -40,12 +49,12 @@ struct RecordingListView: View {
             }
         } else {
             NavigationStack {
-                List(recordings) { recordingData in
+                List(filteredRecordings) { recordingData in
                     NavigationLink {
                         RecordingDetailView(recording: recordingData, dataSource: dataSource)
                     } label: {
                         VStack{
-                            Text(String(recordingData.exercise))
+                            Text(recordingData.exercise)
                                 .font(.caption)
                                 .bold()
                             Text(recordingData.startTimestamp.ISO8601Format())
@@ -54,7 +63,8 @@ struct RecordingListView: View {
                         }
                     }
                 }
-                    .listStyle(.automatic)
+                .listStyle(.automatic)
+                .searchable(text: $searchText)
                 
                 Button(action: {
                     isConfirming = true
@@ -63,17 +73,17 @@ struct RecordingListView: View {
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
                 }
-                    .buttonStyle(BorderedButtonStyle())
-                    .confirmationDialog(
-                               "Are you sure you want delete all?",
-                               isPresented: $isConfirming
-                    ) {
-                        // todo move to
-                        Button("Delete All", role: .destructive) {
-                            recordingListViewModel.deleteAll()
-                        }
-                        Button("Cancel", role: .cancel) {}
+                .buttonStyle(BorderedButtonStyle())
+                .confirmationDialog(
+                    "Are you sure you want delete all?",
+                    isPresented: $isConfirming
+                ) {
+                    // todo move to
+                    Button("Delete All", role: .destructive) {
+                        recordingListViewModel.deleteAll()
                     }
+                    Button("Cancel", role: .cancel) {}
+                }
             }
             .onAppear {
                 Logger.viewCycle.info("RecordingListView NavigationStack Appeared!")
