@@ -20,7 +20,11 @@ struct RecordingDetailView: View {
     
     @State private var fileName: String
     
+    @State private var document: File?
+    
     init(recording: RecordingData, dataSource: DataSource) {
+        // todo check when this is initialized
+        Logger.viewCycle.debug("Running init for RecordingDetailView: \(recording.startTimestamp)")
         self.recording = recording
         self.dataSource = dataSource
 
@@ -60,6 +64,7 @@ struct RecordingDetailView: View {
                 .buttonStyle(BorderedProminentButtonStyle())
 
             Button(action: {
+                document = generateJson(dataSource: dataSource, recording: recording, fileName: fileName)
                 exporting = true
             }){
                 Label("Export", systemImage: "square.and.arrow.up")
@@ -69,7 +74,7 @@ struct RecordingDetailView: View {
             .buttonStyle(BorderedProminentButtonStyle())
             .fileExporter(
                     isPresented: $exporting,
-                    document: generateJson(),
+                    document: document,
                     contentType: .json,
                     defaultFilename: fileName
                 ){ result in
@@ -115,36 +120,6 @@ struct RecordingDetailView: View {
         dataSource.removeData(recording)
     }
     
-    func generateJson() -> File? {
-        do {
-            let descriptor = FetchDescriptor<SensorData>(
-                predicate: #Predicate<SensorData> {
-                    $0.recordingStart == recording.startTimestamp
-                }
-            )
-
-            let sensorData = try? dataSource.getModelContext().fetch(descriptor)
-
-            guard let sensorData = try? dataSource.getModelContext().fetch(descriptor) else {
-                throw RecordingExportError("Error CMBatchedSensorManager not supported")
-            }
-
-            let dict: RecordingDictionary = RecordingDictionary(
-                exercise: recording.exercise,
-                startTimestamp: recording.startTimestamp.timeIntervalSince1970,
-                // todo we could remove the recordingStart from the sensorData
-                sensorData: sensorData
-            )
-            
-            let json = try JSONEncoder().encode(dict)
-            
-            let file = File(fileName: fileName, file: json as NSData)
-            return file
-        } catch {
-            Logger.viewCycle.error("Failed to generate Json \(error.localizedDescription)")
-            return nil
-        }
-    }
 }
 
 struct RecordingDictionary: Encodable {
@@ -195,5 +170,34 @@ struct RecordingExportError: LocalizedError {
 
     var errorDescription: String? {
         description
+    }
+}
+
+func generateJson(dataSource: DataSource, recording: RecordingData, fileName: String) -> File? {
+    do {
+        let descriptor = FetchDescriptor<SensorData>(
+            predicate: #Predicate<SensorData> {
+                $0.recordingStart == recording.startTimestamp
+            }
+        )
+
+        guard let sensorData = try? dataSource.getModelContext().fetch(descriptor) else {
+            throw RecordingExportError("Error CMBatchedSensorManager not supported")
+        }
+
+        let dict: RecordingDictionary = RecordingDictionary(
+            exercise: recording.exercise,
+            startTimestamp: recording.startTimestamp.timeIntervalSince1970,
+            // todo we could remove the recordingStart from the sensorData
+            sensorData: sensorData
+        )
+        
+        let json = try JSONEncoder().encode(dict)
+        
+        let file = File(fileName: fileName, file: json as NSData)
+        return file
+    } catch {
+        Logger.viewCycle.error("Failed to generate Json \(error.localizedDescription)")
+        return nil
     }
 }
