@@ -18,6 +18,11 @@ class SyncViewModel: ObservableObject {
     @Published
     var syncing: Bool = false
     
+    @Published
+    var hasError: Bool = false
+    @Published
+    var errorMessage: String = ""
+    
     init(dataSource: DataSource) {
         self.dataSource = dataSource
         do {
@@ -40,24 +45,54 @@ class SyncViewModel: ObservableObject {
     func setIp(_ ip: String) {
         Logger.viewCycle.debug("Stored IP changed. New ip \(ip)")
         self.syncData.ip = ip
+        DispatchQueue.main.async {
+            do {
+                try self.dataSource.save()
+            } catch {
+                Logger.viewCycle.debug("Failed to save ip: \(error)")
+            }
+        }
     }
     
-    func postData(ip: String){
+    func postData(ip: String) async{
         Logger.viewCycle.info("Calling postData from SyncViewModel")
-        let recordingData = dataSource.fetchRecordingArray()
-        let sensorData = dataSource.fetchSensorDataArray(timestamp: nil)
-        
-        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
         
         DispatchQueue.main.async {
             self.syncing = true
             self.openPostRequests = 0
+            self.hasError = false
+            self.errorMessage = ""
+            Logger.viewCycle.info("Setting vars in SyncViewModel syncing: \(self.syncing)")
+            // todo add count for synced and failed
         }
         
         let networkManager = NetworkViewModel(ip: ip)
+        
+        // todo test if server is available
+        let isRunning = await networkManager.getStatus()
+        
+        Logger.viewCycle.info("SyncViewModel getStatus: \(isRunning)")
+        
+        if (!isRunning) {
+            DispatchQueue.main.async {
+                self.syncing = false
+                self.openPostRequests = 0
+                self.hasError = true
+                self.errorMessage = "Could not reach server \(ip)"
+            }
+            
+            // Exit function
+            return
+        }
+        
+        let recordingData = dataSource.fetchRecordingArray()
+        let sensorData = dataSource.fetchSensorDataArray(timestamp: nil)
+        
+        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
 
         // todo add array of errors that occured
         for recording in recordingData {
+            // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
 //            if (!syncing) {
 //                break
 //            }

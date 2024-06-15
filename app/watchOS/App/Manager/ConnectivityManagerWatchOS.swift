@@ -41,9 +41,13 @@ extension ConnectivityManager {
         } else {
             Logger.viewCycle.debug("iPhone is not reachable yet.")
             // Wait 1s and then retry
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                Logger.viewCycle.debug("Retrying to sendSessionReadyToStart \(retryCount)")
-                self.sendSessionReadyToStart(retryCount: retryCount - 1)
+            if retryCount > 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    Logger.viewCycle.debug("Retrying to sendSessionReadyToStart \(retryCount)")
+                    self.sendSessionReadyToStart(retryCount: retryCount - 1)
+                }
+            } else {
+                Logger.viewCycle.debug("Not retrying to sendSessionReadyToStart \(retryCount)")
             }
         }
     }

@@ -25,6 +25,25 @@ class NetworkViewModel: ObservableObject {
         self.uuid = uuid
     }
     
+    func getStatus() async -> Bool{
+        
+        let urlString = "http://" + ip + "/status"
+        guard let url = URL(string: urlString) else {
+            Logger.viewCycle.error("Invalid URL in getStatus \(urlString)")
+            return false
+        }
+
+        // todo send the compressed data
+        do {
+            try await URLSession.shared.data(from: url)
+            return true
+        } catch {
+            Logger.viewCycle.error("Error getStatus \(error)")
+            return false
+        }
+
+    }
+    
     func postDataToAPI(url: String,  data: Data, handleSuccess: ((_ data: Codable) -> Void)?) {
 
         guard let url = URL(string: url) else {
