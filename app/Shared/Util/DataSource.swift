@@ -112,7 +112,9 @@ final class DataSource: ObservableObject {
             Logger.viewCycle.debug("Running Throttled Save")
             DispatchQueue.main.async {
                 do {
-                    try self.save()
+                    if self.modelContext.hasChanges {
+                        try self.save()
+                    }
                 } catch {
                     Logger.viewCycle.error("Failed to sace dataSource: \(error)")
                 }

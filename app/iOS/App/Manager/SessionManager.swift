@@ -48,6 +48,7 @@ class SessionManager: NSObject, ObservableObject {
     func refreshSessionState() {
         Logger.viewCycle.debug("refreshSessionState from SessionManager")
         Task {
+            self.reset()
             connectivityManager.getSessionState()
         }
     }

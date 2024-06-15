@@ -31,6 +31,13 @@ extension DataSource {
     
     func appendSyncData(_ syncData: SyncData) {
         appendData(syncData)
+        DispatchQueue.main.async {
+            do {
+                try self.save()
+            } catch {
+                Logger.viewCycle.debug("Failed to save sync data: \(error)")
+            }
+        }
     }
 
     func fetchSyncData() -> [SyncData] {

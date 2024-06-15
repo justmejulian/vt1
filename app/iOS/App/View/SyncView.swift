@@ -8,6 +8,7 @@ import SwiftData
 import OSLog
 
 struct SyncView: View {
+    @ObservedObject
     var syncViewModel: SyncViewModel
     
     @ObservedObject
@@ -18,9 +19,11 @@ struct SyncView: View {
     
     init(dataSource: DataSource) {
         self.dataSource = dataSource
-        self.syncViewModel = SyncViewModel(dataSource: dataSource)
         
+        let syncViewModel = SyncViewModel(dataSource: dataSource)
         ip = syncViewModel.syncData.ip
+        
+        self.syncViewModel = syncViewModel
     }
 
     var body: some View {
@@ -59,14 +62,16 @@ struct SyncView: View {
             Button(action: {
                 Logger.viewCycle.info("Calling postData from SyncView")
                 syncViewModel.setIp(ip)
-                syncViewModel.postData(ip: ip)
+                Task {
+                    await self.syncViewModel.postData(ip: ip)
+                }
             }) {
-                Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                Label(syncViewModel.syncing ? "Syncing" : "Sync", systemImage: "arrow.triangle.2.circlepath")
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
             }
                 .buttonStyle(BorderedProminentButtonStyle())
-                .disabled(ip == "")
+                .disabled(ip == "" || syncViewModel.syncing)
 
             Spacer()
             Spacer()
