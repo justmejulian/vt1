@@ -60,6 +60,13 @@ struct ContentView: View {
                             .padding(.vertical, 8)
                             .frame(maxWidth: .infinity)
                     }
+                    NavigationLink {
+                        LogsView()
+                    } label: {
+                        Text("View Logs")
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
             }.padding(.bottom, 32).padding(.horizontal, 20)
 
