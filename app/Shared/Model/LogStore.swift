@@ -7,7 +7,8 @@
 import OSLog
 import Foundation
 
-@MainActor final class LogStore: ObservableObject {
+@MainActor
+final class LogStore: ObservableObject {
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: String(describing: LogStore.self)
