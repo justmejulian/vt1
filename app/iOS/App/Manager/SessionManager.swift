@@ -11,19 +11,19 @@ import SwiftData
 import HealthKit
 import OSLog
 
+@MainActor
 class SessionManager: NSObject, ObservableObject {
     @ObservedObject
     private var connectivityManager: ConnectivityManager
-
+    
     @ObservationIgnored
     private let workoutManager: WorkoutManager
     
-    @ObservationIgnored
-    private let dataSource: DataSource
-
+    private let db: Database
+    
     @Published
     var isSessionRunning: Bool = false
-
+    
     @Published
     var isLoading: Bool? = nil
     
@@ -31,28 +31,32 @@ class SessionManager: NSObject, ObservableObject {
     var hasError: Bool = false
     @Published
     var errorMessage: String = ""
+    @Published
+    var recording: Recording? = nil
+    @Published
+    var sensorValueCount = 0
     
     var exerciseName: String? = nil
     
-    init(workoutManager: WorkoutManager, connectivityManager: ConnectivityManager, dataSource: DataSource) {
+    init(workoutManager: WorkoutManager, connectivityManager: ConnectivityManager, db: Database) {
         
         self.connectivityManager = connectivityManager
         self.workoutManager = workoutManager
-        self.dataSource = dataSource
+        self.db = db
         
         super.init()
-
+        
         addListeners()
     }
-
+    
     func refreshSessionState() {
         Logger.viewCycle.debug("refreshSessionState from SessionManager")
-        Task {
-            self.reset()
-            connectivityManager.getSessionState()
-        }
+        self.reset()
+        // needed? not handled by is session running?
+        connectivityManager.getSessionState()
+        // todo maybe throw and catch?
     }
-
+    
     func toggle(text: String?) async {
         isLoading = true
         Logger.viewCycle.debug("toggle from SessionManager")
@@ -66,7 +70,7 @@ class SessionManager: NSObject, ObservableObject {
         }
         Logger.viewCycle.debug("Finished toggle from SessionManager")
     }
-
+    
     private func start(text: String?) async {
         Logger.viewCycle.debug("start from SessionManager at \(Date())")
         
@@ -107,50 +111,73 @@ class SessionManager: NSObject, ObservableObject {
         
         Logger.viewCycle.debug("started watchWorkout and session from SessionManager at \(Date())")
     }
-
+    
     private func stop() async {
         Logger.viewCycle.debug("stop from SessionManager")
-
+        
         // todo what happens when the watch is sleeping
         isSessionRunning = false
         isLoading = false
         connectivityManager.sendStopSession()
     }
     
+    private func updateSensorValuesCount(_ increase: Int) {
+        self.sensorValueCount += increase
+    }
+    
+    private func setCurrentRecording(_ recording: Recording) {
+        self.recording = recording
+    }
+    
     private func addListeners() {
         // todo maybe create a LinsterMangager or SessionConnectity
         let recordingListener = Listener(key: "recording", handleData: { data in
             if let endcodedRecording = data["recording"] {
-                guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
-                    throw SessionError("Could not decode recording")
+                Task.detached{
+                    guard let recording = try? JSONDecoder().decode(Recording.self, from: endcodedRecording as! Data) else {
+                        throw SessionError("Could not decode recording")
+                    }
+                    
+                    let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                    await dataHandler.appendData(recording)
+                    await self.setCurrentRecording(recording)
                 }
-                
-                self.dataSource.appendRecording(recording)
                 return
             }
         })
         connectivityManager.addListener(recordingListener)
-
-        let sensorDataListener = Listener(key: "sensorData", handleData: { data in
-            if let endcodedSensorData = data["sensorData"] {
-                guard let sensorData = try? JSONDecoder().decode(SensorData.self, from: endcodedSensorData as! Data) else {
-                    throw SessionError("Could not decode sensorData")
+        
+        Task.detached(priority: .background) {
+            let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+            let sensorDataListener = Listener(key: "sensorData", handleData: { data in
+                Logger.viewCycle.debug("Listener handler sensorData called on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+                if let endcodedSensorBatch = data["sensorData"] {
+                    // todo don't decode, just compress
+                    // todo keep count of recieved data count
+                    Task.detached{
+                        Logger.viewCycle.debug("Creating SensorBatch from Json on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+                        guard let sensorData = try? JSONDecoder().decode(SensorBatch.self, from: endcodedSensorBatch as! Data) else {
+                            throw SessionError("Could not decode sensorData")
+                        }
+                        
+                        await dataHandler.appendData(sensorData)
+                        await self.updateSensorValuesCount(sensorData.values.count)
+                    }
+                    return
                 }
-
-                self.dataSource.appendSensorData(sensorData)
-                return
-            }
-        })
-        connectivityManager.addListener(sensorDataListener)
-
+            })
+            await self.connectivityManager.addListener(sensorDataListener)
+        }
+        
         let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
             if let isSessionRunning = data["isSessionRunning"] {
                 guard let isSessionRunningBool = isSessionRunning as? Bool else {
                     throw SessionError("Could not decode isSessionRunning")
                 }
-
+                
                 Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
-
+                
+                // todo what can we do here?
                 DispatchQueue.main.async {
                     self.isSessionRunning = isSessionRunningBool
                     self.isLoading = nil
@@ -159,15 +186,15 @@ class SessionManager: NSObject, ObservableObject {
             }
         })
         connectivityManager.addListener(isSessionRunningListener)
-
+        
         let isSessionReadyListener = Listener(key: "isSessionReady", handleData: { data in
             if let isSessionReady = data["isSessionReady"] {
                 guard let isSessionReadyBool = isSessionReady as? Bool else {
                     throw SessionError("Could not decode isSessionReady")
                 }
-
+                
                 Logger.viewCycle.debug("recived isSessionReady: \(isSessionReadyBool)")
-
+                
                 Task {
                     await self.startSession()
                 }
@@ -177,14 +204,12 @@ class SessionManager: NSObject, ObservableObject {
         connectivityManager.addListener(isSessionReadyListener)
     }
     
-    @MainActor
     func handleError(message: String){
         self.errorMessage = message
         self.hasError = true
         self.isLoading = false
     }
     
-    @MainActor
     func reset(){
         self.errorMessage = ""
         self.hasError = false
@@ -194,11 +219,11 @@ class SessionManager: NSObject, ObservableObject {
 
 struct SessionError: LocalizedError {
     let description: String
-
+    
     init(_ description: String) {
         self.description = description
     }
-
+    
     var errorDescription: String? {
         description
     }

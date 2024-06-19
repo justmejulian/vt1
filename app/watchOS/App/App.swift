@@ -8,31 +8,35 @@ import HealthKit
 import OSLog
 
 
-let workoutManager = WorkoutManager()
-
-let connectivityManager = ConnectivityManager()
 
 @main
 struct Main: App {
     @WKApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
-    let dataSource: DataSource
+    let db: Database
     let sessionManager: SessionManager
-    
+
     init() {
-        self.dataSource = DataSource()
-        self.sessionManager = SessionManager(workoutManager: workoutManager, dataSource: dataSource, connectivityManager: connectivityManager)
+        do {
+        self.db = Database(modelContainer: try ModelContainer(for: Recording.self, SensorBatch.self))
+            self.sessionManager = SessionManager(db: db)
+        } catch {
+            Logger.statistics.error("Fatal Error creating watchOs App \(error.localizedDescription)")
+            fatalError(error.localizedDescription)
+        }
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView(sessionManager: sessionManager, dataSource: dataSource)
-        }.modelContainer(dataSource.getModelContainer())
+            ContentView(sessionManager: sessionManager, db: db)
+        }.modelContainer(db.getModelContainer())
     }
 }
 
 class AppDelegate: NSObject, WKApplicationDelegate {
     func handle(_ workoutConfiguration: HKWorkoutConfiguration) {
+        let workoutManager = WorkoutManager.shared
+        let connectivityManager = ConnectivityManager.shared
         Logger.viewCycle.info("AppDelegate: handle")
         Task {
             do {

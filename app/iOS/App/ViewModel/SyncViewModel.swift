@@ -6,8 +6,9 @@ import Foundation
 import OSLog
 import SwiftUI
 
+@MainActor
 class SyncViewModel: ObservableObject {
-    private let dataSource: DataSource
+    private let db: Database
     
     @Published
     var syncData: SyncData
@@ -23,48 +24,40 @@ class SyncViewModel: ObservableObject {
     @Published
     var errorMessage: String = ""
     
-    init(dataSource: DataSource) {
-        self.dataSource = dataSource
+    init(db: Database) {
+        Logger.viewCycle.info("Init called in SyncViewModel")
+        self.db = db
         do {
-            let fetchedSyncDataArray = dataSource.fetchSyncData()
+            let fetchedSyncDataArray: [SyncData] = try db.fetchData()
             if !fetchedSyncDataArray.isEmpty {
                 let fetchedSyncData = fetchedSyncDataArray[0]
                 self.syncData = fetchedSyncData
             } else {
                 let newSyncData = SyncData(ip: "")
                 self.syncData = newSyncData
-                dataSource.appendSyncData(newSyncData)
+                db.appendData(newSyncData)
             }
         } catch {
             let newSyncData = SyncData(ip: "")
             self.syncData = newSyncData
-            dataSource.appendSyncData(newSyncData)
+            db.appendData(newSyncData)
         }
     }
     
     func setIp(_ ip: String) {
         Logger.viewCycle.debug("Stored IP changed. New ip \(ip)")
         self.syncData.ip = ip
-        DispatchQueue.main.async {
-            do {
-                try self.dataSource.save()
-            } catch {
-                Logger.viewCycle.debug("Failed to save ip: \(error)")
-            }
-        }
     }
     
     func postData(ip: String) async{
         Logger.viewCycle.info("Calling postData from SyncViewModel")
         
-        DispatchQueue.main.async {
-            self.syncing = true
-            self.openPostRequests = 0
-            self.hasError = false
-            self.errorMessage = ""
-            Logger.viewCycle.info("Setting vars in SyncViewModel syncing: \(self.syncing)")
-            // todo add count for synced and failed
-        }
+        self.syncing = true
+        self.openPostRequests = 0
+        self.hasError = false
+        self.errorMessage = ""
+        Logger.viewCycle.info("Setting vars in SyncViewModel syncing: \(self.syncing)")
+        // todo add count for synced and failed
         
         let networkManager = NetworkViewModel(ip: ip)
         
@@ -74,56 +67,54 @@ class SyncViewModel: ObservableObject {
         Logger.viewCycle.info("SyncViewModel getStatus: \(isRunning)")
         
         if (!isRunning) {
-            DispatchQueue.main.async {
-                self.syncing = false
-                self.openPostRequests = 0
-                self.hasError = true
-                self.errorMessage = "Could not reach server \(ip)"
-            }
+            self.syncing = false
+            self.openPostRequests = 0
+            self.hasError = true
+            self.errorMessage = "Could not reach server \(ip)"
             
             // Exit function
             return
         }
         
-        let recordingData = dataSource.fetchRecordingArray()
-        let sensorData = dataSource.fetchSensorDataArray(timestamp: nil)
-        
-        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
-
-        // todo add array of errors that occured
-        for recording in recordingData {
-            // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
-//            if (!syncing) {
-//                break
-//            }
-            DispatchQueue.main.async {
+        do {
+            let recordingData: [Recording] = try db.fetchData()
+            let sensorData: [SensorBatch] = try db.fetchData()
+            
+            Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
+            
+            // todo add array of errors that occured
+            for recording in recordingData {
+                // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
+                //            if (!syncing) {
+                //                break
+                //            }
                 self.openPostRequests += 1
-            }
-            networkManager.postRecordingToAPI(recording, handleSuccess: {
-                data in
-                DispatchQueue.main.async {
+                networkManager.postRecordingToAPI(recording, handleSuccess: {
+                    data in
                     self.openPostRequests -= 1
-                }
-                self.dataSource.removeData(recording)
-            })
+                    self.db.removeData(recording)
+                })
+            }
+            Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
+            
+            Logger.statistics.info("Started sync: \(Date.now)")
+            Logger.statistics.info("SensorBatch count \(sensorData.count)")
+            
+            sendSensorBatchChunked(networkManager: networkManager, sensorDataArray: sensorData)
+            //        sendSensorBatchOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
+        } catch {
+            Logger.viewCycle.info("Failed to post data: \(error)")
         }
-        Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
-        
-        Logger.statistics.info("Started sync: \(Date.now)")
-        Logger.statistics.info("SensorData count \(sensorData.count)")
-        
-        sendSensorDataChunked(networkManager: networkManager, sensorDataArray: sensorData)
-//        sendSensorDataOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
     }
     
-    func sendSensorDataChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorData]){
+    func sendSensorBatchChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorBatch]){
         // todo: a test with 10 100 150 20
         let chunkSize = 100
         Logger.statistics.info("Chunk size \(chunkSize)")
-
-        let chunkedSensorData = sensorDataArray.chunked(into: chunkSize)
-            
-        for chunk in chunkedSensorData {
+        
+        let chunkedSensorBatch = sensorDataArray.chunked(into: chunkSize)
+        
+        for chunk in chunkedSensorBatch {
             // if (!syncing) {
             //     break
             // }
@@ -131,56 +122,44 @@ class SyncViewModel: ObservableObject {
                 self.openPostRequests += 1
             }
             
-            networkManager.postSensorDataArrayToAPI(chunk, handleSuccess: {
+            networkManager.postSensorBatchArrayToAPI(chunk, handleSuccess: {
                 data in
-                DispatchQueue.main.async {
-                    self.openPostRequests -= 1
-                    if (self.openPostRequests == 0) {
-                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
-                    }
+                self.openPostRequests -= 1
+                if (self.openPostRequests == 0) {
+                    Logger.statistics.info("Finished to sending all at: \(Date.now)")
                 }
                 
-                 for sensor in chunk {
-                     self.dataSource.removeData(sensor)
-                 }
+                for sensor in chunk {
+                    self.db.removeData(sensor)
+                }
             })
         }
     }
     
-    func sendSensorDataOneByOne(networkManager: NetworkViewModel, sensorDataArray: [SensorData]){
+    func sendSensorBatchOneByOne(networkManager: NetworkViewModel, sensorDataArray: [SensorBatch]){
         for sensor in sensorDataArray {
-            DispatchQueue.main.async {
-                self.openPostRequests += 1
-            }
+            self.openPostRequests += 1
             
-            print(sensor.values.count)
             do{
-                print(sensor.sensor_id)
-                print(sensor.values.count)
                 let values = try JSONEncoder().encode(sensor.values)
-                print(values.count)
             } catch {
-                print("that did not work")
+                Logger.viewCycle.error("Failed to create JSON in sendSensorBatchOneByOne")
             }
             
-            networkManager.postSensorDataToAPI(sensor, handleSuccess: {
+            networkManager.postSensorBatchToAPI(sensor, handleSuccess: {
                 // todo test time it takes to send
                 data in
-                DispatchQueue.main.async {
-                    self.openPostRequests -= 1
-                    if (self.openPostRequests == 0) {
-                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
-                    }
+                self.openPostRequests -= 1
+                if (self.openPostRequests == 0) {
+                    Logger.statistics.info("Finished to sending all at: \(Date.now)")
                 }
-                self.dataSource.removeData(sensor)
+                self.db.removeData(sensor)
             })
         }
     }
     
     func cancel() {
-        DispatchQueue.main.async {
-            self.syncing = false
-        }
+        self.syncing = false
     }
-
+    
 }

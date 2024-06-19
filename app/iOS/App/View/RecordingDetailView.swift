@@ -8,10 +8,9 @@ import OSLog
 import Foundation
 
 struct RecordingDetailView: View {
-    @ObservationIgnored
-    private let dataSource: DataSource
+    private let db: Database
     
-    var recording: RecordingData
+    var recording: Recording
 
     @State var sensorDataCount: Int
 
@@ -22,15 +21,16 @@ struct RecordingDetailView: View {
     
     @State private var document: File?
     
-    init(recording: RecordingData, dataSource: DataSource) {
+    init(recording: Recording, db: Database) {
         // todo check when this is initialized
         Logger.viewCycle.debug("Running init for RecordingDetailView: \(recording.startTimestamp)")
         self.recording = recording
-        self.dataSource = dataSource
+        self.db = db
 
         self._text = State(initialValue: recording.exercise)
         self.sensorDataCount = 0
         self.fileName = ""
+        // todo add sensordata, on appear
     }
 
     var body: some View {
@@ -64,8 +64,10 @@ struct RecordingDetailView: View {
                 .buttonStyle(BorderedProminentButtonStyle())
 
             Button(action: {
-                document = generateJson(dataSource: dataSource, recording: recording, fileName: fileName)
                 exporting = true
+                Task {
+                    document = await generateJson(db: db, recording: recording, fileName: fileName)
+                }
             }){
                 Label("Export", systemImage: "square.and.arrow.up")
                     .padding(.vertical, 8)
@@ -97,16 +99,10 @@ struct RecordingDetailView: View {
         }
         .onAppear {
             Logger.viewCycle.info("RecordingDetailView Appeared!")
-            let  modelContext = dataSource.getModelContext()
-
-            
-            let descriptor = FetchDescriptor<SensorData>(
-                predicate: #Predicate<SensorData> {
-                    $0.recordingStart == recording.startTimestamp
-                }
-            )
-            self.sensorDataCount = (try? modelContext.fetchCount(descriptor)) ?? 0
-            self.fileName = "Recording-\(recording.startTimestamp)"
+            Task {
+                self.sensorDataCount = db.fetchDataCount(for: SensorBatch.self)
+                self.fileName = "Recording-\(recording.startTimestamp)"
+            }
         }
     }
 
@@ -117,7 +113,7 @@ struct RecordingDetailView: View {
 
     func deleteData() {
         Logger.viewCycle.info("deleteData from RecordingDetailView")
-        dataSource.removeData(recording)
+        db.removeData(recording)
     }
     
 }
@@ -125,7 +121,7 @@ struct RecordingDetailView: View {
 struct RecordingDictionary: Encodable {
     var exercise: String
     var startTimestamp: TimeInterval
-    var sensorData: [SensorData]
+    var sensorData: [SensorBatch]
 }
 
 import UniformTypeIdentifiers
@@ -173,17 +169,16 @@ struct RecordingExportError: LocalizedError {
     }
 }
 
-func generateJson(dataSource: DataSource, recording: RecordingData, fileName: String) -> File? {
+// todo move to background or add loading state
+@MainActor
+func generateJson(db: Database, recording: Recording, fileName: String) async -> File? {
     do {
-        let descriptor = FetchDescriptor<SensorData>(
-            predicate: #Predicate<SensorData> {
+        let descriptor = FetchDescriptor<SensorBatch>(
+            predicate: #Predicate<SensorBatch> {
                 $0.recordingStart == recording.startTimestamp
             }
         )
-
-        guard let sensorData = try? dataSource.getModelContext().fetch(descriptor) else {
-            throw RecordingExportError("Error CMBatchedSensorManager not supported")
-        }
+        let sensorData: [SensorBatch] = try db.fetchData(descriptor: descriptor)
 
         let dict: RecordingDictionary = RecordingDictionary(
             exercise: recording.exercise,

@@ -7,15 +7,14 @@ import OSLog
 
 @Observable
 class RecordingListViewModel {
-        @ObservationIgnored
-        private let dataSource: DataSource
-
-        init(dataSource: DataSource) {
-            self.dataSource = dataSource
-        }
+    private let db: Database
+    
+    init(db: Database) {
+        self.db = db
+    }
     
     func deleteAll(){
         Logger.viewCycle.info("Calling dataSource.clear from RecordingListViewModel")
-        dataSource.clear()
+        // todo add clear here
     }
 }

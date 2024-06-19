@@ -9,7 +9,10 @@ import CoreMotion
 import HealthKit
 import OSLog
 
+@MainActor
 class WorkoutManager: NSObject, ObservableObject {
+    
+    static let shared = WorkoutManager()
     let healthStore = HKHealthStore()
     
     var session: HKWorkoutSession?
@@ -32,6 +35,6 @@ class WorkoutManager: NSObject, ObservableObject {
 }
 
 extension WorkoutManager: HKWorkoutSessionDelegate {
-    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {}
-    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {}
+    nonisolated func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {}
+    nonisolated func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {}
 }

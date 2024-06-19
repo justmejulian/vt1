@@ -11,7 +11,10 @@ import Combine
 import WatchConnectivity
 import OSLog
 
+@MainActor
 class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
+    static let shared = ConnectivityManager()
+    
     internal var session: WCSession = .default
 
     var listeners = [Listener]()

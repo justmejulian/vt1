@@ -13,18 +13,15 @@ struct StartRecordingView: View {
     
     @ObservedObject
     var sessionManager: SessionManager
-    @ObservedObject
-    var dataSource: DataSource
-
-
+    
     @State private var text: String = ""
     
-    init(dataSource: DataSource, sessionManager: SessionManager){
-        self.dataSource = dataSource
+    init(sessionManager: SessionManager){
         self.sessionManager = sessionManager
     }
 
     var body: some View {
+        // todo add pull down to refersch state, throw error if not possible
         
         let disabled = ((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isLoading == true
         let color = sessionManager.isSessionRunning ? Color.red : .blue
@@ -43,7 +40,7 @@ struct StartRecordingView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(dataSource.recordingDataCount))
+                    Text(String(sessionManager.recording?.exercise ?? ""))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -52,7 +49,7 @@ struct StartRecordingView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(dataSource.sensorDataCount))
+                    Text(String(sessionManager.sensorValueCount))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)

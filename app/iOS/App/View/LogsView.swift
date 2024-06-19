@@ -11,23 +11,8 @@ import OSLog
 
 struct LogsView: View {
     
-    let entries: [LogEntry]
-    
-    init() {
-        do {
-            let store = try OSLogStore(scope: .currentProcessIdentifier)
-            let position = store.position(timeIntervalSinceLatestBoot: 1)
-            self.entries  = try store
-                .getEntries(at: position)
-                .compactMap { $0 as? OSLogEntryLog }
-                .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
-                .map { LogEntry(date: $0.date, category: $0.category, message: $0.composedMessage)}
-                .sorted(by: {$0.date > $1.date})
-        } catch {
-            Logger.viewCycle.error("Failed to load logs: \(error.localizedDescription)")
-            self.entries = []
-        }
-    }
+    @State
+    var entries: [LogEntry] = []
     
     var body: some View {
         
@@ -44,7 +29,25 @@ struct LogsView: View {
                     }
                     Text(logEntry.message)
                 }
+            }.onAppear(){
+                do {
+                    let store = try OSLogStore(scope: .currentProcessIdentifier)
+                    let position = store.position(timeIntervalSinceLatestBoot: 1)
+                    self.entries  = try store
+                        .getEntries(at: position)
+                        .compactMap { $0 as? OSLogEntryLog }
+                        .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
+                        .map { LogEntry(date: $0.date, category: $0.category, message: $0.composedMessage)}
+                        .sorted(by: {$0.date > $1.date})
+                } catch {
+                    Logger.viewCycle.error("Failed to load logs: \(error.localizedDescription)")
+                    self.entries = []
+                }
             }
+            //todo make refreshanle
+//            .refreshable {
+//                <#code#>
+//            }
         }
     }
 }

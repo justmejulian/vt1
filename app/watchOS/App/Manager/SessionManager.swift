@@ -9,19 +9,20 @@ import Foundation
 import HealthKit
 import WatchKit
 import OSLog
+import SwiftData
 
+@MainActor
 class SessionManager: NSObject, ObservableObject {
+    
+    let workoutManager = WorkoutManager.shared
+    let connectivityManager = ConnectivityManager.shared
+    
     private let recordingManager = RecordingManager()
-
-    // do these all need to be shared?
-    private let workoutManager: WorkoutManager
-
-    private let dataSource: DataSource
-
-    private let connectivityManager: ConnectivityManager
-
+    
+    private let db: Database
+    
     let timeManager = TimerManager()
-
+    
     @Published var loadingMap = [
         "acceleration": false,
         "rotationRate": false,
@@ -33,16 +34,13 @@ class SessionManager: NSObject, ObservableObject {
     @Published var started = false
     @Published var exerciseName: String? = nil
     @Published var sensorDataCount: Int = 0
-
+    
     // todo why override?
-    init(workoutManager: WorkoutManager, dataSource: DataSource, connectivityManager: ConnectivityManager) {
-
-        self.workoutManager = workoutManager
-        self.dataSource = dataSource
-        self.connectivityManager = connectivityManager
-
+    init(db: Database) {
+        self.db = db
+        
         super.init()
-
+        
         self.addListeners()
     }
     
@@ -54,7 +52,7 @@ class SessionManager: NSObject, ObservableObject {
             Logger.viewCycle.error("Error starting workout from session \(error)")
         }
     }
-
+    
     func start(exerciseName: String = "Default") async {
         Logger.viewCycle.info("Called start SessionManager")
         
@@ -69,27 +67,23 @@ class SessionManager: NSObject, ObservableObject {
         
         WKInterfaceDevice.current().play(.start)
         
-        DispatchQueue.main.async {
-            let newLoading = self.loadingMap.mapValues { value in
-                return true
-            }
-            self.loadingMap = newLoading
+        let newLoading = self.loadingMap.mapValues { value in
+            return true
         }
+        self.loadingMap = newLoading
         
         await requestAuthorization()
-
+        
         if (!workoutManager.started) {
             await startWorkout()
         }
         
-        DispatchQueue.main.async {
-            self.exerciseName = exerciseName
-            self.started = true
-            self.sensorDataCount = 0
-        }
+        self.exerciseName = exerciseName
+        self.started = true
+        self.sensorDataCount = 0
         
         Logger.viewCycle.info("Starting Session for exerciseName \(exerciseName)")
-
+        
         sendSessionState(isSessionRunning: true)
         
         do {
@@ -98,44 +92,48 @@ class SessionManager: NSObject, ObservableObject {
             let recording = try recordingManager.start(exercise: exerciseName)
             
             // Store Recording
-            dataSource.appendRecording(recording)
+            let dataHandler = BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+            await dataHandler.appendData(recording)
             
             // Send Recording
             sendRecording(recording: recording)
             
-            Task {
-                do {
-                    Logger.viewCycle.info("Starting monitororig Updates")
-                    try await recordingManager.monitorUpdates(recording: recording, handleUpdate: { sensorData in
-                        DispatchQueue.main.async {
-                            self.sensorDataCount += sensorData.values.count
-                        }
+            do {
+                Logger.viewCycle.info("Starting monitororig Updates")
+                try await recordingManager.monitorUpdates(recording: recording, handleUpdate: {
+                    recordingStart, timestamp, sensor_id, values in
+                    Task {
+                        await self.increaseSensorBatchCount(by: values.count)
                         
                         // Start Timer after first monitorUpdate is recieved
-                        if let isCurrentLoading = self.loadingMap[sensorData.sensor_id] {
-                            if (isCurrentLoading){
-                                DispatchQueue.main.async {
-                                    Logger.viewCycle.debug("\(sensorData.sensor_id) monitorUpdate revieved.")
-                                    self.loadingMap[sensorData.sensor_id] = false
-                                    
-                                    if (!self.loadingMap.contains(where: {$0.value == true})){
-                                        Logger.viewCycle.debug("All first monitorUpdates revieved. Starting Timer.")
-                                        WKInterfaceDevice.current().play(.success)
-                                        self.timeManager.start()
-                                    }
-
+                        let isSensorLoading = await self.isSensorLoading(sensor_id)
+                        if isSensorLoading {
+                            DispatchQueue.main.async {
+                                Logger.viewCycle.debug("\(sensor_id) monitorUpdate revieved.")
+                                self.loadingMap[sensor_id] = false
+                                
+                                if (!self.loadingMap.contains(where: {$0.value == true})){
+                                    Logger.viewCycle.debug("All first monitorUpdates revieved. Starting Timer.")
+                                    WKInterfaceDevice.current().play(.success)
+                                    self.timeManager.start()
                                 }
+                                
                             }
                         }
+                        let sensorData = SensorBatch(recordingStart: recordingStart, timestamp: timestamp, sensor_id: sensor_id, values: values)
                         // Store Sensor Data
-                        self.dataSource.appendSensorData(sensorData)
+                        let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                        await dataHandler.appendData(sensorData)
+                        //                        let sensorBackgroundDataHandler = SensorBatchHandler(dataHandler: dataHandler)
+                        //                        await sensorBackgroundDataHandler.createSensorBatch(recordingStart: recordingStart, timestamp: timestamp, sensor_id: sensor_id, values: values)
+                        
                         // Send Sensor Data
-                        self.sendSensorData(sensorData: sensorData)
-                    })
-                } catch {
-                    Logger.viewCycle.error("Error starting monitorUpdates: \(error)")
-                    self.stop()
-                }
+                        await self.sendSensorBatch(sensorData: sensorData)
+                    }
+                })
+            } catch {
+                Logger.viewCycle.error("Error starting monitorUpdates: \(error)")
+                self.stop()
             }
             
         } catch {
@@ -144,15 +142,31 @@ class SessionManager: NSObject, ObservableObject {
         }
     }
     
-    func sendSensorData(sensorData: SensorData) {
-        // Logger.viewCycle.debug("Calling SessionManager sendSensorData for \(sensorData.timestamp)")
-        self.connectivityManager.sendSensorData(sensorData: sensorData, replyHandler:  { (replyData: [String: Any]) in
+    func isSensorLoading(_ id: String) -> Bool {
+        guard let isCurrentLoading = self.loadingMap[id] else {
+            Logger.viewCycle.debug("Could not find sensor in loading Map \(id)")
+            return false
+        }
+        
+        return isCurrentLoading
+    }
+    
+    func increaseSensorBatchCount(by count: Int){
+        self.sensorDataCount += count
+    }
+    
+    func sendSensorBatch(sensorData: SensorBatch) {
+        // Logger.viewCycle.debug("Calling SessionManager sendSensorBatch for \(sensorData.timestamp)")
+        self.connectivityManager.sendSensorBatch(sensorData: sensorData, replyHandler:  { (replyData: [String: Any]) in
             if replyData["sucess"] != nil {
                 // Logger.viewCycle.debug("Sucsessfuly sent sensorData timestamp \(sensorData.timestamp)")
                 
                 // Remove synced Sensor Data
-                self.dataSource.removeData(sensorData)
-                // Logger.viewCycle.debug("Removed sensorData timestamp \(sensorData.timestamp) from store")
+                Task {
+                    let dataHandler = BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                    await dataHandler.removeData(sensorData)
+                    Logger.viewCycle.debug("Removed sensorData timestamp \(sensorData.timestamp) from store")
+                }
                 
                 return
             }
@@ -163,7 +177,7 @@ class SessionManager: NSObject, ObservableObject {
                 if let errorString = error as? String {
                     
                     Logger.viewCycle.error("Reply Error: \(errorString)")
-
+                    
                     return
                 }
                 
@@ -179,25 +193,28 @@ class SessionManager: NSObject, ObservableObject {
         connectivityManager.sendSessionState(isSessionRunning: isSessionRunning)
     }
     
-    func sendRecording(recording: RecordingData) {
+    func sendRecording(recording: Recording) {
         // Logger.viewCycle.debug("Calling SessionManager sendRecording for \(recording.startTimestamp)")
         self.connectivityManager.sendRecording(recording: recording, replyHandler:  { replyData in
             if replyData["sucess"] != nil {
                 // Logger.viewCycle.debug("Sucsessfuly sent recording timestamp \(recording.startTimestamp)")
                 // Remove synced Sensor Data
-                self.dataSource.removeData(recording)
+                Task {
+                    let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                    await dataHandler.removeData(recording)
+                }
                 
                 // Logger.viewCycle.debug("Removed recording timestamp \(recording.startTimestamp) from store")
                 return
             }
-
+            
             Logger.viewCycle.error("Something went wrong sending recording data")
-
+            
             if let error = replyData["error"] {
                 if let errorString = error as? String {
                     
                     Logger.viewCycle.error("Reply Error: \(errorString)")
-
+                    
                     return
                 }
                 
@@ -207,22 +224,33 @@ class SessionManager: NSObject, ObservableObject {
             }
         })
     }
-
+    
     func sync() {
+        // todo need to be done in the background
         Logger.viewCycle.debug("Starting SessionManager sync")
-        let sensorData = dataSource.fetchSensorDataArray()
-        let recordings = dataSource.fetchRecordingArray()
-
-        Logger.statistics.info("Syncing \(sensorData.count) SensorData and \(recordings.count) Recordings")
-        sensorData.forEach { sensorData in
-            sendSensorData(sensorData: sensorData)
+        Task.detached {
+            do {
+                let sensorData: [SensorBatch] = await self.db.fetchData()
+                let recordings: [Recording] = await self.db.fetchData()
+                
+                Logger.statistics.info("Syncing \(sensorData.count) SensorBatch and \(recordings.count) Recordings")
+                sensorData.forEach { sensorData in
+                    Task {
+                        await self.sendSensorBatch(sensorData: sensorData)
+                    }
+                }
+                recordings.forEach { recording in
+                    Task {
+                        await self.sendRecording(recording: recording)
+                    }
+                }
+                Logger.viewCycle.debug("Finished Syncing")
+            } catch {
+                Logger.viewCycle.debug("Failed during SessionManager sync: \(error.localizedDescription)")
+            }
         }
-        recordings.forEach { recording in
-            sendRecording(recording: recording)
-        }
-        Logger.viewCycle.debug("Finished Syncing")
     }
-
+    
     func stop() {
         Logger.viewCycle.debug("Stopping SessionManager session")
         
@@ -236,14 +264,14 @@ class SessionManager: NSObject, ObservableObject {
             }
             self.loadingMap = newLoading
         }
-
+        
         recordingManager.stop()
         
         sendSessionState(isSessionRunning: false)
-
+        
         workoutManager.resetWorkout()
     }
-
+    
     func toggle() {
         Logger.viewCycle.debug("SessionManager toggle called")
         if started {
@@ -258,33 +286,7 @@ class SessionManager: NSObject, ObservableObject {
             await self.start()
         }
     }
-
-    func getCountOfUnsyncedData() -> Int? {
-        Logger.viewCycle.debug("Called getCountOfUnsyncedData")
-        if recordingManager.isRecording {
-            Logger.viewCycle.debug("Cannot get count of unsynced data while recording")
-            return nil
-        }
-        return getCountOfUnsyncedSensorData()! + getCountOfUnsyncedRecordingData()!
-    }
-
-    func getCountOfUnsyncedSensorData() -> Int? {
-        Logger.viewCycle.debug("Called getCountOfUnsyncedSensorData")
-        if recordingManager.isRecording {
-            Logger.viewCycle.error("Cannot get count of unsynced sensor data while recording")
-            return nil
-        }
-        return dataSource.fetchSensorDataArray().count
-    }
-
-    func getCountOfUnsyncedRecordingData() -> Int? {
-        if recordingManager.isRecording {
-            Logger.viewCycle.error("Cannot get count of unsynced recording data while recording")
-            return nil
-        }
-        return dataSource.fetchRecordingArray().count
-    }
-
+    
     func requestAuthorization() async {
         Logger.viewCycle.debug("Requestion requestAuthorization in SessionManager")
         await workoutManager.requestAuthorization()
@@ -299,17 +301,17 @@ class SessionManager: NSObject, ObservableObject {
                     throw SessionError("Could not decode exerciseName")
                 }
                 
-                    Logger.viewCycle.info("start session with exerciseName: \(exerciseName)")
-
-                    Task {
-                        await self.start(exerciseName: exerciseName)
-                    }
-                    return
+                Logger.viewCycle.info("start session with exerciseName: \(exerciseName)")
+                
+                Task {
+                    await self.start(exerciseName: exerciseName)
+                }
+                return
             }
         })
-
+        
         connectivityManager.addListener(startSessionListener)
-
+        
         let stopSessionListener = Listener(key: "stopSession", handleData: { data in
             if data["stopSession"] != nil {
                 Logger.viewCycle.info("recived stop session")
@@ -317,9 +319,9 @@ class SessionManager: NSObject, ObservableObject {
                 return
             }
         })
-
+        
         connectivityManager.addListener(stopSessionListener)
-
+        
         let getSessionStateListener = Listener(key: "getSessionState", handleData: { data in
             if data["getSessionState"] != nil {
                 Logger.viewCycle.info("recived getSessionState")
@@ -330,18 +332,18 @@ class SessionManager: NSObject, ObservableObject {
                 return
             }
         })
-
+        
         connectivityManager.addListener(getSessionStateListener)
     }
 }
 
 struct SessionError: LocalizedError {
     let description: String
-
+    
     init(_ description: String) {
         self.description = description
     }
-
+    
     var errorDescription: String? {
         description
     }

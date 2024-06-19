@@ -31,6 +31,8 @@ extension ConnectivityManager {
             }
             Logger.viewCycle.error("Something went wrong getSessionState, could not decode the response")
         }, errorHandler: { (error) in
+            // todo: error sending getSessionState: WatchConnectivity session on paired device is not reachable.
+            // todo need to allow resend, create a wake up button
             Logger.viewCycle.error("error sending getSessionState: \(error.localizedDescription)")
         })
     }

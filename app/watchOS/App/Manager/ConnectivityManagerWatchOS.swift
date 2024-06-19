@@ -11,11 +11,11 @@ import WatchConnectivity
 import OSLog
 
 extension ConnectivityManager {
-    func sendSensorData(sensorData: SensorData, replyHandler: (([String : Any]) -> Void)?) {
+    func sendSensorBatch(sensorData: SensorBatch, replyHandler: (([String : Any]) -> Void)?) {
         self.sendPresistentModel(key: "sensorData", data: sensorData, replyHandler: replyHandler)
     }
 
-    func sendRecording(recording: RecordingData, replyHandler: (([String : Any]) -> Void)?) {
+    func sendRecording(recording: Recording, replyHandler: (([String : Any]) -> Void)?) {
         self.sendPresistentModel(key: "recording", data: recording, replyHandler: replyHandler)
     }
 

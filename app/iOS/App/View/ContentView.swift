@@ -10,11 +10,14 @@ struct ContentView: View {
     @ObservationIgnored
     let sessionManager: SessionManager
     
-    @ObservedObject
-    var dataSource: DataSource
+    @ObservationIgnored
+    var db: Database
     
-    init(sessionManager: SessionManager, dataSource: DataSource) {
-        self.dataSource = dataSource
+    @State var sensorValueCount: Int = 0
+    @State var recordingCount: Int = 0
+    
+    init(sessionManager: SessionManager, db: Database) {
+        self.db = db
         self.sessionManager = sessionManager
     }
 
@@ -34,7 +37,7 @@ struct ContentView: View {
                     Text("Recording #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(dataSource.recordingDataCount))
+                    Text(String(recordingCount))
                         .font(.caption)
                 }
                 Spacer()
@@ -42,7 +45,7 @@ struct ContentView: View {
                     Text("Batch #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(dataSource.sensorDataCount))
+                    Text(String(sensorValueCount))
                         .font(.caption)
                 }
                 Spacer()
@@ -54,7 +57,7 @@ struct ContentView: View {
             VStack {
                 List {
                     NavigationLink {
-                        RecordingListView(dataSource: dataSource)
+                        RecordingListView(db: db)
                     } label: {
                         Text("Recordings")
                             .padding(.vertical, 8)
@@ -74,7 +77,7 @@ struct ContentView: View {
 
             VStack {
                 NavigationLink {
-                    StartRecordingView(dataSource: dataSource, sessionManager: sessionManager)
+                    StartRecordingView(sessionManager: sessionManager)
                 } label: {
                     Label("New Recording", systemImage: "plus")
                         .padding(.vertical, 8)
@@ -82,7 +85,7 @@ struct ContentView: View {
                 }.buttonStyle(BorderedProminentButtonStyle())
 
                 NavigationLink {
-                    SyncView(dataSource: dataSource)
+                    SyncView(db: db)
                 } label: {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)

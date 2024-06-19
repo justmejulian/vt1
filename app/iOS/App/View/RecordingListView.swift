@@ -9,21 +9,32 @@ import Foundation
 
 struct RecordingListView: View {
     @ObservationIgnored
-    let dataSource: DataSource
+    let db: Database
     
     var recordingListViewModel: RecordingListViewModel
     
-    @Query var recordings: [RecordingData]
+    @State var recordings: [Recording]
     
     @State private var isConfirming = false
     @State private var searchText: String = ""
     
-    init(dataSource: DataSource) {
-        self.dataSource = dataSource
-        self.recordingListViewModel = RecordingListViewModel(dataSource: dataSource)
+    init(db: Database) {
+        self.db = db
+        self.recordingListViewModel = RecordingListViewModel(db: db)
+        self.recordings = []
     }
     
-    var filteredRecordings: [RecordingData] {
+    func updateRecordings() {
+        do {
+            self.recordings = try db.fetchData()
+        } catch {
+            Logger.viewCycle.error("Failed to fetch recording \(error)")
+            self.recordings = []
+        }
+
+    }
+    
+    var filteredRecordings: [Recording] {
         if searchText.isEmpty {
             recordings
         } else {
@@ -46,12 +57,13 @@ struct RecordingListView: View {
             }
             .onAppear {
                 Logger.viewCycle.info("RecordingListView Empty VStack Appeared!")
+                updateRecordings()
             }
         } else {
             NavigationStack {
                 List(filteredRecordings) { recordingData in
                     NavigationLink {
-                        RecordingDetailView(recording: recordingData, dataSource: dataSource)
+                        RecordingDetailView(recording: recordingData, db: db)
                     } label: {
                         VStack{
                             Text(recordingData.exercise)
@@ -87,6 +99,7 @@ struct RecordingListView: View {
             }
             .onAppear {
                 Logger.viewCycle.info("RecordingListView NavigationStack Appeared!")
+                updateRecordings()
             }
         }
     }

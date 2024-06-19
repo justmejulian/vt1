@@ -11,13 +11,13 @@ struct ContentView: View {
     var sessionManager: SessionManager
 
     @ObservationIgnored
-    var dataSource: DataSource
+    var db: Database
     
     let motionView:MotionView
     
-    init(sessionManager: SessionManager, dataSource: DataSource) {
+    init(sessionManager: SessionManager, db: Database) {
         self.sessionManager = sessionManager
-        self.dataSource = dataSource
+        self.db = db
         self.motionView = MotionView(sessionManager: sessionManager)
     }
     
@@ -31,7 +31,7 @@ struct ContentView: View {
                         Label("New Recording", systemImage: "plus")
                     }
                     NavigationLink {
-                        RecordingListView(dataSource: dataSource)
+                        RecordingListView()
                     } label: {
                         Label("List of Unsynced Recordings", systemImage: "list.bullet")
                     }

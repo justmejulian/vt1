@@ -8,7 +8,7 @@ import Foundation
 import SwiftData
 
 @Model
-class RecordingData: Codable{
+class Recording: Codable{
 
     enum CodingKeys: CodingKey {
         case exercise

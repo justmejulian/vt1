@@ -18,7 +18,7 @@ struct MotionView: View {
         let text = loading ? "Loading" : sessionManager.started ? "Stop" : "Start"
         
         let color = loading ? Color.gray : sessionManager.started ? Color.red : Color.blue
-        
+        // todo: show that is still syncing
         VStack(content: {
             if sessionManager.started {
                 Spacer()

@@ -11,16 +11,18 @@ struct SyncView: View {
     @ObservedObject
     var syncViewModel: SyncViewModel
     
-    @ObservedObject
-    var dataSource: DataSource
+    var db: Database
+    
+    @Query var sensorData: [SensorBatch]
+    @Query var recordingData: [Recording]
 
     @State
     var ip: String
     
-    init(dataSource: DataSource) {
-        self.dataSource = dataSource
+    init(db: Database) {
+        self.db = db
         
-        let syncViewModel = SyncViewModel(dataSource: dataSource)
+        let syncViewModel = SyncViewModel(db: db)
         ip = syncViewModel.syncData.ip
         
         self.syncViewModel = syncViewModel
@@ -39,7 +41,7 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(dataSource.recordingDataCount))
+                    Text(String(recordingData.count))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -47,7 +49,7 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(dataSource.sensorDataCount))
+                    Text(String(sensorData.count))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)

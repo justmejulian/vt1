@@ -10,13 +10,9 @@ import OSLog
 import Foundation
 
 struct RecordingListView: View {
-    let dataSource: DataSource
-
+    @Query var recordingDataList: [Recording]
+    
     var body: some View {
-
-        let recordingDataList = dataSource.fetchRecordingArray()
-
-        // add lazy loading
         List(recordingDataList) { recordingData in
             VStack{
                 Text(String(recordingData.exercise))
@@ -29,6 +25,7 @@ struct RecordingListView: View {
 
         }
             .listStyle(.automatic)
+            // todo use this in other places
             .overlay(Group {
                 if recordingDataList.isEmpty {
                     Text("Oops, looks like there's no data...")

@@ -8,15 +8,16 @@ import OSLog
 import Foundation
 
 @MainActor
-final class LogStore: ObservableObject {
+final class Log: ObservableObject {
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
-        category: String(describing: LogStore.self)
+        category: String(describing: Log.self)
     )
 
     // todo why not just return
     @Published private(set) var entries: [String] = []
 
+    // todo make resuable
     func export() {
         do {
             let store = try OSLogStore(scope: .currentProcessIdentifier)

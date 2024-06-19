@@ -8,7 +8,7 @@ import Foundation
 import SwiftData
 
 @Model
-class SensorData: Codable{
+class SensorBatch: Codable{
 
     enum CodingKeys: CodingKey {
         case recordingStart

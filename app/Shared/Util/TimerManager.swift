@@ -9,13 +9,14 @@ import Foundation
 import OSLog
 
 // Timer needs to run on main to make sure it updated correctly
-class TimerManager {
-
+@MainActor
+class TimerManager: ObservableObject{
+    
+    // todo make private(set)
     @Published var counter = 0
-
+    
     var timer: Timer? = nil
-
-    @MainActor
+    
     func start() {
         Logger.viewCycle.debug("Starting Timer")
         if timer != nil {
@@ -24,14 +25,12 @@ class TimerManager {
         counter = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             // Update the counter every second
-            DispatchQueue.main.async {
-                self.counter += 1
-            }
+            // todo build in max time
+            // todo add updateCounter function
+            self.counter += 1
         }
     }
     
-
-    @MainActor 
     func stop() {
         Logger.viewCycle.debug("Stopping Timer")
         if timer == nil {
