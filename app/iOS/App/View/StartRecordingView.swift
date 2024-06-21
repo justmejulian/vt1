@@ -36,16 +36,16 @@ struct StartRecordingView: View {
             
             VStack{
                 HStack {
-                    Text("Recording #: ")
+                    Text("Recording Startime")
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(sessionManager.recording?.exercise ?? ""))
+                    Text(String(sessionManager.recording?.startTimestamp.ISO8601Format() ?? ""))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
                     // todo use some var in session for this
-                    Text("Batch #")
+                    Text("Recorded Values: ")
                         .font(.title3)
                         .bold()
                     Spacer()

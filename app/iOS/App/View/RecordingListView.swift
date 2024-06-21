@@ -17,21 +17,12 @@ struct RecordingListView: View {
     
     @State private var isConfirming = false
     @State private var searchText: String = ""
+    @State private var loading = true
     
     init(db: Database) {
         self.db = db
         self.recordingListViewModel = RecordingListViewModel(db: db)
         self.recordings = []
-    }
-    
-    func updateRecordings() {
-        do {
-            self.recordings = try db.fetchData()
-        } catch {
-            Logger.viewCycle.error("Failed to fetch recording \(error)")
-            self.recordings = []
-        }
-
     }
     
     var filteredRecordings: [Recording] {
@@ -49,58 +40,62 @@ struct RecordingListView: View {
         
         Spacer()
         
-        if recordings.isEmpty {
-            VStack{
-                Spacer()
-                Text("Looks like there are no Recordings yet...")
-                Spacer()
-            }
-            .onAppear {
-                Logger.viewCycle.info("RecordingListView Empty VStack Appeared!")
-                updateRecordings()
-            }
-        } else {
-            NavigationStack {
-                List(filteredRecordings) { recordingData in
-                    NavigationLink {
-                        RecordingDetailView(recording: recordingData, db: db)
-                    } label: {
-                        VStack{
-                            Text(recordingData.exercise)
-                                .font(.caption)
-                                .bold()
-                            Text(recordingData.startTimestamp.ISO8601Format())
-                                .font(.caption2)
-                                .bold()
-                        }
+        NavigationStack {
+            List(filteredRecordings) { recordingData in
+                NavigationLink {
+                    RecordingDetailView(recording: recordingData, db: db)
+                } label: {
+                    VStack{
+                        Text(recordingData.exercise)
+                            .font(.caption)
+                            .bold()
+                        Text(recordingData.startTimestamp.ISO8601Format())
+                            .font(.caption2)
+                            .bold()
                     }
                 }
-                .listStyle(.automatic)
-                .searchable(text: $searchText)
-                
-                Button(action: {
-                    isConfirming = true
-                }) {
-                    Label("Delete All", systemImage: "trash")
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(BorderedButtonStyle())
-                .confirmationDialog(
-                    "Are you sure you want delete all?",
-                    isPresented: $isConfirming
-                ) {
-                    // todo move to
-                    Button("Delete All", role: .destructive) {
-                        recordingListViewModel.deleteAll()
-                    }
-                    Button("Cancel", role: .cancel) {}
-                }
             }
-            .onAppear {
-                Logger.viewCycle.info("RecordingListView NavigationStack Appeared!")
-                updateRecordings()
+            .overlay(Group {
+                if loading {
+                    SpinnerView()
+                }
+                if !loading && recordings.isEmpty {
+                    Text("Oops, looks like there's no data...")
+                }
+            })
+            .task(){
+                updateList()
+            }
+            .refreshable {
+                updateList()
+            }
+            .listStyle(.automatic)
+            .searchable(text: $searchText)
+            
+            Button(action: {
+                isConfirming = true
+            }) {
+                Label("Delete All", systemImage: "trash")
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(BorderedButtonStyle())
+            .confirmationDialog(
+                "Are you sure you want delete all?",
+                isPresented: $isConfirming
+            ) {
+                // todo move to
+                Button("Delete All", role: .destructive) {
+                    recordingListViewModel.deleteAll()
+                }
+                Button("Cancel", role: .cancel) {}
             }
         }
+    }
+    
+    func updateList() {
+        self.loading = true
+        self.recordings = db.fetchData()
+        self.loading = false
     }
 }

@@ -13,9 +13,6 @@ struct SyncView: View {
     
     var db: Database
     
-    @Query var sensorData: [SensorBatch]
-    @Query var recordingData: [Recording]
-
     @State
     var ip: String
     
@@ -41,7 +38,7 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(recordingData.count))
+                    Text(String(syncViewModel.recordingCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -49,12 +46,13 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(sensorData.count))
+                    Text(String(syncViewModel.sensorBatchCount))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)
 
             VStack(content: {
+                Text("Sever Ip")
                 TextField("Enter IP:", text: $ip)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
@@ -83,6 +81,9 @@ struct SyncView: View {
         }
         .onDisappear{
             syncViewModel.setIp(ip)
+        }
+        .task {
+            syncViewModel.fetchCount()
         }
     }
 }

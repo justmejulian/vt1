@@ -7,7 +7,7 @@ import UIKit
 import OSLog
 
 
-// todo move to @Observable
+// todo move to @Observable and move to Manager
 // https://developer.apple.com/documentation/swiftui/migrating-from-the-observable-object-protocol-to-the-observable-macro
 @MainActor
 class NetworkViewModel: ObservableObject {

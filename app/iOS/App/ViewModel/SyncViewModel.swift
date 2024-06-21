@@ -24,9 +24,13 @@ class SyncViewModel: ObservableObject {
     @Published
     var errorMessage: String = ""
     
+    @Published var sensorBatchCount: Int = 0
+    @Published var recordingCount: Int = 0
+    
     init(db: Database) {
         Logger.viewCycle.info("Init called in SyncViewModel")
         self.db = db
+        
         do {
             let fetchedSyncDataArray: [SyncData] = try db.fetchData()
             if !fetchedSyncDataArray.isEmpty {
@@ -42,6 +46,11 @@ class SyncViewModel: ObservableObject {
             self.syncData = newSyncData
             db.appendData(newSyncData)
         }
+    }
+    
+    func fetchCount(){
+        self.sensorBatchCount = db.fetchDataCount(for: SensorBatch.self)
+        self.recordingCount = db.fetchDataCount(for: Recording.self)
     }
     
     func setIp(_ ip: String) {
@@ -93,6 +102,7 @@ class SyncViewModel: ObservableObject {
                     data in
                     self.openPostRequests -= 1
                     self.db.removeData(recording)
+                    self.recordingCount -= 1
                 })
             }
             Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
@@ -130,7 +140,9 @@ class SyncViewModel: ObservableObject {
                 }
                 
                 for sensor in chunk {
+                    // todo add remove chunk
                     self.db.removeData(sensor)
+                    self.sensorBatchCount -= 1
                 }
             })
         }

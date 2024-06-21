@@ -21,6 +21,8 @@ struct RecordingDetailView: View {
     
     @State private var document: File?
     
+    @State private var loading = false
+    
     init(recording: Recording, db: Database) {
         // todo check when this is initialized
         Logger.viewCycle.debug("Running init for RecordingDetailView: \(recording.startTimestamp)")
@@ -30,10 +32,11 @@ struct RecordingDetailView: View {
         self._text = State(initialValue: recording.exercise)
         self.sensorDataCount = 0
         self.fileName = ""
-        // todo add sensordata, on appear
     }
 
     var body: some View {
+        
+        
         VStack{
             Spacer()
             Text("Recording: ")
@@ -65,9 +68,6 @@ struct RecordingDetailView: View {
 
             Button(action: {
                 exporting = true
-                Task {
-                    document = await generateJson(db: db, recording: recording, fileName: fileName)
-                }
             }){
                 Label("Export", systemImage: "square.and.arrow.up")
                     .padding(.vertical, 8)
@@ -103,6 +103,11 @@ struct RecordingDetailView: View {
                 self.sensorDataCount = db.fetchDataCount(for: SensorBatch.self)
                 self.fileName = "Recording-\(recording.startTimestamp)"
             }
+        }
+        .task {
+            self.loading = true
+            self.document = await generateJson(db: db, recording: recording, fileName: fileName)
+            self.loading = false
         }
     }
 
