@@ -25,7 +25,6 @@ extension BackgroundDataHandler {
     }
     
     func save(modelContext: ModelContext) throws {
-        let lastUpdateString: String = lastUpdate?.ISO8601Format() ?? ""
         Logger.viewCycle.debug("Saving Data on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
         // todo use this to throttle
         lastUpdate = Date.now

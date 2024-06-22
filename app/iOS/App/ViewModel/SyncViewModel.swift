@@ -85,36 +85,32 @@ class SyncViewModel: ObservableObject {
             return
         }
         
-        do {
-            let recordingData: [Recording] = try db.fetchData()
-            let sensorData: [SensorBatch] = try db.fetchData()
-            
-            Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
-            
-            // todo add array of errors that occured
-            for recording in recordingData {
-                // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
-                //            if (!syncing) {
-                //                break
-                //            }
-                self.openPostRequests += 1
-                networkManager.postRecordingToAPI(recording, handleSuccess: {
-                    data in
-                    self.openPostRequests -= 1
-                    self.db.removeData(recording)
-                    self.recordingCount -= 1
-                })
-            }
-            Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
-            
-            Logger.statistics.info("Started sync: \(Date.now)")
-            Logger.statistics.info("SensorBatch count \(sensorData.count)")
-            
-            sendSensorBatchChunked(networkManager: networkManager, sensorDataArray: sensorData)
-            //        sendSensorBatchOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
-        } catch {
-            Logger.viewCycle.info("Failed to post data: \(error)")
+        let recordingData: [Recording] = db.fetchData()
+        let sensorData: [SensorBatch] = db.fetchData()
+        
+        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
+        
+        // todo add array of errors that occured
+        for recording in recordingData {
+            // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
+            //            if (!syncing) {
+            //                break
+            //            }
+            self.openPostRequests += 1
+            networkManager.postRecordingToAPI(recording, handleSuccess: {
+                data in
+                self.openPostRequests -= 1
+                self.db.removeData(recording)
+                self.recordingCount -= 1
+            })
         }
+        Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
+        
+        Logger.statistics.info("Started sync: \(Date.now)")
+        Logger.statistics.info("SensorBatch count \(sensorData.count)")
+        
+        sendSensorBatchChunked(networkManager: networkManager, sensorDataArray: sensorData)
+        //        sendSensorBatchOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
     }
     
     func sendSensorBatchChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorBatch]){

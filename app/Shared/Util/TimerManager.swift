@@ -22,19 +22,27 @@ class TimerManager: ObservableObject{
         if timer != nil {
             Logger.viewCycle.warning("Timer already running")
         }
-        counter = 0
+        
+        self.reset()
+        
+        // Update the counter every second
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            // Update the counter every second
             // todo build in max time
-            // todo add updateCounter function
-            self.counter += 1
+            Task(priority: .high) {
+                await self.increaseCounter()
+            }
         }
+    }
+    
+    func increaseCounter() {
+        self.counter += 1
     }
     
     func stop() {
         Logger.viewCycle.debug("Stopping Timer")
         if timer == nil {
             Logger.viewCycle.warning("No Timer running")
+            return
         }
         timer?.invalidate()
         timer = nil

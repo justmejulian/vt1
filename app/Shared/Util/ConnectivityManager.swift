@@ -54,20 +54,21 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     
     func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
         Logger.viewCycle.debug("ConnectivityManager: session for: \(data.keys)")
+        Task {
+            guard let listener = await listeners.first(where: { data[$0.key] != nil }) else {
+                Logger.viewCycle.debug("ConnectivityManager: Could not find listener for: \(data.keys)")
+                replyHandler(["error": "unknown data type"])
+                return
+            }
 
-        guard let listener = listeners.first(where: { data[$0.key] != nil }) else {
-            Logger.viewCycle.debug("ConnectivityManager: Could not find listener for: \(data.keys)")
-            replyHandler(["error": "unknown data type"])
-            return
-        }
-
-        do {
-            try listener.didReceiveMessage(data: data)
-            replyHandler(["sucess": true])
-        } catch {
-            Logger.viewCycle.debug("ConnectivityManager: error: \(error.localizedDescription)")
-            
-            replyHandler(["error": error.localizedDescription])
+            do {
+                try listener.didReceiveMessage(data: data)
+                replyHandler(["sucess": true])
+            } catch {
+                Logger.viewCycle.debug("ConnectivityManager: error: \(error.localizedDescription)")
+                
+                replyHandler(["error": error.localizedDescription])
+            }
         }
     }
     
