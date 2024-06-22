@@ -26,16 +26,17 @@ extension BackgroundDataHandler {
     
     func save(modelContext: ModelContext) throws {
         Logger.viewCycle.debug("Saving Data on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
-        // todo use this to throttle
         lastUpdate = Date.now
-        try modelContext.save()
+        if modelContext.hasChanges {
+            try modelContext.save()
+        }
     }
     
-    internal func appendData<T>(_ data: T) where T : PersistentModel{
+    // todo split into save and no save
+    func appendData<T>(_ data: T) where T : PersistentModel{
         Logger.viewCycle.debug("Appending Data: \(T.self), on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
         let modelContext = createModelContext(modelContainer: modelContainer)
         modelContext.insert(data)
-        // todo remove save
         do {
             try save(modelContext: modelContext)
         } catch {
@@ -43,12 +44,61 @@ extension BackgroundDataHandler {
         }
     }
     
-    // todo delete using Identifier
-    internal func removeData<T>(_ data: T) where T: PersistentModel {
-        Logger.viewCycle.debug("Appending Data: \(T.self), on Thread \(Thread.current)")
-        Logger.viewCycle.debug("Removing Data: \(T.self)")
+    func appendData<T>(_ dataArray: [T]) where T : PersistentModel{
+        Logger.viewCycle.debug("Appending Data Array: \(T.self), on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
         let modelContext = createModelContext(modelContainer: modelContainer)
-        modelContext.delete(data)
-        // todo save
+        for data in dataArray {
+            modelContext.insert(data)
+        }
+        do {
+            try save(modelContext: modelContext)
+        } catch {
+            Logger.viewCycle.error("Failed to save from append \(error.localizedDescription)")
+        }
     }
+
+    func removeData(identifier: PersistentIdentifier) {
+        Logger.viewCycle.debug("Removing Data: \(identifier.entityName), on Thread \(Thread.current)")
+        let modelContext = createModelContext(modelContainer: modelContainer)
+        let model = modelContext.model(for: identifier)
+        modelContext.delete(model)
+        do {
+            try save(modelContext: modelContext)
+        } catch {
+            Logger.viewCycle.error("Failed to save from append \(error.localizedDescription)")
+        }
+    }
+    
+    func fetchData<T>() -> [T] where T : PersistentModel {
+        return fetchData(descriptor: FetchDescriptor<T>())
+    }
+    
+    func fetchData<T>(descriptor: FetchDescriptor<T>) -> [T] where T : PersistentModel {
+        do {
+            return try modelContext.fetch(descriptor)
+        } catch {
+            Logger.statistics.error("Failed to fetch \(T.self)")
+            return []
+        }
+    }
+    
+    func fetchDataCount<T: PersistentModel>(for _: T.Type) -> Int {
+        do {
+            let descriptor = FetchDescriptor<T>()
+            return try modelContext.fetchCount(descriptor)
+        } catch {
+            Logger.statistics.error("Failed to fetch count \(T.self)")
+            return 0
+        }
+    }
+    
+    func fetchPersistentIdentifiers<T>(for _: T.Type) -> [PersistentIdentifier] where T : PersistentModel {
+        do {
+            return try self.modelContext.fetchIdentifiers(FetchDescriptor<T>())
+        } catch {
+            Logger.statistics.error("Failed to fetch Identifiers for \(T.self)")
+            return []
+        }
+    }
+    
 }

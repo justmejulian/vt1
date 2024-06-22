@@ -32,15 +32,15 @@ final class Database {
     }
     
     // todo maybe remove these and only use the dataHnalder
-    internal func appendData<T>(_ data: T) where T : PersistentModel{
+    func appendData<T>(_ data: T) where T : PersistentModel{
         self.modelContext.insert(data)
     }
     
-    internal func fetchData<T>() -> [T] where T : PersistentModel {
+    func fetchData<T>() -> [T] where T : PersistentModel {
         return fetchData(descriptor: FetchDescriptor<T>())
     }
     
-    internal func fetchData<T>(descriptor: FetchDescriptor<T>) -> [T] where T : PersistentModel {
+    func fetchData<T>(descriptor: FetchDescriptor<T>) -> [T] where T : PersistentModel {
         do {
             return try modelContext.fetch(descriptor)
         } catch {
@@ -49,7 +49,7 @@ final class Database {
         }
     }
     
-    internal func fetchDataCount<T: PersistentModel>(for _: T.Type) -> Int {
+    func fetchDataCount<T: PersistentModel>(for _: T.Type) -> Int {
         do {
             let descriptor = FetchDescriptor<T>()
             return try modelContext.fetchCount(descriptor)
@@ -59,15 +59,29 @@ final class Database {
         }
     }
     
-    internal func removeData<T>(_ data: T) where T: PersistentModel {
+    func removeData<T>(_ data: T) where T: PersistentModel {
         self.modelContext.delete(data)
     }
     
-    internal func removeModel<T>(_ dataModel: T.Type) where T : PersistentModel {
+    func removeModel<T>(_ dataModel: T.Type) where T : PersistentModel {
         do {
             try self.modelContext.delete(model: dataModel)
         } catch {
             Logger.statistics.error("Failed to remove \(T.self)")
         }
+    }
+    
+    
+    func fetchModel<T>(_ id: PersistentIdentifier) -> T? where T : PersistentModel {
+        guard let model = self.modelContext.model(for: id) as? T else {
+            Logger.statistics.error("Failed to map PersistentIdentifier for \(id.entityName) to Model \(T.self)")
+            return nil
+        }
+        return model
+    }
+    
+    func clear() {
+        Logger.statistics.error("Deleting all Data")
+        self.modelContainer.deleteAllData()
     }
 }

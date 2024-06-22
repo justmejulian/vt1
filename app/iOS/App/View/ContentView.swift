@@ -95,8 +95,6 @@ struct ContentView: View {
         }
         .onAppear {
             Logger.viewCycle.info("ContentView Appeared!")
-        }
-        .task {
             self.sensorValueCount = db.fetchDataCount(for: SensorBatch.self)
             self.recordingCount = db.fetchDataCount(for: Recording.self)
         }

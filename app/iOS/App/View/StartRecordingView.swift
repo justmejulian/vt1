@@ -23,6 +23,7 @@ struct StartRecordingView: View {
     var body: some View {
         // todo add pull down to refersch state, throw error if not possible
         
+        // todo move these into @State
         let disabled = ((text == "") && sessionManager.isSessionRunning == false) || sessionManager.isLoading == true
         let color = sessionManager.isSessionRunning ? Color.red : .blue
         let label = sessionManager.isSessionRunning ? "Stop Recording" : "Start Recording"
@@ -59,6 +60,7 @@ struct StartRecordingView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .padding(.all)
+                    .disabled(sessionManager.isSessionRunning == true)
             }).padding(.all)
 
             Button(action: {

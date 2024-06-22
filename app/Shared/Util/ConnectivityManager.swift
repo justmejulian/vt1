@@ -22,14 +22,14 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
     // todo why override?
     override init() {
         Logger.statistics.debug("Creating ConnectivityManager")
-
+        
         super.init()
-
+        
         self.session.delegate = self
         self.session.activate()
     }
 
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         Logger.viewCycle.debug("Handling activationDidCompleteWith")
         if let error = error {
             Logger.viewCycle.error("Error trying to activate WCSession: \(error.localizedDescription)")
@@ -38,7 +38,7 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
         }
     }
 
-    func sendPresistentModel<T: PersistentModel>(key: String, data: T, replyHandler: (([String : Any]) -> Void)?) where T:Codable {
+    func sendCodable<T: Codable>(key: String, data: T, replyHandler: (([String : Any]) -> Void)?) {
         do {
             let encodedData = try JSONEncoder().encode(data)
 
@@ -52,11 +52,13 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
         }
     }
     
-    func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
+    nonisolated func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
         Logger.viewCycle.debug("ConnectivityManager: session for: \(data.keys)")
         Task {
             guard let listener = await listeners.first(where: { data[$0.key] != nil }) else {
                 Logger.viewCycle.debug("ConnectivityManager: Could not find listener for: \(data.keys)")
+                
+                // todo replace these with messages we send back
                 replyHandler(["error": "unknown data type"])
                 return
             }
@@ -90,7 +92,7 @@ class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
 
 struct Listener {
     let key: String
-    let handleData: ([String: Any]) throws -> Void
+    let handleData: @Sendable ([String: Any]) throws -> Void
     
     func didReceiveMessage(data: [String : Any]) throws -> Void {
         try handleData(data)

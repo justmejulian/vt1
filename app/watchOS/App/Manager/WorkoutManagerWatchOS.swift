@@ -69,10 +69,10 @@ extension WorkoutManager {
 
 extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
 
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+    nonisolated func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
         Logger.viewCycle.debug("workoutBuilderDidCollectEvent in WorkoutManager")
     }
 
-    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+    nonisolated func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
     }
 }

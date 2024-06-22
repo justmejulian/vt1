@@ -91,12 +91,14 @@ class SessionManager: NSObject, ObservableObject {
             // Start Recording
             let recording = try recordingManager.start(exercise: exerciseName)
             
+            let modelContaier = self.db.getModelContainer()
+            
             // Store Recording
-            let dataHandler = BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+            let dataHandler = BackgroundDataHandler(modelContainer: modelContaier)
             await dataHandler.appendData(recording)
             
             // Send Recording
-            sendRecording(recording: recording)
+            sendRecording(id: recording.id)
             
             do {
                 Logger.viewCycle.info("Starting monitororig Updates")
@@ -120,17 +122,17 @@ class SessionManager: NSObject, ObservableObject {
                                 
                             }
                         }
-                        let sensorData = SensorBatch(recordingStart: recordingStart, timestamp: timestamp, sensor_id: sensor_id, values: values)
-                        // Store Sensor Data
-                        let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
-                        await dataHandler.appendData(sensorData)
-                        //                        let sensorBackgroundDataHandler = SensorBatchHandler(dataHandler: dataHandler)
-                        //                        await sensorBackgroundDataHandler.createSensorBatch(recordingStart: recordingStart, timestamp: timestamp, sensor_id: sensor_id, values: values)
+                        
+                        let sensorBatch = SensorBatchStruct(recordingStart: recordingStart, timestamp: timestamp, sensor_id: sensor_id, values: values)
+                        let sensorBatchBackgroundDataHandler = SensorBatchBackgroundDataHandler(modelContainer: modelContaier)
+                        let persistentModelID = await sensorBatchBackgroundDataHandler.appendData(sensorBatch)
                         
                         // Send Sensor Data
-                        await self.sendSensorBatch(sensorData: sensorData)
+                        await self.sendSensorBatch(id: persistentModelID)
                     }
                 })
+                // todo find a way to count the amount of sensorBatches/recoridngs send
+                // have a final thing we send to iphone with these number so the iphone knows if recording is complete or if it needs to resync
             } catch {
                 Logger.viewCycle.error("Error starting monitorUpdates: \(error)")
                 self.stop()
@@ -155,17 +157,25 @@ class SessionManager: NSObject, ObservableObject {
         self.sensorDataCount += count
     }
     
-    func sendSensorBatch(sensorData: SensorBatch) {
-        // Logger.viewCycle.debug("Calling SessionManager sendSensorBatch for \(sensorData.timestamp)")
-        self.connectivityManager.sendSensorBatch(sensorData: sensorData, replyHandler:  { (replyData: [String: Any]) in
+    func sendSensorBatch(id: PersistentIdentifier) {
+        // Logger.viewCycle.debug("Calling SessionManager sendSensorBatch for \(sensorData.timestamp) on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+        // todo cleanup
+        guard let sensorBatch: SensorBatch = self.db.fetchModel(id) else {
+            Logger.viewCycle.debug("Could not fetch sensorBatch")
+            return
+        }
+        
+        let sensorBatchStruct = SensorBatchStruct(sensorBatch: sensorBatch)
+        
+        self.connectivityManager.sendSensorBatch(sensorBatch: sensorBatchStruct, replyHandler:  { (replyData: [String: Any]) in
             if replyData["sucess"] != nil {
                 // Logger.viewCycle.debug("Sucsessfuly sent sensorData timestamp \(sensorData.timestamp)")
                 
                 // Remove synced Sensor Data
                 Task {
                     let dataHandler = BackgroundDataHandler(modelContainer: self.db.getModelContainer())
-                    await dataHandler.removeData(sensorData)
-                    Logger.viewCycle.debug("Removed sensorData timestamp \(sensorData.timestamp) from store")
+                    await dataHandler.removeData(identifier: id)
+                    Logger.viewCycle.debug("Removed sensorData timestamp \(sensorBatchStruct.timestamp) from store")
                 }
                 
                 return
@@ -193,15 +203,25 @@ class SessionManager: NSObject, ObservableObject {
         connectivityManager.sendSessionState(isSessionRunning: isSessionRunning)
     }
     
-    func sendRecording(recording: Recording) {
-        // Logger.viewCycle.debug("Calling SessionManager sendRecording for \(recording.startTimestamp)")
-        self.connectivityManager.sendRecording(recording: recording, replyHandler:  { replyData in
+    func sendRecording(id: PersistentIdentifier) {
+        
+        guard let recording: Recording = self.db.fetchModel(id) else {
+            Logger.viewCycle.debug("Could not fetch sensorBatch")
+            return
+        }
+    
+        let recordingStruct = RecordingStruct(recording: recording)
+        
+        Logger.viewCycle.debug("Calling SessionManager sendRecording for \(recording.startTimestamp)")
+
+        self.connectivityManager.sendRecording(recording: recordingStruct, replyHandler:  { replyData in
             if replyData["sucess"] != nil {
                 // Logger.viewCycle.debug("Sucsessfuly sent recording timestamp \(recording.startTimestamp)")
                 // Remove synced Sensor Data
                 Task {
-                    let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
-                    await dataHandler.removeData(recording)
+                    // todo move this into a send, don't do in replyHandler
+                    let dataHandler = BackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                    await dataHandler.removeData(identifier: recording.persistentModelID)
                 }
                 
                 // Logger.viewCycle.debug("Removed recording timestamp \(recording.startTimestamp) from store")
@@ -229,25 +249,22 @@ class SessionManager: NSObject, ObservableObject {
         // todo need to be done in the background
         Logger.viewCycle.debug("Starting SessionManager sync")
         Task.detached {
-            do {
-                let sensorData: [SensorBatch] = await self.db.fetchData()
-                let recordings: [Recording] = await self.db.fetchData()
-                
-                Logger.statistics.info("Syncing \(sensorData.count) SensorBatch and \(recordings.count) Recordings")
-                sensorData.forEach { sensorData in
-                    Task {
-                        await self.sendSensorBatch(sensorData: sensorData)
-                    }
+            let backgroundDataHanlder = BackgroundDataHandler(modelContainer: await self.db.getModelContainer())
+            let sensorBatchIdentifiers = await backgroundDataHanlder.fetchPersistentIdentifiers(for: SensorBatch.self)
+            let recordingsIdentifiers = await backgroundDataHanlder.fetchPersistentIdentifiers(for: Recording.self)
+            
+            Logger.statistics.info("Syncing \(sensorBatchIdentifiers.count) SensorBatch and \(recordingsIdentifiers.count) Recordings on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+            sensorBatchIdentifiers.forEach { sensorBatchIdentifier in
+                Task {
+                    await self.sendSensorBatch(id: sensorBatchIdentifier)
                 }
-                recordings.forEach { recording in
-                    Task {
-                        await self.sendRecording(recording: recording)
-                    }
-                }
-                Logger.viewCycle.debug("Finished Syncing")
-            } catch {
-                Logger.viewCycle.debug("Failed during SessionManager sync: \(error.localizedDescription)")
             }
+            recordingsIdentifiers.forEach { recordingsIdentifier in
+                Task {
+                    await self.sendRecording(id: recordingsIdentifier)
+                }
+            }
+            Logger.viewCycle.debug("Finished Syncing")
         }
     }
     
@@ -315,7 +332,9 @@ class SessionManager: NSObject, ObservableObject {
         let stopSessionListener = Listener(key: "stopSession", handleData: { data in
             if data["stopSession"] != nil {
                 Logger.viewCycle.info("recived stop session")
-                self.stop()
+                Task {
+                    await self.stop()
+                }
                 return
             }
         })
@@ -327,7 +346,9 @@ class SessionManager: NSObject, ObservableObject {
                 Logger.viewCycle.info("recived getSessionState")
                 
                 // send session state
-                self.connectivityManager.sendSessionState(isSessionRunning: self.started)
+                Task {
+                    await self.connectivityManager.sendSessionState(isSessionRunning: self.started)
+                }
                 
                 return
             }

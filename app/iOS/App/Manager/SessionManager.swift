@@ -13,7 +13,6 @@ import OSLog
 
 @MainActor
 class SessionManager: NSObject, ObservableObject {
-    @ObservedObject
     private var connectivityManager: ConnectivityManager
     
     @ObservationIgnored
@@ -32,7 +31,7 @@ class SessionManager: NSObject, ObservableObject {
     @Published
     var errorMessage: String = ""
     @Published
-    var recording: Recording? = nil
+    var recording: RecordingStruct? = nil
     @Published
     var sensorValueCount = 0
     
@@ -125,21 +124,21 @@ class SessionManager: NSObject, ObservableObject {
         self.sensorValueCount += increase
     }
     
-    private func setCurrentRecording(_ recording: Recording) {
+    private func setCurrentRecording(_ recording: RecordingStruct) {
         self.recording = recording
     }
     
     private func addListeners() {
         // todo maybe create a LinsterMangager or SessionConnectity
         let recordingListener = Listener(key: "recording", handleData: { data in
-            if let endcodedRecording = data["recording"] {
-                Task.detached{
-                    guard let recording = try? JSONDecoder().decode(Recording.self, from: endcodedRecording as! Data) else {
+            if let endcodedRecording = data["recording"] as? Data {
+                Task.detached(priority: .background) {
+                    guard let recording = try? JSONDecoder().decode(RecordingStruct.self, from: endcodedRecording) else {
                         throw SessionError("Could not decode recording")
                     }
                     
-                    let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
-                    await dataHandler.appendData(recording)
+                    let recordingBackgroundDataHandler = await RecordingBackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                    let _ = await recordingBackgroundDataHandler.appendData(recording)
                     await self.setCurrentRecording(recording)
                 }
                 return
@@ -147,42 +146,44 @@ class SessionManager: NSObject, ObservableObject {
         })
         connectivityManager.addListener(recordingListener)
         
-        Task.detached(priority: .background) {
-            let dataHandler = await BackgroundDataHandler(modelContainer: self.db.getModelContainer())
-            let sensorDataListener = Listener(key: "sensorData", handleData: { data in
-                Logger.viewCycle.debug("Listener handler sensorData called on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
-                if let endcodedSensorBatch = data["sensorData"] {
-                    // todo don't decode, just compress
-                    // todo keep count of recieved data count
-                    Task.detached{
-                        Logger.viewCycle.debug("Creating SensorBatch from Json on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
-                        guard let sensorData = try? JSONDecoder().decode(SensorBatch.self, from: endcodedSensorBatch as! Data) else {
-                            throw SessionError("Could not decode sensorData")
-                        }
-                        
-                        await dataHandler.appendData(sensorData)
-                        await self.updateSensorValuesCount(sensorData.values.count)
+        let sensorDataListener = Listener(key: "sensorBatch", handleData: { data in
+            Logger.viewCycle.debug("Listener handler sensorData called on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+            if let endcodedSensorBatch = data["sensorBatch"] as? Data {
+                // todo don't decode, just compress
+                // todo keep count of recieved data count
+                Task.detached(priority: .background) {
+                    Logger.viewCycle.debug("Creating SensorBatch from Json on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+                    
+                    guard let sensorBatchStruct = try? JSONDecoder().decode(SensorBatchStruct.self, from: endcodedSensorBatch) else {
+                        throw SessionError("Could not decode sensorBatch")
                     }
-                    return
+                    
+                    let sensorBatchBackgroundDataHandler = await SensorBatchBackgroundDataHandler(modelContainer: self.db.getModelContainer())
+                    let _ = await sensorBatchBackgroundDataHandler.appendData(sensorBatchStruct)
+                    // todo move to SensorBatchDataHandler
+                    await self.updateSensorValuesCount(sensorBatchStruct.values.count)
                 }
-            })
-            await self.connectivityManager.addListener(sensorDataListener)
-        }
+                return
+            }
+        })
+        self.connectivityManager.addListener(sensorDataListener)
         
         let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
             if let isSessionRunning = data["isSessionRunning"] {
-                guard let isSessionRunningBool = isSessionRunning as? Bool else {
-                    throw SessionError("Could not decode isSessionRunning")
+                Task {
+                    guard let isSessionRunningBool = isSessionRunning as? Bool else {
+                        throw SessionError("Could not decode isSessionRunning")
+                    }
+                    
+                    Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
+                    
+                    if (!(await self.isSessionRunning) && isSessionRunningBool) {
+                        await self.reset()
+                    }
+                    
+                    await self.setIsSessionRunning(to: isSessionRunningBool)
+                    return
                 }
-                
-                Logger.viewCycle.debug("recived isSessionRunning: \(isSessionRunningBool)")
-                
-                // todo what can we do here?
-                DispatchQueue.main.async {
-                    self.isSessionRunning = isSessionRunningBool
-                    self.isLoading = nil
-                }
-                return
             }
         })
         connectivityManager.addListener(isSessionRunningListener)
@@ -204,6 +205,10 @@ class SessionManager: NSObject, ObservableObject {
         connectivityManager.addListener(isSessionReadyListener)
     }
     
+    func setIsSessionRunning(to bool: Bool) {
+        self.isSessionRunning = bool
+    }
+    
     func handleError(message: String){
         self.errorMessage = message
         self.hasError = true
@@ -212,6 +217,7 @@ class SessionManager: NSObject, ObservableObject {
     
     func reset(){
         self.errorMessage = ""
+        self.sensorValueCount = 0
         self.hasError = false
         self.isLoading = false
     }

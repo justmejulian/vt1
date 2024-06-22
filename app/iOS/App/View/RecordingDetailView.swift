@@ -126,7 +126,7 @@ struct RecordingDetailView: View {
 struct RecordingDictionary: Encodable {
     var exercise: String
     var startTimestamp: TimeInterval
-    var sensorData: [SensorBatch]
+    var sensorData: [SensorBatchStruct]
 }
 
 import UniformTypeIdentifiers
@@ -178,12 +178,10 @@ struct RecordingExportError: LocalizedError {
 @MainActor
 func generateJson(db: Database, recording: Recording, fileName: String) async -> File? {
     do {
-        let descriptor = FetchDescriptor<SensorBatch>(
-            predicate: #Predicate<SensorBatch> {
-                $0.recordingStart == recording.startTimestamp
-            }
-        )
-        let sensorData: [SensorBatch] = try db.fetchData(descriptor: descriptor)
+        let modelContainer = db.getModelContainer()
+        
+        let sensorBatchBackgroundDataHandler = SensorBatchBackgroundDataHandler(modelContainer: modelContainer)
+        let sensorData: [SensorBatchStruct] = await sensorBatchBackgroundDataHandler.fetchSendableData()
 
         let dict: RecordingDictionary = RecordingDictionary(
             exercise: recording.exercise,

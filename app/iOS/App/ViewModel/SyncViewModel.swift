@@ -31,17 +31,11 @@ class SyncViewModel: ObservableObject {
         Logger.viewCycle.info("Init called in SyncViewModel")
         self.db = db
         
-        do {
-            let fetchedSyncDataArray: [SyncData] = try db.fetchData()
-            if !fetchedSyncDataArray.isEmpty {
-                let fetchedSyncData = fetchedSyncDataArray[0]
-                self.syncData = fetchedSyncData
-            } else {
-                let newSyncData = SyncData(ip: "")
-                self.syncData = newSyncData
-                db.appendData(newSyncData)
-            }
-        } catch {
+        let fetchedSyncDataArray: [SyncData] = db.fetchData()
+        if !fetchedSyncDataArray.isEmpty {
+            let fetchedSyncData = fetchedSyncDataArray[0]
+            self.syncData = fetchedSyncData
+        } else {
             let newSyncData = SyncData(ip: "")
             self.syncData = newSyncData
             db.appendData(newSyncData)
@@ -85,35 +79,58 @@ class SyncViewModel: ObservableObject {
             return
         }
         
-        let recordingData: [Recording] = db.fetchData()
-        let sensorData: [SensorBatch] = db.fetchData()
         
-        Logger.statistics.info("postData: recordingData \(recordingData.count), sensorData \(sensorData.count)")
-        
-        // todo add array of errors that occured
-        for recording in recordingData {
-            // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
-            //            if (!syncing) {
-            //                break
-            //            }
-            self.openPostRequests += 1
-            networkManager.postRecordingToAPI(recording, handleSuccess: {
-                data in
-                self.openPostRequests -= 1
-                self.db.removeData(recording)
-                self.recordingCount -= 1
-            })
+    }
+    
+    func postRecordings(networkManager: NetworkViewModel) {
+        let modelContainer = self.db.getModelContainer()
+        // todo maybe detach
+        Task.detached {
+            let recordingBackgroundDataHandler = RecordingBackgroundDataHandler(modelContainer: modelContainer)
+            let recordings: [RecordingStruct] = await recordingBackgroundDataHandler.fetchSendableData()
+            Logger.statistics.info("postData: recordingData \(recordings.count)")
+            
+            for recording in recordings {
+                // todo: cancel https://www.hackingwithswift.com/quick-start/concurrency/how-to-cancel-a-task
+                //            if (!syncing) {
+                //                break
+                //            }
+                await self.increasePostRequests()
+                await networkManager.postRecordingToAPI(recording, handleSuccess: {
+                    data in
+                    Task {
+                        await self.decreasePostRequests()
+                        await self.removeRecording(recording: recording)
+                    }
+                })
+            }
+            Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
         }
-        Logger.viewCycle.info("Finished posting recordingData from SyncViewModel")
+    }
+    
+    func postSensorBachtes(networkManager: NetworkViewModel) {
+        Logger.statistics.info("Started SensorBatch sync: \(Date.now)")
+        let modelContainer = self.db.getModelContainer()
         
-        Logger.statistics.info("Started sync: \(Date.now)")
-        Logger.statistics.info("SensorBatch count \(sensorData.count)")
-        
-        sendSensorBatchChunked(networkManager: networkManager, sensorDataArray: sensorData)
+        // todo maybe detach
+        Task.detached {
+            let sensorBatchBackgroundDataHandler = SensorBatchBackgroundDataHandler(modelContainer: modelContainer)
+            let sensorData: [SensorBatchStruct] = await sensorBatchBackgroundDataHandler.fetchSendableData()
+            Logger.statistics.info("postData: sensorData \(sensorData.count)")
+            await self.sendSensorBatchChunked(networkManager: networkManager, sensorDataArray: sensorData)
+        }
         //        sendSensorBatchOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
     }
     
-    func sendSensorBatchChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorBatch]){
+    func increasePostRequests() {
+        self.openPostRequests += 1
+    }
+    
+    func decreasePostRequests() {
+        self.openPostRequests -= 1
+    }
+    
+    func sendSensorBatchChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorBatchStruct]){
         // todo: a test with 10 100 150 20
         let chunkSize = 100
         Logger.statistics.info("Chunk size \(chunkSize)")
@@ -124,46 +141,66 @@ class SyncViewModel: ObservableObject {
             // if (!syncing) {
             //     break
             // }
-            DispatchQueue.main.async {
-                self.openPostRequests += 1
-            }
+            increasePostRequests()
             
             networkManager.postSensorBatchArrayToAPI(chunk, handleSuccess: {
                 data in
-                self.openPostRequests -= 1
-                if (self.openPostRequests == 0) {
-                    Logger.statistics.info("Finished to sending all at: \(Date.now)")
-                }
                 
-                for sensor in chunk {
-                    // todo add remove chunk
-                    self.db.removeData(sensor)
-                    self.sensorBatchCount -= 1
+                Task {
+                    await self.decreasePostRequests()
+                    if (await self.openPostRequests == 0) {
+                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
+                    }
+                    
+                    for sensor in chunk {
+                        // todo add remove chunk
+                        await self.removeSensorBatch(sensorBatch: sensor)
+                    }
                 }
             })
         }
     }
     
-    func sendSensorBatchOneByOne(networkManager: NetworkViewModel, sensorDataArray: [SensorBatch]){
+    func sendSensorBatchOneByOne(networkManager: NetworkViewModel, sensorDataArray: [SensorBatchStruct]){
         for sensor in sensorDataArray {
             self.openPostRequests += 1
-            
-            do{
-                let values = try JSONEncoder().encode(sensor.values)
-            } catch {
-                Logger.viewCycle.error("Failed to create JSON in sendSensorBatchOneByOne")
-            }
             
             networkManager.postSensorBatchToAPI(sensor, handleSuccess: {
                 // todo test time it takes to send
                 data in
-                self.openPostRequests -= 1
-                if (self.openPostRequests == 0) {
-                    Logger.statistics.info("Finished to sending all at: \(Date.now)")
+                Task {
+                    await self.decreasePostRequests()
+                    if (await self.openPostRequests == 0) {
+                        Logger.statistics.info("Finished to sending all at: \(Date.now)")
+                    }
+                    await self.removeSensorBatch(sensorBatch: sensor)
                 }
-                self.db.removeData(sensor)
             })
         }
+    }
+    
+    
+    func removeRecording(recording: RecordingStruct) async {
+        let modelContainer = self.db.getModelContainer()
+        let backgroundDataHandler = BackgroundDataHandler(modelContainer: modelContainer)
+        guard let id = recording.id else {
+            Logger.viewCycle.error("Failed to delete recording")
+            return
+        }
+        await backgroundDataHandler.removeData(identifier: id)
+        self.recordingCount -= 1
+    }
+    
+    func removeSensorBatch(sensorBatch: SensorBatchStruct) async {
+        let modelContainer = self.db.getModelContainer()
+        let backgroundDataHandler = BackgroundDataHandler(modelContainer: modelContainer)
+        guard let id = sensorBatch.id else {
+            Logger.viewCycle.error("Failed to delete sensorBatch")
+            return
+        }
+        await backgroundDataHandler.removeData(identifier: id)
+        
+        self.sensorBatchCount -= 1
     }
     
     func cancel() {

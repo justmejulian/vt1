@@ -39,7 +39,8 @@ class NetworkViewModel: ObservableObject {
 
         // todo send the compressed data
         do {
-            try await URLSession.shared.data(from: url)
+            let (_, response) = try await URLSession.shared.data(from: url)
+            Logger.viewCycle.debug("Server reacable: \(response)")
             return true
         } catch {
             Logger.viewCycle.error("Error getStatus \(error)")
@@ -49,7 +50,7 @@ class NetworkViewModel: ObservableObject {
     }
     
     // todo do this on a different Thread
-    func postDataToAPI(url: String,  data: Data, handleSuccess: ((_ data: Codable) -> Void)?) {
+    func postDataToAPI(url: String,  data: Data, handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
 
         guard let url = URL(string: url) else {
             Logger.viewCycle.error("Invalid URL in postDataToAPI \(url)")
@@ -83,7 +84,7 @@ class NetworkViewModel: ObservableObject {
         }.resume()
     }
 
-    func postCodableDataToAPI(url: String,  data: Codable, handleSuccess: ((_ data: Codable) -> Void)?) {
+    func postCodableDataToAPI(url: String,  data: Codable, handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
         guard let jsonData = try? JSONEncoder().encode(data) else {
             Logger.viewCycle.error("Failed to convert to Json")
             return
@@ -91,7 +92,7 @@ class NetworkViewModel: ObservableObject {
         postDataToAPI(url: url, data: jsonData, handleSuccess: handleSuccess)
     }
 
-    func postRecordingToAPI(_ recording: Recording, handleSuccess: ((_ data: Codable) -> Void)?) {
+    func postRecordingToAPI(_ recording: RecordingStruct, handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
         
         // todo move these urls out so that they are only built 1
         let url = "http://" + ip + "/device/" + uuid + "/" + "recording"
@@ -99,13 +100,13 @@ class NetworkViewModel: ObservableObject {
         postCodableDataToAPI(url: url, data: recording, handleSuccess: handleSuccess)
     }
 
-    func postSensorBatchToAPI(_ sensorData: SensorBatch, handleSuccess: ((_ data: Codable) -> Void)?) {
+    func postSensorBatchToAPI(_ sensorData: SensorBatchStruct, handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
         let url = "http://" + ip + "/device/" + uuid + "/" + "sensorData"
         Logger.viewCycle.debug("postSensorBatchToAPI :\(url)")
         postCodableDataToAPI(url: url, data: sensorData, handleSuccess: handleSuccess)
     }
     
-    func postSensorBatchArrayToAPI(_ sensorDataArray: [SensorBatch], handleSuccess: ((_ data: Codable) -> Void)?) {
+    func postSensorBatchArrayToAPI(_ sensorDataArray: [SensorBatchStruct], handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
         let url = "http://" + ip + "/device/" + uuid + "/" + "sensorData/batch"
         Logger.viewCycle.debug("postSensorBatchToAPI :\(url)")
 

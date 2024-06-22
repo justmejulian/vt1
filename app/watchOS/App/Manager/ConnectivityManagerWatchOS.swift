@@ -11,12 +11,12 @@ import WatchConnectivity
 import OSLog
 
 extension ConnectivityManager {
-    func sendSensorBatch(sensorData: SensorBatch, replyHandler: (([String : Any]) -> Void)?) {
-        self.sendPresistentModel(key: "sensorData", data: sensorData, replyHandler: replyHandler)
+    func sendSensorBatch(sensorBatch: SensorBatchStruct, replyHandler: (([String : Any]) -> Void)?) {
+        self.sendCodable(key: "sensorBatch", data: sensorBatch, replyHandler: replyHandler)
     }
 
-    func sendRecording(recording: Recording, replyHandler: (([String : Any]) -> Void)?) {
-        self.sendPresistentModel(key: "recording", data: recording, replyHandler: replyHandler)
+    func sendRecording(recording: RecordingStruct, replyHandler: (([String : Any]) -> Void)?) {
+        self.sendCodable(key: "recording", data: recording, replyHandler: replyHandler)
     }
 
     func sendSessionState(isSessionRunning: Bool) {
