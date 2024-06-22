@@ -68,6 +68,7 @@ struct SensorBatchStruct: Codable {
         self.values = try container.decode([Value].self, forKey: .values)
     }
 
+    // We don't want the id in the encoding
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(recordingStart, forKey: .recordingStart)

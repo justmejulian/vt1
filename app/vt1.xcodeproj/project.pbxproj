@@ -19,6 +19,7 @@
 		C70462902AE5899E009F5DD4 /* SensorBatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorBatch.swift */; };
 		C71330432C1DD69800A0B89D /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71330422C1DD69800A0B89D /* LogsView.swift */; };
 		C713304C2C2336EB00A0B89D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C713304B2C2336E800A0B89D /* SpinnerView.swift */; };
+		C713305D2C2742A400A0B89D /* FileCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C713305C2C2742A200A0B89D /* FileCreator.swift */; };
 		C71BA45A2BC43ABF007430D2 /* TimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71BA4592BC43ABF007430D2 /* TimerManager.swift */; };
 		C71BA45B2BC43ABF007430D2 /* TimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71BA4592BC43ABF007430D2 /* TimerManager.swift */; };
 		C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */; };
@@ -146,6 +147,7 @@
 		C704628F2AE5899E009F5DD4 /* SensorBatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorBatch.swift; sourceTree = "<group>"; };
 		C71330422C1DD69800A0B89D /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		C713304B2C2336E800A0B89D /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		C713305C2C2742A200A0B89D /* FileCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCreator.swift; sourceTree = "<group>"; };
 		C71BA4592BC43ABF007430D2 /* TimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerManager.swift; sourceTree = "<group>"; };
 		C729084E2BA5BA5E00ED7183 /* vt1-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "vt1-Watch-App-Info.plist"; sourceTree = "<group>"; };
 		C729084F2BA5BA6C00ED7183 /* vt1-Mobile-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "vt1-Mobile-App-Info.plist"; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 		C7778DD12B10B18E00E5D9ED /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C713305C2C2742A200A0B89D /* FileCreator.swift */,
 				C755927C2B17918F00972671 /* SessionManager.swift */,
 				C7778DC62B0D007900E5D9ED /* WorkoutManagerIOS.swift */,
 				C7C44CF12B136BA200789EAA /* ConnectivityManagerIOS.swift */,
@@ -815,6 +818,7 @@
 				C73A2C442AF7DB5A009C046B /* SensorBatch.swift in Sources */,
 				C713304C2C2336EB00A0B89D /* SpinnerView.swift in Sources */,
 				C755927D2B17918F00972671 /* SessionManager.swift in Sources */,
+				C713305D2C2742A400A0B89D /* FileCreator.swift in Sources */,
 				C768E5D02BD950800051E567 /* CompressionManager.swift in Sources */,
 				C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,

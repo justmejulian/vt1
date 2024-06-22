@@ -63,7 +63,8 @@ struct RecordingListView: View {
                     Text("Oops, looks like there's no data...")
                 }
             })
-            .task(){
+            .task(priority: .background) {
+                Logger.viewCycle.debug("Running Task")
                 updateList()
             }
             .refreshable {
@@ -95,7 +96,10 @@ struct RecordingListView: View {
     
     func updateList() {
         self.loading = true
-        self.recordings = db.fetchData()
+        let temp: [Recording] = db.fetchData()
+        self.recordings = temp.sorted {
+            $0.startTimestamp > $1.startTimestamp
+        }
         self.loading = false
     }
 }
