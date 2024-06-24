@@ -17,7 +17,7 @@ struct SyncView: View {
     @ObservedObject
     var syncViewModel: SyncViewModel
     @Query var recordings: [Recording]
-    @Query var sensorData: [SensorBatch]
+    @Query var sensorBatch: [SensorBatch]
     
     init(sessionManager: SessionManager) {
         self.sessionManager = sessionManager
@@ -35,14 +35,14 @@ struct SyncView: View {
                 .font(.footnote)
             Text("# unsynced SensorBatch:")
                 .font(.footnote)
-            Text("\(sensorData.count)")
+            Text("\(sensorBatch.count)")
                 .font(.footnote)
             Spacer()
             Button("Sync") {
                 syncViewModel.sync()
             }
                 .buttonStyle(.borderedProminent)
-                .disabled(sensorData.count <= 0 && recordings.count <= 0)
+                .disabled(sensorBatch.count <= 0 && recordings.count <= 0)
         }
         .onAppear {
             Logger.viewCycle.info("SyncView Appeared!")

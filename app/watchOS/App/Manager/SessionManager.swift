@@ -33,7 +33,7 @@ class SessionManager: NSObject, ObservableObject {
     
     @Published var started = false
     @Published var exerciseName: String? = nil
-    @Published var sensorDataCount: Int = 0
+    @Published var sensorBatchCount: Int = 0
     
     // todo why override?
     init(db: Database) {
@@ -80,7 +80,7 @@ class SessionManager: NSObject, ObservableObject {
         
         self.exerciseName = exerciseName
         self.started = true
-        self.sensorDataCount = 0
+        self.sensorBatchCount = 0
         
         Logger.viewCycle.info("Starting Session for exerciseName \(exerciseName)")
         
@@ -154,11 +154,11 @@ class SessionManager: NSObject, ObservableObject {
     }
     
     func increaseSensorBatchCount(by count: Int){
-        self.sensorDataCount += count
+        self.sensorBatchCount += count
     }
     
     func sendSensorBatch(id: PersistentIdentifier) {
-        // Logger.viewCycle.debug("Calling SessionManager sendSensorBatch for \(sensorData.timestamp) on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+        // Logger.viewCycle.debug("Calling SessionManager sendSensorBatch for \(sensorBatch.timestamp) on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
         // todo cleanup
         guard let sensorBatch: SensorBatch = self.db.fetchModel(id) else {
             Logger.viewCycle.debug("Could not fetch sensorBatch")
@@ -169,13 +169,13 @@ class SessionManager: NSObject, ObservableObject {
         
         self.connectivityManager.sendSensorBatch(sensorBatch: sensorBatchStruct, replyHandler:  { (replyData: [String: Any]) in
             if replyData["sucess"] != nil {
-                // Logger.viewCycle.debug("Sucsessfuly sent sensorData timestamp \(sensorData.timestamp)")
+                // Logger.viewCycle.debug("Sucsessfuly sent sensorBatch timestamp \(sensorBatch.timestamp)")
                 
                 // Remove synced Sensor Data
                 Task {
                     let dataHandler = BackgroundDataHandler(modelContainer: self.db.getModelContainer())
                     await dataHandler.removeData(identifier: id)
-                    Logger.viewCycle.debug("Removed sensorData timestamp \(sensorBatchStruct.timestamp) from store")
+                    Logger.viewCycle.debug("Removed sensorBatch timestamp \(sensorBatchStruct.timestamp) from store")
                 }
                 
                 return

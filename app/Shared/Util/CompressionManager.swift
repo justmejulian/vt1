@@ -11,11 +11,7 @@ class CompressionManager {
     func compressData(_ data: Data) throws -> NSData{
         // todo catch error
         let nsData = data as NSData
-        print ("original data size: \(nsData.count) bytes")
-
         let compressedData = try nsData.compressed(using: .lzma)
-
-        print("zlib compressed size: \(compressedData.count) bytes")
         return compressedData
     }
 }

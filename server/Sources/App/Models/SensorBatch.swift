@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class SensorData: Model, Content {
+final class SensorBatch: Model, Content {
     static let schema = "sensor_data"
 
     @ID(key: .id)

@@ -79,7 +79,12 @@ class SyncViewModel: ObservableObject {
             return
         }
         
+        Logger.viewCycle.info("SyncViewModel start sycning")
         
+        self.postRecordings(networkManager: networkManager)
+        self.postSensorBachtes(networkManager: networkManager)
+        
+        Logger.viewCycle.info("SyncViewModel finished sycning")
     }
     
     func postRecordings(networkManager: NetworkViewModel) {
@@ -115,11 +120,11 @@ class SyncViewModel: ObservableObject {
         // todo maybe detach
         Task.detached {
             let sensorBatchBackgroundDataHandler = SensorBatchBackgroundDataHandler(modelContainer: modelContainer)
-            let sensorData: [SensorBatchStruct] = await sensorBatchBackgroundDataHandler.fetchSendableData()
-            Logger.statistics.info("postData: sensorData \(sensorData.count)")
-            await self.sendSensorBatchChunked(networkManager: networkManager, sensorDataArray: sensorData)
+            let sensorBatch: [SensorBatchStruct] = await sensorBatchBackgroundDataHandler.fetchSendableData()
+            Logger.statistics.info("postData: sensorBatch \(sensorBatch.count)")
+            await self.sendSensorBatchChunked(networkManager: networkManager, sensorBatchArray: sensorBatch)
         }
-        //        sendSensorBatchOneByOne(networkManager: networkManager, sensorDataArray: sensorData)
+        //        sendSensorBatchOneByOne(networkManager: networkManager, sensorBatchArray: sensorBatch)
     }
     
     func increasePostRequests() {
@@ -130,12 +135,12 @@ class SyncViewModel: ObservableObject {
         self.openPostRequests -= 1
     }
     
-    func sendSensorBatchChunked(networkManager: NetworkViewModel, sensorDataArray: [SensorBatchStruct]){
+    func sendSensorBatchChunked(networkManager: NetworkViewModel, sensorBatchArray: [SensorBatchStruct]){
         // todo: a test with 10 100 150 20
         let chunkSize = 100
         Logger.statistics.info("Chunk size \(chunkSize)")
         
-        let chunkedSensorBatch = sensorDataArray.chunked(into: chunkSize)
+        let chunkedSensorBatch = sensorBatchArray.chunked(into: chunkSize)
         
         for chunk in chunkedSensorBatch {
             // if (!syncing) {
@@ -161,8 +166,8 @@ class SyncViewModel: ObservableObject {
         }
     }
     
-    func sendSensorBatchOneByOne(networkManager: NetworkViewModel, sensorDataArray: [SensorBatchStruct]){
-        for sensor in sensorDataArray {
+    func sendSensorBatchOneByOne(networkManager: NetworkViewModel, sensorBatchArray: [SensorBatchStruct]){
+        for sensor in sensorBatchArray {
             self.openPostRequests += 1
             
             networkManager.postSensorBatchToAPI(sensor, handleSuccess: {
@@ -191,7 +196,7 @@ class SyncViewModel: ObservableObject {
         self.recordingCount -= 1
     }
     
-    func removeSensorBatch(sensorBatch: SensorBatchStruct) async {
+    func removeSensorBatch(sensorBatch: SensorBatchStruct) {
         let modelContainer = self.db.getModelContainer()
         let backgroundDataHandler = BackgroundDataHandler(modelContainer: modelContainer)
         guard let id = sensorBatch.id else {

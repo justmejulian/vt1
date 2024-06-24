@@ -12,7 +12,7 @@ struct RecordingDetailView: View {
     
     var recording: Recording
     
-    @State var sensorDataCount: Int
+    @State var sensorBatchCount: Int
     
     @State private var text: String
     @State private var exporting: Bool = false
@@ -30,7 +30,7 @@ struct RecordingDetailView: View {
         self.db = db
         
         self._text = State(initialValue: recording.exercise)
-        self.sensorDataCount = 0
+        self.sensorBatchCount = 0
         self.fileName = ""
     }
     
@@ -50,7 +50,7 @@ struct RecordingDetailView: View {
                 .font(.title3)
             Spacer()
             
-            Text("# batches: " + String(sensorDataCount))
+            Text("# batches: " + String(sensorBatchCount))
                 .font(.title2)
             
             Spacer()
@@ -104,7 +104,7 @@ struct RecordingDetailView: View {
                 
                 let sensorBatchBackgroundDataHandler = SensorBatchBackgroundDataHandler(modelContainer: modelContainer)
                 let sensorBatches: [SensorBatchStruct] = await sensorBatchBackgroundDataHandler.fetchSendableData(for: recording.startTimestamp)
-                self.sensorDataCount = sensorBatches.count
+                self.sensorBatchCount = sensorBatches.count
                 
                 let dict: RecordingDictionary = RecordingDictionary(recording: recording, sensorBatches: sensorBatches)
                 

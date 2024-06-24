@@ -100,23 +100,23 @@ class NetworkViewModel: ObservableObject {
         postCodableDataToAPI(url: url, data: recording, handleSuccess: handleSuccess)
     }
 
-    func postSensorBatchToAPI(_ sensorData: SensorBatchStruct, handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
-        let url = "http://" + ip + "/device/" + uuid + "/" + "sensorData"
+    func postSensorBatchToAPI(_ sensorBatch: SensorBatchStruct, handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
+        let url = "http://" + ip + "/device/" + uuid + "/" + "sensorBatch"
         Logger.viewCycle.debug("postSensorBatchToAPI :\(url)")
-        postCodableDataToAPI(url: url, data: sensorData, handleSuccess: handleSuccess)
+        postCodableDataToAPI(url: url, data: sensorBatch, handleSuccess: handleSuccess)
     }
     
-    func postSensorBatchArrayToAPI(_ sensorDataArray: [SensorBatchStruct], handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
-        let url = "http://" + ip + "/device/" + uuid + "/" + "sensorData/batch"
+    func postSensorBatchArrayToAPI(_ sensorBatchArray: [SensorBatchStruct], handleSuccess: (@Sendable (_ data: Codable) -> Void)?) {
+        let url = "http://" + ip + "/device/" + uuid + "/" + "sensorBatch/batch"
         Logger.viewCycle.debug("postSensorBatchToAPI :\(url)")
 
-        guard let jsonData = try? JSONEncoder().encode(sensorDataArray) else {
+        guard let jsonData = try? JSONEncoder().encode(sensorBatchArray) else {
             Logger.viewCycle.error("Failed to convert to Json")
             return
         }
 
         guard let compressedJsonData = try? compressionManager.compressData(jsonData) else {
-            Logger.viewCycle.error("Failed to compress to sensorDataArray")
+            Logger.viewCycle.error("Failed to compress to sensorBatchArray")
             return
         }
 

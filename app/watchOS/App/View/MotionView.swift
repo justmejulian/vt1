@@ -35,7 +35,7 @@ struct MotionView: View {
                 Text("Data Point #:")
                 .font(.caption)
                 .bold()
-                Text(String(sessionManager.sensorDataCount))
+                Text(String(sessionManager.sensorBatchCount))
                 .font(.caption)
             }
             Spacer()

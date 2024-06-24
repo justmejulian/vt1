@@ -1,6 +1,6 @@
 import Fluent
 
-struct CreateSensorData: AsyncMigration {
+struct CreateSensorBatch: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("sensor_data")
             .id()

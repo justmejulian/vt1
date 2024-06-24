@@ -102,6 +102,7 @@ class SessionManager: NSObject, ObservableObject {
         connectivityManager.sendStartSession(exerciseName: exerciseName ?? "", errorHandler: {
             error in
             Task {
+                self.handleError(message: "Cound not start Session: \(error.localizedDescription)")
                 await self.stop()
             }
         })
@@ -146,8 +147,8 @@ class SessionManager: NSObject, ObservableObject {
         })
         connectivityManager.addListener(recordingListener)
         
-        let sensorDataListener = Listener(key: "sensorBatch", handleData: { data in
-            Logger.viewCycle.debug("Listener handler sensorData called on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
+        let sensorBatchListener = Listener(key: "sensorBatch", handleData: { data in
+            Logger.viewCycle.debug("Listener handler sensorBatch called on Thread \(Thread.current) is MainThread \(Thread.isMainThread)")
             if let endcodedSensorBatch = data["sensorBatch"] as? Data {
                 // todo don't decode, just compress
                 // todo keep count of recieved data count
@@ -166,7 +167,7 @@ class SessionManager: NSObject, ObservableObject {
                 return
             }
         })
-        self.connectivityManager.addListener(sensorDataListener)
+        self.connectivityManager.addListener(sensorBatchListener)
         
         let isSessionRunningListener = Listener(key: "isSessionRunning", handleData: { data in
             if let isSessionRunning = data["isSessionRunning"] {
