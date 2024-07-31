@@ -1,23 +1,14 @@
 //
-//  SensorData.swift
-//  vt1 Watch App
+//  vt1
 //
-//  Created by Julian Visser on 229.10.2023.
+//  Created by Julian Visser on 25.10.2023.
 //
 
 import Foundation
 import SwiftData
 
 @Model
-class SensorData: Codable{
-
-    enum CodingKeys: CodingKey {
-        case recordingStart
-        case timestamp
-        case sensor_id
-        case values
-    }
-
+class SensorBatch {
     var recordingStart: Date
     var timestamp: Date
     var sensor_id: String
@@ -30,8 +21,46 @@ class SensorData: Codable{
         self.sensor_id = sensor_id
         self.values = values
     }
+    
+    init(sensorBatchStruct: SensorBatchStruct){
+        self.recordingStart = sensorBatchStruct.recordingStart
+        self.timestamp = sensorBatchStruct.timestamp
+        self.sensor_id = sensorBatchStruct.sensor_id
+        self.values = sensorBatchStruct.values
+    }
+}
 
-    required init(from decoder: Decoder) throws {
+struct SensorBatchStruct: Codable {
+    enum CodingKeys: CodingKey {
+        case recordingStart
+        case timestamp
+        case sensor_id
+        case values
+    }
+
+    var id: PersistentIdentifier?
+    var recordingStart: Date
+    var timestamp: Date
+    var sensor_id: String
+
+    var values: [Value] // batch of values
+    
+    init(recordingStart: Date, timestamp: Date, sensor_id: String, values: [Value]) {
+        self.recordingStart = recordingStart
+        self.timestamp = timestamp
+        self.sensor_id = sensor_id
+        self.values = values
+    }
+    
+    init(sensorBatch: SensorBatch){
+        self.id = sensorBatch.persistentModelID
+        self.recordingStart = sensorBatch.recordingStart
+        self.timestamp = sensorBatch.timestamp
+        self.sensor_id = sensorBatch.sensor_id
+        self.values = sensorBatch.values
+    }
+    // -- Codable
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.recordingStart = try container.decode(Date.self, forKey: .recordingStart)
         self.timestamp = try container.decode(Date.self, forKey: .timestamp)
@@ -39,6 +68,7 @@ class SensorData: Codable{
         self.values = try container.decode([Value].self, forKey: .values)
     }
 
+    // We don't want the id in the encoding
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(recordingStart, forKey: .recordingStart)

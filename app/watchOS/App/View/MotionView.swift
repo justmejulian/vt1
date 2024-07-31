@@ -4,15 +4,21 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct MotionView: View {
 
-    @ObservedObject var sessionManager = SessionManager.shared
-    
-    @Query
-    var sensorData: [SensorData]
+    @ObservedObject
+    var sessionManager: SessionManager
 
     var body: some View {
+        
+        let loading = self.sessionManager.loadingMap.contains(where: { $0.value == true})
+        
+        let text = loading ? "Loading" : sessionManager.started ? "Stop" : "Start"
+        
+        let color = loading ? Color.gray : sessionManager.started ? Color.red : Color.blue
+        // todo: show that is still syncing
         VStack(content: {
             if sessionManager.started {
                 Spacer()
@@ -29,7 +35,7 @@ struct MotionView: View {
                 Text("Data Point #:")
                 .font(.caption)
                 .bold()
-                Text(String(sessionManager.sensorDataCount))
+                Text(String(sessionManager.sensorBatchCount))
                 .font(.caption)
             }
             Spacer()
@@ -39,22 +45,23 @@ struct MotionView: View {
                     .frame(maxWidth: .infinity)
                     .font(.caption2)
                     .bold()
-                Text("\(sessionManager.timeCounter)")
+                Text("\(sessionManager.timeManager.counter)")
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.caption2)
             }
             Spacer()
             Button(action: sessionManager.toggle) {
-                Text(sessionManager.started ? "Stop" : "Start")
+                Text(text)
                     .font(.title2)
             }
-            .background(sessionManager.started ? Color.red : Color.blue)
+            .disabled(loading)
+            .background(color)
                 .clipShape(Capsule())
                 .padding(.all)
         })
         .navigationBarBackButtonHidden(sessionManager.started)
         .onAppear {
-            sessionManager.requestAuthorization()
+            Logger.viewCycle.info("MotionView Appeared!")
         }
     }
 

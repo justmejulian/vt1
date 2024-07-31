@@ -5,10 +5,12 @@
 import Foundation
 import CoreMotion
 import HealthKit
+import OSLog
 
 extension WorkoutManager {
     // Request authorization to access HealthKit.
-    func requestAuthorization() {
+    func requestAuthorization() async {
+        Logger.viewCycle.info("requestAuthorization from WorkoutManager")
         // The quantity type to write to the health store.
         let typesToShare: Set = [
             HKQuantityType.workoutType()
@@ -19,19 +21,27 @@ extension WorkoutManager {
             HKQuantityType.quantityType(forIdentifier: .heartRate)!,
             HKObjectType.activitySummaryType()
         ]
-
-        // Request authorization for those quantity types.
-        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
-            // Handle error.
-            if error != nil {
-                print(error!)
-                return
+        
+        do {
+            // Check that Health data is available on the device.
+            if HKHealthStore.isHealthDataAvailable() {
+                
+                // Asynchronously request authorization to the data.
+                try await healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead)
+                Logger.viewCycle.info("successfuly requested Authorization from WorkoutManager")
             }
+        } catch {
+            
+            // Typically, authorization requests only fail if you haven't set the
+            // usage and share descriptions in your app's Info.plist, or if
+            // Health data isn't available on the current device.
+            fatalError("*** An unexpected error occurred while requesting authorization: \(error.localizedDescription) ***")
         }
+
     }
 
     func startWorkout() async throws {
-        print("start workout")
+        Logger.viewCycle.info("startWorkout from WorkoutManager")
 
 
         let configuration = HKWorkoutConfiguration()
@@ -48,8 +58,9 @@ extension WorkoutManager {
 
         session?.startActivity(with: startDate)
         try await builder?.beginCollection(at: startDate)
-        
+
         started = true
+        Logger.viewCycle.debug("started workout from WorkoutManager \(startDate)")
     }
 
     func handleReceivedData(_ data: Data) throws {
@@ -58,9 +69,10 @@ extension WorkoutManager {
 
 extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
 
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+    nonisolated func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+        Logger.viewCycle.debug("workoutBuilderDidCollectEvent in WorkoutManager")
     }
 
-    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+    nonisolated func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
     }
 }

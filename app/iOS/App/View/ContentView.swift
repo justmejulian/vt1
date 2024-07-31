@@ -4,14 +4,22 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct ContentView: View {
+    @ObservationIgnored
+    let sessionManager: SessionManager
     
-    @Query
-    var sensorData: [SensorData]
+    @ObservationIgnored
+    var db: Database
     
-    @Query
-    var recordingData: [RecordingData]
+    @State var sensorValueCount: Int = 0
+    @State var recordingCount: Int = 0
+    
+    init(sessionManager: SessionManager, db: Database) {
+        self.db = db
+        self.sessionManager = sessionManager
+    }
 
     var body: some View {
         NavigationStack {
@@ -29,15 +37,15 @@ struct ContentView: View {
                     Text("Recording #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(recordingData.count))
+                    Text(String(recordingCount))
                         .font(.caption)
                 }
                 Spacer()
                 VStack {
-                    Text("Data Point #: ")
+                    Text("Batch #: ")
                         .font(.caption)
                         .bold()
-                    Text(String(sensorData.count))
+                    Text(String(sensorValueCount))
                         .font(.caption)
                 }
                 Spacer()
@@ -46,36 +54,49 @@ struct ContentView: View {
             Spacer()
             Spacer()
             
-            Text("Unsynced Data")
-                .font(.title3)
-                .bold()
-                .padding(.top, 32)
-            
-            Spacer()
-
-            RecordingListView()
+            VStack {
+                List {
+                    NavigationLink {
+                        RecordingListView(db: db)
+                    } label: {
+                        Text("Recordings")
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
+                    }
+                    NavigationLink {
+                        LogsView()
+                    } label: {
+                        Text("View Logs")
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+            }.padding(.bottom, 32).padding(.horizontal, 20)
 
             Spacer()
 
             VStack {
                 NavigationLink {
-                    StartRecordingView()
+                    StartRecordingView(sessionManager: sessionManager)
                 } label: {
                     Label("New Recording", systemImage: "plus")
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedProminentButtonStyle())
+                }.buttonStyle(BorderedProminentButtonStyle())
 
                 NavigationLink {
-                    SyncView()
+                    SyncView(db: db)
                 } label: {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedButtonStyle())
+                }.buttonStyle(BorderedButtonStyle())
             }.padding(.bottom, 32).padding(.horizontal, 20)
+        }
+        .onAppear {
+            Logger.viewCycle.info("ContentView Appeared!")
+            self.sensorValueCount = db.fetchDataCount(for: SensorBatch.self)
+            self.recordingCount = db.fetchDataCount(for: Recording.self)
         }
     }
 

@@ -6,18 +6,13 @@
 //
 import SwiftUI
 import SwiftData
-
+import OSLog
 import Foundation
 
 struct RecordingListView: View {
-    @ObservationIgnored
-    private let dataSource = DataSource.shared
-
+    @Query var recordingDataList: [Recording]
+    
     var body: some View {
-
-        let recordingDataList = dataSource.fetchRecordingArray()
-
-        // add lazy loading
         List(recordingDataList) { recordingData in
             VStack{
                 Text(String(recordingData.exercise))
@@ -30,10 +25,14 @@ struct RecordingListView: View {
 
         }
             .listStyle(.automatic)
+            // todo use this in other places
             .overlay(Group {
                 if recordingDataList.isEmpty {
                     Text("Oops, looks like there's no data...")
                 }
             })
+            .onAppear {
+                Logger.viewCycle.info("RecordingListView Appeared!")
+            }
     }
 }

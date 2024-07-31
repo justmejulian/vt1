@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,9 +16,12 @@
 		C70462772ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */; };
 		C70462792ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */; };
 		C704627C2ADFCF70009F5DD4 /* vt1 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
-		C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
-		C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDA2AF908DE00A3A563 /* DataSource.swift */; };
+		C70462902AE5899E009F5DD4 /* SensorBatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorBatch.swift */; };
+		C71330432C1DD69800A0B89D /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71330422C1DD69800A0B89D /* LogsView.swift */; };
+		C713304C2C2336EB00A0B89D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C713304B2C2336E800A0B89D /* SpinnerView.swift */; };
+		C713305D2C2742A400A0B89D /* FileCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C713305C2C2742A200A0B89D /* FileCreator.swift */; };
+		C71BA45A2BC43ABF007430D2 /* TimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71BA4592BC43ABF007430D2 /* TimerManager.swift */; };
+		C71BA45B2BC43ABF007430D2 /* TimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71BA4592BC43ABF007430D2 /* TimerManager.swift */; };
 		C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */; };
 		C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BDCE22AFD409D00A3A563 /* SyncView.swift */; };
 		C7327B832ADD5D8200F16E63 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327B822ADD5D8200F16E63 /* App.swift */; };
@@ -30,21 +33,30 @@
 		C7327BA22ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */; };
 		C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
 		C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */; };
-		C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorData.swift */; };
-		C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
+		C73A2C442AF7DB5A009C046B /* SensorBatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704628F2AE5899E009F5DD4 /* SensorBatch.swift */; };
+		C73A2C452AF7DB5D009C046B /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* Recording.swift */; };
+		C74A61B62C03563400D4596A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A61B52C03563400D4596A /* Array.swift */; };
+		C74A61B72C03563400D4596A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A61B52C03563400D4596A /* Array.swift */; };
+		C74A61BA2C0B48A200D4596A /* Throttler in Frameworks */ = {isa = PBXBuildFile; productRef = C74A61B92C0B48A200D4596A /* Throttler */; };
+		C74A61BC2C0B48AD00D4596A /* Throttler in Frameworks */ = {isa = PBXBuildFile; productRef = C74A61BB2C0B48AD00D4596A /* Throttler */; };
+		C74A61BF2C0DFD6300D4596A /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = C74A61BE2C0DFD6300D4596A /* AlertToast */; };
 		C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */; };
 		C75583812B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
 		C75583822B54471500451621 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75583802B54471500451621 /* TimeInterval.swift */; };
 		C755927D2B17918F00972671 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C755927C2B17918F00972671 /* SessionManager.swift */; };
+		C768E5C12BCD696E0051E567 /* StartRecordingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5C02BCD696E0051E567 /* StartRecordingViewModel.swift */; };
+		C768E5C42BD000580051E567 /* SyncData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5C32BD000580051E567 /* SyncData.swift */; };
+		C768E5CD2BD947EF0051E567 /* CompressedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5CC2BD947EF0051E567 /* CompressedData.swift */; };
+		C768E5D02BD950800051E567 /* CompressionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5CF2BD950800051E567 /* CompressionManager.swift */; };
+		C768E5D12BD950800051E567 /* CompressionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C768E5CF2BD950800051E567 /* CompressionManager.swift */; };
 		C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7713C1A2B0B71DB001C7768 /* SyncView.swift */; };
 		C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */; };
 		C7778DC52B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */; };
 		C7778DC72B0D007900E5D9ED /* WorkoutManagerIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC62B0D007900E5D9ED /* WorkoutManagerIOS.swift */; };
 		C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DC82B0D008600E5D9ED /* WorkoutManagerWatchOS.swift */; };
-		C7778DCB2B0D0D1C00E5D9ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DCA2B0D0D1C00E5D9ED /* AppDelegate.swift */; };
 		C7778DCF2B10A9FF00E5D9ED /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7778DCD2B10A9FF00E5D9ED /* RecordingManager.swift */; };
 		C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF902AE954D90086F894 /* RecordingListView.swift */; };
-		C778EF932AE95A120086F894 /* RecordingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* RecordingData.swift */; };
+		C778EF932AE95A120086F894 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF922AE95A120086F894 /* Recording.swift */; };
 		C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF962AEC45CB0086F894 /* RecordingListView.swift */; };
 		C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C778EF942AEC44BD0086F894 /* StartRecordingView.swift */; };
 		C7C44CEE2B10FC6100789EAA /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C44CEC2B10FC6100789EAA /* SessionManager.swift */; };
@@ -60,6 +72,10 @@
 		C7CF34252B34D7DC006EE207 /* WorkoutManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF34232B34D7DC006EE207 /* WorkoutManagerTest.swift */; };
 		C7CF34272B34D803006EE207 /* RecordingManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF34262B34D803006EE207 /* RecordingManagerTest.swift */; };
 		C7CF34292B34D82E006EE207 /* ConnectivityManagerWatchOSTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF34282B34D82E006EE207 /* ConnectivityManagerWatchOSTest.swift */; };
+		C7DF9C762B9C6B350096FD89 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C752B9C6B350096FD89 /* Log.swift */; };
+		C7DF9C772B9C6B350096FD89 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C752B9C6B350096FD89 /* Log.swift */; };
+		C7DF9C792B9CD31D0096FD89 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C782B9CD31D0096FD89 /* Logger.swift */; };
+		C7DF9C7A2B9CD31D0096FD89 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DF9C782B9CD31D0096FD89 /* Logger.swift */; };
 		C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */; };
 		C7F8C1AD2B3333A800FABF84 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -128,8 +144,13 @@
 		C70462722ADFCF70009F5DD4 /* vtt1 Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtt1 Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C70462762ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		C70462782ADFCF70009F5DD4 /* vt1_watchos_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_watchos_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		C704628F2AE5899E009F5DD4 /* SensorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorData.swift; sourceTree = "<group>"; };
-		C72BDCDA2AF908DE00A3A563 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		C704628F2AE5899E009F5DD4 /* SensorBatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorBatch.swift; sourceTree = "<group>"; };
+		C71330422C1DD69800A0B89D /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
+		C713304B2C2336E800A0B89D /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		C713305C2C2742A200A0B89D /* FileCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCreator.swift; sourceTree = "<group>"; };
+		C71BA4592BC43ABF007430D2 /* TimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerManager.swift; sourceTree = "<group>"; };
+		C729084E2BA5BA5E00ED7183 /* vt1-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "vt1-Watch-App-Info.plist"; sourceTree = "<group>"; };
+		C729084F2BA5BA6C00ED7183 /* vt1-Mobile-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "vt1-Mobile-App-Info.plist"; sourceTree = "<group>"; };
 		C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		C72BDCE22AFD409D00A3A563 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "vt1 Mobile App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,18 +164,22 @@
 		C7327B9F2ADD5D8300F16E63 /* vt1_ios_Mobile_App1UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1_ios_Mobile_App1UITests.swift; sourceTree = "<group>"; };
 		C7327BA12ADD5D8300F16E63 /* vt1UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vt1UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
+		C74A61B52C03563400D4596A /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListViewModel.swift; sourceTree = "<group>"; };
 		C75583802B54471500451621 /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
 		C755927C2B17918F00972671 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		C768E5C02BCD696E0051E567 /* StartRecordingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingViewModel.swift; sourceTree = "<group>"; };
+		C768E5C32BD000580051E567 /* SyncData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncData.swift; sourceTree = "<group>"; };
+		C768E5CC2BD947EF0051E567 /* CompressedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressedData.swift; sourceTree = "<group>"; };
+		C768E5CF2BD950800051E567 /* CompressionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressionManager.swift; sourceTree = "<group>"; };
 		C7713C1A2B0B71DB001C7768 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		C7778DC62B0D007900E5D9ED /* WorkoutManagerIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManagerIOS.swift; sourceTree = "<group>"; };
 		C7778DC82B0D008600E5D9ED /* WorkoutManagerWatchOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManagerWatchOS.swift; sourceTree = "<group>"; };
-		C7778DCA2B0D0D1C00E5D9ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C7778DCC2B0D222300E5D9ED /* vt1 Mobile App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "vt1 Mobile App.entitlements"; sourceTree = "<group>"; };
 		C7778DCD2B10A9FF00E5D9ED /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
 		C778EF902AE954D90086F894 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
-		C778EF922AE95A120086F894 /* RecordingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingData.swift; sourceTree = "<group>"; };
+		C778EF922AE95A120086F894 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		C778EF942AEC44BD0086F894 /* StartRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingView.swift; sourceTree = "<group>"; };
 		C778EF962AEC45CB0086F894 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
 		C7C44CEC2B10FC6100789EAA /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -168,15 +193,45 @@
 		C7CF34232B34D7DC006EE207 /* WorkoutManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManagerTest.swift; sourceTree = "<group>"; };
 		C7CF34262B34D803006EE207 /* RecordingManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManagerTest.swift; sourceTree = "<group>"; };
 		C7CF34282B34D82E006EE207 /* ConnectivityManagerWatchOSTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManagerWatchOSTest.swift; sourceTree = "<group>"; };
+		C7DF9C752B9C6B350096FD89 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		C7DF9C782B9CD31D0096FD89 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
 		C7F8C1AC2B3333A800FABF84 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C71330482C1E155000A0B89D /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				BackgroundDataHandler.swift,
+				Database.swift,
+				RecordingBackgroundDataHandler.swift,
+				SensorBatchBackgroundDataHandler.swift,
+			);
+			target = C7327B7E2ADD5D8200F16E63 /* vt1 Mobile App */;
+		};
+		C71330492C1E155000A0B89D /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				BackgroundDataHandler.swift,
+				Database.swift,
+				RecordingBackgroundDataHandler.swift,
+				SensorBatchBackgroundDataHandler.swift,
+			);
+			target = C70462582ADFCF6F009F5DD4 /* vt1 Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C71330442C1E151900A0B89D /* Database */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C71330482C1E155000A0B89D /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C71330492C1E155000A0B89D /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Database; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C70462562ADFCF6F009F5DD4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C74A61BC2C0B48AD00D4596A /* Throttler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +253,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C74A61BF2C0DFD6300D4596A /* AlertToast in Frameworks */,
+				C74A61BA2C0B48A200D4596A /* Throttler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +284,6 @@
 				C704625B2ADFCF6F009F5DD4 /* App.swift */,
 				C704625F2ADFCF70009F5DD4 /* Assets.xcassets */,
 				C70462612ADFCF70009F5DD4 /* Preview Content */,
-				C7778DCA2B0D0D1C00E5D9ED /* AppDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -283,6 +339,7 @@
 		C704628D2ADFD3F3009F5DD4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C71330442C1E151900A0B89D /* Database */,
 				C7CF341C2B34D75A006EE207 /* Tests */,
 				C72BDCD92AF908C800A3A563 /* Util */,
 				C73A2C3B2AF296EC009C046B /* Model */,
@@ -293,11 +350,13 @@
 		C72BDCD72AF8F74800A3A563 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C713304B2C2336E800A0B89D /* SpinnerView.swift */,
 				C778EF942AEC44BD0086F894 /* StartRecordingView.swift */,
 				C778EF962AEC45CB0086F894 /* RecordingListView.swift */,
 				C72BDCDD2AF9275400A3A563 /* RecordingDetailView.swift */,
 				C7327B842ADD5D8200F16E63 /* ContentView.swift */,
 				C7713C1A2B0B71DB001C7768 /* SyncView.swift */,
+				C71330422C1DD69800A0B89D /* LogsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -308,6 +367,7 @@
 				C70462212ADEDB67009F5DD4 /* NetworkViewModel.swift */,
 				C74B13502B0137AF008302F3 /* RecordingListViewModel.swift */,
 				C7F8C1A62B332BBA00FABF84 /* SyncViewModel.swift */,
+				C768E5C02BCD696E0051E567 /* StartRecordingViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -316,9 +376,12 @@
 			isa = PBXGroup;
 			children = (
 				C73A2C412AF7AA54009C046B /* ConnectivityManager.swift */,
-				C72BDCDA2AF908DE00A3A563 /* DataSource.swift */,
 				C7778DC32B0CFB1A00E5D9ED /* WorkoutManager.swift */,
 				C75583802B54471500451621 /* TimeInterval.swift */,
+				C7DF9C782B9CD31D0096FD89 /* Logger.swift */,
+				C71BA4592BC43ABF007430D2 /* TimerManager.swift */,
+				C768E5CF2BD950800051E567 /* CompressionManager.swift */,
+				C74A61B52C03563400D4596A /* Array.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -326,12 +389,15 @@
 		C7327B762ADD5D8200F16E63 = {
 			isa = PBXGroup;
 			children = (
+				C729084F2BA5BA6C00ED7183 /* vt1-Mobile-App-Info.plist */,
+				C729084E2BA5BA5E00ED7183 /* vt1-Watch-App-Info.plist */,
 				C7778DCC2B0D222300E5D9ED /* vt1 Mobile App.entitlements */,
 				C7CA489E2B07D09D00023112 /* vt1 Watch App.entitlements */,
 				C704628D2ADFD3F3009F5DD4 /* Shared */,
 				C704628C2ADFD370009F5DD4 /* watchOS */,
 				C704628B2ADFD35E009F5DD4 /* iOS */,
 				C7327B802ADD5D8200F16E63 /* Products */,
+				C768E5D92BDD3CD10051E567 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -351,6 +417,7 @@
 		C7327B812ADD5D8200F16E63 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				C768E5C22BD000320051E567 /* Model */,
 				C7778DD12B10B18E00E5D9ED /* Manager */,
 				C72BDCD82AF8F74E00A3A563 /* ViewModel */,
 				C72BDCD72AF8F74800A3A563 /* View */,
@@ -389,8 +456,9 @@
 		C73A2C3B2AF296EC009C046B /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				C704628F2AE5899E009F5DD4 /* SensorData.swift */,
-				C778EF922AE95A120086F894 /* RecordingData.swift */,
+				C704628F2AE5899E009F5DD4 /* SensorBatch.swift */,
+				C778EF922AE95A120086F894 /* Recording.swift */,
+				C7DF9C752B9C6B350096FD89 /* Log.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -404,6 +472,22 @@
 				C72BDCE22AFD409D00A3A563 /* SyncView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		C768E5C22BD000320051E567 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C768E5C32BD000580051E567 /* SyncData.swift */,
+				C768E5CC2BD947EF0051E567 /* CompressedData.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C768E5D92BDD3CD10051E567 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C7778DD02B10B17200E5D9ED /* Manager */ = {
@@ -420,6 +504,7 @@
 		C7778DD12B10B18E00E5D9ED /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C713305C2C2742A200A0B89D /* FileCreator.swift */,
 				C755927C2B17918F00972671 /* SessionManager.swift */,
 				C7778DC62B0D007900E5D9ED /* WorkoutManagerIOS.swift */,
 				C7C44CF12B136BA200789EAA /* ConnectivityManagerIOS.swift */,
@@ -461,6 +546,9 @@
 			dependencies = (
 			);
 			name = "vt1 Watch App";
+			packageProductDependencies = (
+				C74A61BB2C0B48AD00D4596A /* Throttler */,
+			);
 			productName = "vt1_watchos Watch App";
 			productReference = C70462592ADFCF6F009F5DD4 /* vt1 Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -516,6 +604,10 @@
 				C704627B2ADFCF70009F5DD4 /* PBXTargetDependency */,
 			);
 			name = "vt1 Mobile App";
+			packageProductDependencies = (
+				C74A61B92C0B48A200D4596A /* Throttler */,
+				C74A61BE2C0DFD6300D4596A /* AlertToast */,
+			);
 			productName = vt1;
 			productReference = C7327B7F2ADD5D8200F16E63 /* vt1 Mobile App.app */;
 			productType = "com.apple.product-type.application";
@@ -564,7 +656,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					C70462582ADFCF6F009F5DD4 = {
 						CreatedOnToolsVersion = 15.0;
@@ -599,6 +691,10 @@
 				Base,
 			);
 			mainGroup = C7327B762ADD5D8200F16E63;
+			packageReferences = (
+				C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */,
+				C74A61BD2C0DFD6300D4596A /* XCRemoteSwiftPackageReference "AlertToast" */,
+			);
 			productRefGroup = C7327B802ADD5D8200F16E63 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -667,6 +763,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7DF9C7A2B9CD31D0096FD89 /* Logger.swift in Sources */,
 				C7C44CF02B136B5700789EAA /* ConnectivityManagerWatchOS.swift in Sources */,
 				C72BDCE32AFD409D00A3A563 /* SyncView.swift in Sources */,
 				C7778DCF2B10A9FF00E5D9ED /* RecordingManager.swift in Sources */,
@@ -676,14 +773,16 @@
 				C73A2C432AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C7778DC52B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C7F8C1AD2B3333A800FABF84 /* SyncViewModel.swift in Sources */,
+				C768E5D12BD950800051E567 /* CompressionManager.swift in Sources */,
 				C7778DC92B0D008600E5D9ED /* WorkoutManagerWatchOS.swift in Sources */,
-				C72BDCDC2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF912AE954D90086F894 /* RecordingListView.swift in Sources */,
-				C7778DCB2B0D0D1C00E5D9ED /* AppDelegate.swift in Sources */,
-				C778EF932AE95A120086F894 /* RecordingData.swift in Sources */,
+				C7DF9C772B9C6B350096FD89 /* Log.swift in Sources */,
+				C778EF932AE95A120086F894 /* Recording.swift in Sources */,
+				C74A61B72C03563400D4596A /* Array.swift in Sources */,
 				C704625C2ADFCF6F009F5DD4 /* App.swift in Sources */,
-				C70462902AE5899E009F5DD4 /* SensorData.swift in Sources */,
+				C70462902AE5899E009F5DD4 /* SensorBatch.swift in Sources */,
 				C7C44CEE2B10FC6100789EAA /* SessionManager.swift in Sources */,
+				C71BA45B2BC43ABF007430D2 /* TimerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,21 +815,31 @@
 			files = (
 				C7713C1B2B0B71DB001C7768 /* SyncView.swift in Sources */,
 				C75583812B54471500451621 /* TimeInterval.swift in Sources */,
-				C73A2C442AF7DB5A009C046B /* SensorData.swift in Sources */,
+				C73A2C442AF7DB5A009C046B /* SensorBatch.swift in Sources */,
+				C713304C2C2336EB00A0B89D /* SpinnerView.swift in Sources */,
 				C755927D2B17918F00972671 /* SessionManager.swift in Sources */,
+				C713305D2C2742A400A0B89D /* FileCreator.swift in Sources */,
+				C768E5D02BD950800051E567 /* CompressionManager.swift in Sources */,
 				C7778DC42B0CFB1A00E5D9ED /* WorkoutManager.swift in Sources */,
 				C73A2C422AF7AA54009C046B /* ConnectivityManager.swift in Sources */,
 				C7C44CF22B136BA200789EAA /* ConnectivityManagerIOS.swift in Sources */,
+				C768E5C42BD000580051E567 /* SyncData.swift in Sources */,
+				C71330432C1DD69800A0B89D /* LogsView.swift in Sources */,
+				C768E5C12BCD696E0051E567 /* StartRecordingViewModel.swift in Sources */,
+				C7DF9C762B9C6B350096FD89 /* Log.swift in Sources */,
+				C768E5CD2BD947EF0051E567 /* CompressedData.swift in Sources */,
 				C7778DC72B0D007900E5D9ED /* WorkoutManagerIOS.swift in Sources */,
 				C778EF982AEC4E6F0086F894 /* RecordingListView.swift in Sources */,
-				C72BDCDB2AF908DE00A3A563 /* DataSource.swift in Sources */,
 				C778EF992AEC4E6F0086F894 /* StartRecordingView.swift in Sources */,
+				C71BA45A2BC43ABF007430D2 /* TimerManager.swift in Sources */,
 				C72BDCDE2AF9275400A3A563 /* RecordingDetailView.swift in Sources */,
 				C74B13512B0137AF008302F3 /* RecordingListViewModel.swift in Sources */,
 				C7327B852ADD5D8200F16E63 /* ContentView.swift in Sources */,
-				C73A2C452AF7DB5D009C046B /* RecordingData.swift in Sources */,
+				C7DF9C792B9CD31D0096FD89 /* Logger.swift in Sources */,
+				C73A2C452AF7DB5D009C046B /* Recording.swift in Sources */,
 				C7327B832ADD5D8200F16E63 /* App.swift in Sources */,
 				C7F8C1A72B332BBA00FABF84 /* SyncViewModel.swift in Sources */,
+				C74A61B62C03563400D4596A /* Array.swift in Sources */,
 				C70462222ADEDB67009F5DD4 /* NetworkViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -792,10 +901,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "vt1 Watch App.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.3;
 				DEVELOPMENT_ASSET_PATHS = "\"watchOS/App/Preview Content\"";
-				DEVELOPMENT_TEAM = T73ZGJ9UTG;
+				DEVELOPMENT_TEAM = PQ9M73T7N8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "vt1-Watch-App-Info.plist";
@@ -804,17 +914,19 @@
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Writes workout into Apple Health";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Getting data from acceleroemeter";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.julianvisser.vt1;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ch.zhaw.vissejul.vt1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.julianvisser.vt1.watchos-App";
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.zhaw.vissejul.vt1.watchos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
@@ -827,10 +939,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "vt1 Watch App.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.3;
 				DEVELOPMENT_ASSET_PATHS = "\"watchOS/App/Preview Content\"";
-				DEVELOPMENT_TEAM = T73ZGJ9UTG;
+				DEVELOPMENT_TEAM = PQ9M73T7N8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "vt1-Watch-App-Info.plist";
@@ -839,17 +952,19 @@
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Writes workout into Apple Health";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Getting data from acceleroemeter";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.julianvisser.vt1;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ch.zhaw.vissejul.vt1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.julianvisser.vt1.watchos-App";
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.zhaw.vissejul.vt1.watchos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
@@ -859,7 +974,6 @@
 		C70462802ADFCF70009F5DD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -880,7 +994,6 @@
 		C70462812ADFCF70009F5DD4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -901,7 +1014,6 @@
 		C70462822ADFCF70009F5DD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T73ZGJ9UTG;
@@ -921,7 +1033,6 @@
 		C70462832ADFCF70009F5DD4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T73ZGJ9UTG;
@@ -998,6 +1109,8 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1053,6 +1166,8 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1060,19 +1175,20 @@
 		C7327BA62ADD5D8300F16E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "vt1 Mobile App.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.3;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/App/Preview Content\"";
-				DEVELOPMENT_TEAM = T73ZGJ9UTG;
+				DEVELOPMENT_TEAM = PQ9M73T7N8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "vt1-Mobile-App-Info.plist";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Your workout related data will be used to display your saved workouts in MyWorkouts.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Your workout related data will be used to display your saved workouts in MyWorkouts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1082,11 +1198,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.julianvisser.vt1;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.zhaw.vissejul.vt1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1095,19 +1212,20 @@
 		C7327BA72ADD5D8300F16E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "vt1 Mobile App.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.3;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/App/Preview Content\"";
-				DEVELOPMENT_TEAM = T73ZGJ9UTG;
+				DEVELOPMENT_TEAM = PQ9M73T7N8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "vt1-Mobile-App-Info.plist";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Your workout related data will be used to display your saved workouts in MyWorkouts.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Your workout related data will be used to display your saved workouts in MyWorkouts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1117,11 +1235,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.julianvisser.vt1;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.zhaw.vissejul.vt1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1130,7 +1249,6 @@
 		C7327BA92ADD5D8300F16E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1150,7 +1268,6 @@
 		C7327BAA2ADD5D8300F16E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1170,7 +1287,6 @@
 		C7327BAC2ADD5D8300F16E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T73ZGJ9UTG;
@@ -1188,7 +1304,6 @@
 		C7327BAD2ADD5D8300F16E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T73ZGJ9UTG;
@@ -1270,6 +1385,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/boraseoksoon/Throttler.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.3;
+			};
+		};
+		C74A61BD2C0DFD6300D4596A /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.9;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C74A61B92C0B48A200D4596A /* Throttler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */;
+			productName = Throttler;
+		};
+		C74A61BB2C0B48AD00D4596A /* Throttler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C74A61B82C0B47C400D4596A /* XCRemoteSwiftPackageReference "Throttler" */;
+			productName = Throttler;
+		};
+		C74A61BE2C0DFD6300D4596A /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C74A61BD2C0DFD6300D4596A /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C7327B772ADD5D8200F16E63 /* Project object */;
 }

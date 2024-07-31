@@ -5,22 +5,30 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct SyncView: View {
+    @ObservedObject
+    var syncViewModel: SyncViewModel
     
-    @ObservationIgnored
-    private let syncViewModel = SyncViewModel()
+    var db: Database
     
-    @Query var sensorData: [SensorData]
-    @Query var recordingData: [RecordingData]
-
-    @State private var ip: String = "192.168.1.251:8080"
+    @State
+    var ip: String
+    
+    init(db: Database) {
+        self.db = db
+        
+        let syncViewModel = SyncViewModel(db: db)
+        ip = syncViewModel.syncData.ip
+        
+        self.syncViewModel = syncViewModel
+    }
 
     var body: some View {
-        
-        let valluesCount = sensorData.reduce(0) { $0 + $1.values.count }
-        
+
         VStack{
+            Spacer()
             Text("Sync Data")
                 .font(.largeTitle)
                 .padding(.all)
@@ -30,15 +38,7 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(recordingData.count))
-                        .font(.title3)
-                }.padding(.all)
-                HStack {
-                    Text("Data #")
-                        .font(.title3)
-                        .bold()
-                    Spacer()
-                    Text(String(valluesCount))
+                    Text(String(syncViewModel.recordingCount))
                         .font(.title3)
                 }.padding(.all)
                 HStack {
@@ -46,41 +46,44 @@ struct SyncView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(String(sensorData.count))
+                    Text(String(syncViewModel.sensorBatchCount))
                         .font(.title3)
                 }.padding(.all)
             }.padding(.all)
 
-            Spacer()
-
             VStack(content: {
+                Text("Sever Ip")
                 TextField("Enter IP:", text: $ip)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .padding(.all)
             }).padding(.all)
 
-            VStack {
-                Button(action: {
-                    syncViewModel.postData(ip: ip)
-                }) {
-                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
+            Button(action: {
+                Logger.viewCycle.info("Calling postData from SyncView")
+                syncViewModel.setIp(ip)
+                Task {
+                    await self.syncViewModel.postData(ip: ip)
                 }
-                    .buttonStyle(BorderedProminentButtonStyle())
-                    .disabled(ip == "")
+            }) {
+                Label(syncViewModel.syncing ? "Syncing" : "Sync", systemImage: "arrow.triangle.2.circlepath")
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
+            }
+                .buttonStyle(BorderedProminentButtonStyle())
+                .disabled(ip == "" || syncViewModel.syncing)
 
-                Button(action: {
-                    syncViewModel.deleteAll()
-                }) {
-                    Label("Delete All", systemImage: "trash")
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
-                }
-                    .buttonStyle(BorderedButtonStyle())
-                    .disabled(ip == "")
-            }.padding(.bottom, 32).padding(.horizontal, 20)
+            Spacer()
+            Spacer()
+        }
+        .onAppear {
+            Logger.viewCycle.info("SyncView Appeared!")
+        }
+        .onDisappear{
+            syncViewModel.setIp(ip)
+        }
+        .task {
+            syncViewModel.fetchCount()
         }
     }
 }

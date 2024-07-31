@@ -7,115 +7,101 @@
 
 import Foundation
 import WatchConnectivity
+import OSLog
 
 extension ConnectivityManager {
     
     func getSessionState() {
+        Logger.viewCycle.debug("getSessionState from ConnectivityManager")
         let context = ["getSessionState": true]
         self.session.sendMessage(context, replyHandler: { replyData in
-            if let isSessionRunning = replyData["isSessionRunning"] as? Bool {
-                print("Got Session state", isSessionRunning)
-                DispatchQueue.main.async {
-                    SessionManager.shared.isSessionRunning = isSessionRunning
-                }
+            if replyData["sucess"] != nil {
+                Logger.viewCycle.debug("sucessfully sent getSessionState")
                 return
             }
-            print("Something went wrong getSessionState")
+            
             if let error = replyData["error"] {
-                print(error)
+                if let errorString = error as? String {
+                    Logger.viewCycle.error("Something went wrong getSessionState: \(errorString)")
+                    return
+                }
+                
+                Logger.viewCycle.error("Something went wrong getSessionState, error was not a string")
                 return
             }
+            Logger.viewCycle.error("Something went wrong getSessionState, could not decode the response")
         }, errorHandler: { (error) in
-            print("error getting session state", error.localizedDescription)
-            DispatchQueue.main.async {
-                SessionManager.shared.isSessionRunning = false
-            }
+            // todo: error sending getSessionState: WatchConnectivity session on paired device is not reachable.
+            // todo need to allow resend, create a wake up button
+            Logger.viewCycle.error("error sending getSessionState: \(error.localizedDescription)")
         })
     }
-    
-    func sendStartSession(exerciseName: String) {
-        print("send StartSession")
+
+    func sendStartSession(exerciseName: String, errorHandler: ((any Error) -> Void)? = nil ) {
+        Logger.viewCycle.debug("sendStartSession from ConnectivityManager for \(exerciseName)")
         let context = ["startSession": exerciseName]
         self.session.sendMessage(context, replyHandler: { replyData in
             if replyData["sucess"] != nil {
-                print("sucessfully started session")
+                Logger.viewCycle.debug("sucessfully started session for \(exerciseName)")
                 return
             }
-            print("Something went wrong starting session")
+            
             if let error = replyData["error"] {
-                print(error)
+                if let errorString = error as? String {
+                    Logger.viewCycle.error("Something went wrong sendStartSession: \(errorString)")
+                    return
+                }
+                
+                Logger.viewCycle.error("Something went wrong sendStartSession, error was not a string")
                 return
             }
+            Logger.viewCycle.error("Something went wrong sendStartSession, could not decode the response")
         }, errorHandler: { (error) in
-            print("error sending start session", exerciseName, error.localizedDescription)
+            Logger.viewCycle.error("ConnectivityManager: error sending start session for exerciseName \(exerciseName): \(error.localizedDescription)")
+            
+            if let errorHandler = errorHandler {
+                errorHandler(error)
+            }
         })
     }
     
+    
+    // todo add sucess / error handler
+    // also abstract start and stop into 1 shared self.session.sendMessage
+    // same as sendPresistentModel
     func sendStopSession() {
-        print("send StopSession")
+        Logger.viewCycle.debug("send StopSession from ConnectivityManager")
         let context = ["stopSession": true]
         self.session.sendMessage(context, replyHandler: { replyData in
             if replyData["sucess"] != nil {
-                print("sucessfully started session")
+                Logger.viewCycle.debug("sucessfully stopped session")
                 return
             }
-            print("Something went wrong stopping session")
+            
             if let error = replyData["error"] {
-                print(error)
+                if let errorString = error as? String {
+                    Logger.viewCycle.error("Something went wrong sendStopSession: \(errorString)")
+                    return
+                }
+                
+                Logger.viewCycle.error("Something went wrong sendStopSession, error was not a string")
                 return
             }
+            Logger.viewCycle.error("Something went wrong sendStopSession, could not decode the response")
         }, errorHandler: { (error) in
-            print("error sending stop session", error.localizedDescription)
+            Logger.viewCycle.error("error sending stop session: \(error.localizedDescription)")
         })
     }
-    
-    func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
 
-        if let endcodedRecording = data["recording"] {
-            guard let recording = try? JSONDecoder().decode(RecordingData.self, from: endcodedRecording as! Data) else {
-                print("error decoding recording")
-                replyHandler(["error": "error decoding recording"])
-                return
-            }
-
-            self.dataSource.appendRecording(recording)
-            replyHandler(["sucess": true])
-            return
-        }
-
-        if let endcodedSensorData = data["sensorData"] {
-            guard let sensorData = try? JSONDecoder().decode(SensorData.self, from: endcodedSensorData as! Data) else {
-                print("error decoding sensorData")
-                replyHandler(["error": "error decoding sensorData"])
-                return
-            }
-
-            self.dataSource.appendSensorData(sensorData)
-            replyHandler(["sucess": true])
-            return
-        }
-
-        if let isSessionRunning = data["isSessionRunning"] as? Bool{
-            print("recived isSessionRunning:", isSessionRunning)
-            DispatchQueue.main.async {
-                SessionManager.shared.isSessionRunning = isSessionRunning
-            }
-            replyHandler(["sucess": true])
-            return
-        }
-
-        replyHandler(["error in iOS ConnectivityManager": "unknown data type"])
-    }
-    
     func sessionWatchStateDidChange(_ session: WCSession){
-        print("Session WatchState Did Change")
+        Logger.viewCycle.debug("Session WatchState Did Change")
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
-        print("Session Did Become Inactive")
+        Logger.viewCycle.debug("Session Did Become Inactive")
     }
     func sessionDidDeactivate(_ session: WCSession) {
-        print("Session Did Become Deactivate")
+        Logger.viewCycle.debug("Session Did Become Deactivate")
     }
 }
 
@@ -130,4 +116,3 @@ struct ConnectivityError: LocalizedError {
         description
     }
 }
-

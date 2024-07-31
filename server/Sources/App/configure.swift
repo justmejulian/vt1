@@ -15,7 +15,8 @@ public func configure(_ app: Application) async throws {
     ContentConfiguration.global.use(decoder: jsonDecoder, for: .json)
     
     // todo maybe remove and send in chunks
-    app.routes.defaultMaxBodySize = "100mb"
+    // https://docs.vapor.codes/basics/routing/#body-streaming
+    app.routes.defaultMaxBodySize = "5mb"
     
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
@@ -30,11 +31,11 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateDevice())
     app.migrations.add(CreateSensor())
-    app.migrations.add(CreateSensorData())
-    app.migrations.add(CreateRecordingData())
+    app.migrations.add(CreateSensorBatch())
+    app.migrations.add(CreateRecording())
     app.migrations.add(AddSensors())
     app.migrations.add(AddQuaternionSensor())
-    app.migrations.add(AddSensorDataFieldW())
+    app.migrations.add(AddSensorBatchFieldW())
 
     // run migrations
     try await app.autoMigrate()

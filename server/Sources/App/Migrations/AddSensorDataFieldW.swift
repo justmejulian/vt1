@@ -1,6 +1,6 @@
 import Fluent
 
-struct AddSensorDataFieldW: Migration {
+struct AddSensorBatchFieldW: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.schema("sensor_data")
             .field("w", .double)

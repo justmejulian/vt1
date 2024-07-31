@@ -1,6 +1,6 @@
 import Fluent
 
-struct CreateRecordingData: AsyncMigration {
+struct CreateRecording: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("recording_data")
             .id()

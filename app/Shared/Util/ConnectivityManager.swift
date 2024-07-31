@@ -1,5 +1,5 @@
 //
-//  SessionDelegater.swift
+//  vt1
 //
 //  Created by Julian Visser on 05.11.2023.
 //
@@ -9,47 +9,92 @@ import SwiftUI
 import SwiftData
 import Combine
 import WatchConnectivity
+import OSLog
 
+@MainActor
 class ConnectivityManager: NSObject, WCSessionDelegate, ObservableObject {
-    @MainActor
     static let shared = ConnectivityManager()
-
+    
     internal var session: WCSession = .default
 
-    @ObservationIgnored
-    internal let dataSource: DataSource
+    var listeners = [Listener]()
 
-    @MainActor
-    init(dataSource: DataSource = DataSource.shared) {
-        self.dataSource = dataSource
-
+    // todo why override?
+    override init() {
+        Logger.statistics.debug("Creating ConnectivityManager")
+        
         super.init()
-
+        
         self.session.delegate = self
         self.session.activate()
     }
 
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        print("Handling activationDidCompleteWith")
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        Logger.viewCycle.debug("Handling activationDidCompleteWith")
         if let error = error {
-            print("Error trying to activate WCSession: ",error.localizedDescription)
+            Logger.viewCycle.error("Error trying to activate WCSession: \(error.localizedDescription)")
         } else {
-            print("The session has completed activation.")
+            Logger.viewCycle.info("The session has completed activation.")
         }
     }
 
-    func sendPresistentModel<T: PersistentModel>(key: String, data: T, replyHandler: (([String : Any]) -> Void)?) where T:Codable {
+    func sendCodable<T: Codable>(key: String, data: T, replyHandler: (([String : Any]) -> Void)?) {
         do {
             let encodedData = try JSONEncoder().encode(data)
 
             let context = [key: encodedData]
             // do this async?
             self.session.sendMessage(context, replyHandler: replyHandler, errorHandler: { (error) in
-                print("error sending", key, error.localizedDescription)
+                Logger.viewCycle.error("Error sending: \(key) \(error.localizedDescription)")
             })
         } catch {
-            print("Error sending Presistent Model: ", error)
+            Logger.viewCycle.error("Error sending Presistent Model: \(error)")
         }
     }
+    
+    nonisolated func session(_ session: WCSession, didReceiveMessage data: [String : Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        Logger.viewCycle.debug("ConnectivityManager: session for: \(data.keys)")
+        Task {
+            guard let listener = await listeners.first(where: { data[$0.key] != nil }) else {
+                Logger.viewCycle.debug("ConnectivityManager: Could not find listener for: \(data.keys)")
+                
+                // todo replace these with messages we send back
+                replyHandler(["error": "unknown data type"])
+                return
+            }
 
+            do {
+                try listener.didReceiveMessage(data: data)
+                replyHandler(["sucess": true])
+            } catch {
+                Logger.viewCycle.debug("ConnectivityManager: error: \(error.localizedDescription)")
+                
+                replyHandler(["error": error.localizedDescription])
+            }
+        }
+    }
+    
+    func addListener(_ listener: Listener) {
+        if listeners.contains(where: { $0.key == listener.key}){
+            removeListener(listener.key)
+        }
+        
+        listeners.append(listener)
+        Logger.viewCycle.debug("Added listener. Count: \(self.listeners.count)")
+    }
+    
+    func removeListener(_ key: String) {
+        listeners = listeners.filter() { $0.key != key }
+        Logger.viewCycle.debug("Removed listener. Count: \(self.listeners.count)")
+    }
+}
+
+
+struct Listener {
+    let key: String
+    let handleData: @Sendable ([String: Any]) throws -> Void
+    
+    func didReceiveMessage(data: [String : Any]) throws -> Void {
+        try handleData(data)
+    }
 }
