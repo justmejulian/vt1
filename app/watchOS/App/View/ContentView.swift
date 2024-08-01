@@ -25,23 +25,25 @@ struct ContentView: View {
         NavigationStack {
             switch sessionManager.started {
             case false :
-                    NavigationLink {
-                        motionView
-                    } label: {
-                        Label("New Recording", systemImage: "plus")
-                    }
-                    NavigationLink {
-                        RecordingListView()
-                    } label: {
-                        Label("List of Unsynced Recordings", systemImage: "list.bullet")
-                    }
-                    Spacer()
-                    NavigationLink {
-                        SyncView(sessionManager: sessionManager)
-                    } label: {
-                        Label("Sync", systemImage: "arrow.triangle.2.circlepath")
-                    }.buttonStyle(.borderedProminent)
-
+                
+                NavigationLink {
+                    motionView
+                } label: {
+                    Label("New Recording", systemImage: "plus")
+                }
+                NavigationLink {
+                   ListsView()
+                } label: {
+                    Label("Lists", systemImage: "list.bullet")
+                }
+                
+                Spacer()
+                
+                NavigationLink {
+                    SyncView(sessionManager: sessionManager)
+                } label: {
+                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                }.buttonStyle(.borderedProminent)
             case true:
                 motionView
             }
