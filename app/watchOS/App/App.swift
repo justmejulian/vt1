@@ -18,7 +18,11 @@ struct Main: App {
 
     init() {
         do {
-        self.db = Database(modelContainer: try ModelContainer(for: Recording.self, SensorBatch.self))
+            let schema =  Schema([
+                Recording.self,
+                SensorBatch.self,
+            ])
+            self.db = Database(modelContainer: try ModelContainer(for: schema))
             self.sessionManager = SessionManager(db: db)
         } catch {
             Logger.statistics.error("Fatal Error creating watchOs App \(error.localizedDescription)")
